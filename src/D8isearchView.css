@@ -1,3 +1,23 @@
 #D8isearchPicker {
   /* background-color: #000; */
 }
+
+.pictureOriginal{
+  width: 120px;
+  height: 120px;
+}
+
+.loader{
+  text-align: center;
+  margin-top: 100px;
+}
+
+.linkOriginal{
+  border-bottom: 1px dotted #8C1D40;
+  text-decoration: none;
+  color: #8C1D40;
+}
+
+.titleOriginal{
+  font-weight: bold;
+}
