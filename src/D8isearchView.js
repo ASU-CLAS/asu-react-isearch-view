@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Container, Row } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import './D8isearchView.css';
 import Loader from 'react-loader-spinner';
 import Fade from 'react-reveal/Fade';
@@ -11,17 +11,44 @@ class D8isearchPicker extends Component {
     ourData: [],
     isLoaded: false,
     callErr: true,
-    errMsg: ''
+    errMsg: '',
+    displayType: 'classic'
   };
 
   componentDidMount() {
-    const feedURL = this.props.dataFromPage.config
+    // const feedURL = this.props.dataFromPage.config
+    const feedData = JSON.parse(this.props.dataFromPage.config)
+    let feedURL = ''
+
+    if (feedData.type === 'depList') {
+      feedURL = '/clas-feeds/isearch/solr/q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
+    }
+    else {
+      let asuriteIds = feedData.ids.join(' OR ')
+      feedURL = '/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&wt=json'
+    }
+
     axios.get(feedURL).then(response => {
+
       console.log(response);
+      let orderedProfileResults = response.data.response.docs
+      if (feedData.type === 'customList') {
+        // order results
+        orderedProfileResults = feedData.ids.map(item => {
+          for (var i = 0; i < response.data.response.docs.length; i++) {
+            if (item === response.data.response.docs[i].asuriteId) {
+              return response.data.response.docs[i]
+            }
+          }
+        })
+      }
+
+
       this.setState({
-        ourData: response.data,
+        ourData: orderedProfileResults,
         isLoaded: true,
         callErr: false,
+        displayType: feedData.displayType
       }, () => {
         console.log(this.state.ourData);
       })
@@ -58,37 +85,47 @@ class D8isearchPicker extends Component {
 
 
   render() {
-    let config = this.props.dataFromPage.config
     let results = this.state.ourData.map(( thisNode, index ) => {
 
-      switch (this.props.dataFromPage.theme) {
-        case 'Modern':
+      switch (this.state.displayType) {
+        case 'modern':
         return(
-            <tr key={thisNode.eid}>
-              <th scope="row">
-                <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://i.pinimg.com/originals/3a/fd/eb/3afdebe186623197d3500c70df74bfc4.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
-              </th>
-              <td>
-                <p>
-                  <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
-                </p>
-                <p className="titleOriginal">Modern: {thisNode.primaryTitle}</p>
+            <Col sm="3" key={thisNode.eid} className="modernCol">
+              <div class="ch-item ch-img-1" style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url(https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png)'}}>
+                <div class="ch-info-wrap">
+                  <div class="ch-info">
+                    <div class="ch-info-front ch-img-1"></div>
+                    <div class="ch-info-back">
+                      <h3>{thisNode.displayName}</h3>
+                      <p>{thisNode.primaryTitle}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          )
+          break;
+        case 'modernOG':
+        return(
+            <Col sm="3" key={thisNode.eid}>
+              <div className="modernProfile">
+                <img src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                <p className="titleOriginal">{thisNode.primaryTitle}</p>
                 <p>{thisNode.shortBio}</p>
-              </td>
-              <td>
                 <p>
                   <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>
                 </p>
                 <p>{thisNode.phone}</p>
-              </td>
-            </tr>
+              </div>
+            </Col>
           )
           break;
         default:
         return(
             <tr key={thisNode.eid}>
               <th scope="row">
-                <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://i.pinimg.com/originals/3a/fd/eb/3afdebe186623197d3500c70df74bfc4.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
               </th>
               <td>
                 <p>
@@ -122,18 +159,30 @@ class D8isearchPicker extends Component {
         </div>
       )
     }
-    else {
+    else if (this.state.displayType === 'classic') {
       return (
         <Fade>
           <div id="D8isearchPicker">
             <Container>
                 <Row>
-                  <p><strong>Configuration here:</strong> {config}</p>
                   <table className="table">
                     <tbody>
                       {results}
                     </tbody>
                   </table>
+                </Row>
+            </Container>
+          </div>
+        </Fade>
+      );
+    }
+    else if (this.state.displayType === 'modern') {
+      return (
+        <Fade>
+          <div id="D8isearchPicker">
+            <Container>
+                <Row>
+                  {results}
                 </Row>
             </Container>
           </div>
