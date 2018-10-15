@@ -17,6 +17,7 @@ class D8isearchPicker extends Component {
 
   componentDidMount() {
     // const feedURL = this.props.dataFromPage.config
+    console.log(this.props.dataFromPage.config)
     const feedData = JSON.parse(this.props.dataFromPage.config)
     let feedURL = ''
 
@@ -41,6 +42,10 @@ class D8isearchPicker extends Component {
             }
           }
         })
+      }
+      else {
+        // order filtered results
+        orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
       }
 
 
