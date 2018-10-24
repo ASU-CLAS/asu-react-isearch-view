@@ -46,14 +46,15 @@ class D8isearchPicker extends Component {
       else {
         // order filtered results
         orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
-        if (feedData.titleFilter !== '') {
+        if (typeof feedData.titleFilter != 'undefined') {
           if (feedData.titleFilter[0] === '/') {
             console.log('its regex')
-            const filter = feedData.titleFilter.slice(1, -1);
-            let regexConstructor = new RegExp(filter);
+            const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
+            const flags = feedData.titleFilter.substr(feedData.titleFilter.lastIndexOf('/') + 1 )
+            let regexConstructor = new RegExp(pattern, flags);
             orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.primaryTitle))
           }
-          else {
+          else{
             console.log('its a string')
             orderedProfileResults = orderedProfileResults.filter( profile => profile.primaryTitle === feedData.titleFilter)
           }
