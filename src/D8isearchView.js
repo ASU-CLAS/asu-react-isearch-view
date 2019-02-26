@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Container, Row, Col } from 'reactstrap';
 import './D8isearchView.css';
 import Loader from 'react-loader-spinner';
-import Fade from 'react-reveal/Fade';
+// import Fade from 'react-reveal/Fade'; Todo: allow for multiple fade instances
 
 class D8isearchPicker extends Component {
 
@@ -12,7 +12,8 @@ class D8isearchPicker extends Component {
     isLoaded: false,
     callErr: true,
     errMsg: '',
-    displayType: 'classic'
+    displayType: 'classic',
+    sortType: 'alpha'
   };
 
   componentDidMount() {
@@ -34,16 +35,29 @@ class D8isearchPicker extends Component {
       console.log(response);
       let orderedProfileResults = response.data.response.docs
       if (feedData.type === 'customList') {
-        // order results
-        orderedProfileResults = feedData.ids.map(item => {
+        // order results and assign custom titles
+        orderedProfileResults = feedData.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.response.docs.length; i++) {
             if (item === response.data.response.docs[i].asuriteId) {
+              let titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
+              response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
               return response.data.response.docs[i]
             }
           }
         })
       }
       else {
+
+        //assign custom titles and rank
+        orderedProfileResults = orderedProfileResults.map( item => {
+          let titleIndex = item.deptids.indexOf(feedData.ids[0].toString())
+          item.selectedDepTitle = item.titles[titleIndex]
+          if (feedData.sortType === 'rank') {
+            item.selectedDepRank = item.employeeWeight[titleIndex]
+          }
+          return item
+        })
+
         // order filtered results
         orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
         if (typeof feedData.titleFilter != 'undefined') {
@@ -52,16 +66,33 @@ class D8isearchPicker extends Component {
             const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
             const flags = feedData.titleFilter.substr(feedData.titleFilter.lastIndexOf('/') + 1 )
             let regexConstructor = new RegExp(pattern, flags);
-            orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.primaryTitle))
+            orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.selectedDepTitle))
           }
           else{
             console.log('its a string')
-            orderedProfileResults = orderedProfileResults.filter( profile => profile.primaryTitle === feedData.titleFilter)
+            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle === feedData.titleFilter)
           }
-
-
         }
-        orderedProfileResults = orderedProfileResults.sort((a, b) => a.firstName.localeCompare(b.firstName))
+
+        // sort results
+        if (feedData.sortType === 'rank') {
+          orderedProfileResults = orderedProfileResults.sort((a, b) => {
+              if ( a.selectedDepRank === b.selectedDepRank ){
+                return a.lastName.localeCompare(b.lastName)
+              }
+              else {
+                return a.selectedDepRank - b.selectedDepRank
+              }
+          })
+        }
+        else {
+          orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
+        }
+
+
+
+        console.log(orderedProfileResults);
+
       }
 
 
@@ -118,7 +149,7 @@ class D8isearchPicker extends Component {
                     <div class="ch-info-front ch-img-1"></div>
                     <div class="ch-info-back">
                       <h3>{thisNode.displayName}</h3>
-                      <p>{thisNode.primaryTitle}</p>
+                      <p>{thisNode.selectedDepTitle}</p>
                     </div>
                   </div>
                 </div>
@@ -132,7 +163,7 @@ class D8isearchPicker extends Component {
               <div className="modernProfile">
                 <img src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
                 <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
-                <p className="titleOriginal">{thisNode.primaryTitle}</p>
+                <p className="titleOriginal">{thisNode.selectedDepTitle}</p>
                 <p>{thisNode.shortBio}</p>
                 <p>
                   <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>
@@ -152,7 +183,7 @@ class D8isearchPicker extends Component {
                 <p>
                   <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
                 </p>
-                <p className="titleOriginal">{thisNode.primaryTitle}</p>
+                <p className="titleOriginal">{thisNode.selectedDepTitle}</p>
                 <p>{thisNode.shortBio}</p>
               </td>
               <td>
@@ -182,7 +213,6 @@ class D8isearchPicker extends Component {
     }
     else if (this.state.displayType === 'classic') {
       return (
-        <Fade>
           <div id="D8isearchPicker">
             <Container>
                 <Row>
@@ -194,12 +224,10 @@ class D8isearchPicker extends Component {
                 </Row>
             </Container>
           </div>
-        </Fade>
       );
     }
     else if (this.state.displayType === 'modern') {
       return (
-        <Fade>
           <div id="D8isearchPicker">
             <Container>
                 <Row>
@@ -207,7 +235,6 @@ class D8isearchPicker extends Component {
                 </Row>
             </Container>
           </div>
-        </Fade>
       );
     }
 
