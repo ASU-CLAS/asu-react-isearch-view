@@ -27,7 +27,7 @@ class D8isearchPicker extends Component {
     }
     else {
       let asuriteIds = feedData.ids.join(' OR ')
-      feedURL = '/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&wt=json'
+      feedURL = '/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
     }
 
     axios.get(feedURL).then(response => {
