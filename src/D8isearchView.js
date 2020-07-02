@@ -143,13 +143,36 @@ class D8isearchPicker extends Component {
         case 'modern':
         return(
             <Col sm="3" key={thisNode.eid} className="modernCol">
-              <div class="ch-item ch-img-1" style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url(https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png)'}}>
+              <div class="ch-item ch-img-1" data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url(https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png)'}}>
                 <div class="ch-info-wrap">
                   <div class="ch-info">
                     <div class="ch-info-front ch-img-1"></div>
                     <div class="ch-info-back">
                       <h3>{thisNode.displayName}</h3>
                       <p>{thisNode.selectedDepTitle}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class={"modal fade bd-isearch-modal-"+thisNode.eid} tabindex="-1" role="dialog">
+                <div class="modal-dialog isearch-card-modal">
+                  <div class="modal-content">
+                    <div class="card isearch-card">
+                      <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                      </button>
+                        <img class="pictureOriginal card-img-top" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                        <div class="card-body">
+                          <h5 class="card-title">
+                            <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                          </h5>
+                          <h6 class="card-subtitle mb-2 text-muted titleOriginal">{thisNode.selectedDepTitle}</h6>
+                          <p>{thisNode.shortBio}</p>
+                          <p>
+                            <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>
+                          </p>
+                          <p>{thisNode.phone}</p>
+                        </div>
                     </div>
                   </div>
                 </div>
