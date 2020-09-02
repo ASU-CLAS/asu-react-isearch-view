@@ -60,7 +60,7 @@ class D8isearchPicker extends Component {
 
         // order filtered results
         orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
-        if (typeof feedData.titleFilter != 'undefined') {
+        if (typeof feedData.titleFilter !== 'undefined') {
           if (feedData.titleFilter[0] === '/') {
             console.log('its regex')
             const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
@@ -161,7 +161,7 @@ class D8isearchPicker extends Component {
                       <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
                       </button>
-                        <img class="pictureOriginal card-img-top" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                        <img class="pictureModal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
                         <div class="card-body">
                           <h5 class="card-title">
                             <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
