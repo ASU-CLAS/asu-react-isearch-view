@@ -2,9 +2,18 @@
   /* background-color: #000; */
 }
 
+.x {
+	position: absolute;
+    background: transparent;
+    top: 0px;
+    right: 5px;
+    float: right!important;
+    height: 24px;
+}
+
 .pictureOriginal{
-  width: 120px;
-  height: 120px;
+	width: 120px;
+	height: 120px;
 }
 
 .loader{
