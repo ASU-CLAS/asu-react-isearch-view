@@ -41,6 +41,10 @@ class D8isearchPicker extends Component {
             if (item === response.data.response.docs[i].asuriteId) {
               let titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
               response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
+              if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
+                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                console.log('use working title')
+              }
               return response.data.response.docs[i]
             }
           }
@@ -52,6 +56,10 @@ class D8isearchPicker extends Component {
         orderedProfileResults = orderedProfileResults.map( item => {
           let titleIndex = item.deptids.indexOf(feedData.ids[0].toString())
           item.selectedDepTitle = item.titles[titleIndex]
+          if(item.titleSource[titleIndex] == 'workingTitle') {
+            item.selectedDepTitle = item.workingTitle
+            console.log('use working title')
+          }
           if (feedData.sortType === 'rank') {
             item.selectedDepRank = item.employeeWeight[titleIndex]
           }

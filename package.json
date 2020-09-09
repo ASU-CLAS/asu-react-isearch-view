@@ -14,6 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "drupal-light": "react-app-rewired build",
     "drupal": "react-app-rewired build && yarn run drupal:dist",
     "drupal:dist": "cd build && cp static/js/*.js ../../js/clas_isearch_view_react.min.js && cp static/css/*.css ../../css/clas_isearch_view.css",
     "test": "react-scripts test --env=jsdom",
