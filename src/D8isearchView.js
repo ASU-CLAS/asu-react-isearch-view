@@ -39,12 +39,7 @@ class D8isearchPicker extends Component {
         orderedProfileResults = feedData.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.response.docs.length; i++) {
             if (item === response.data.response.docs[i].asuriteId) {
-              let titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
-              response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
-              if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
-                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
-                console.log('use working title')
-              }
+              response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
               return response.data.response.docs[i]
             }
           }
@@ -56,9 +51,10 @@ class D8isearchPicker extends Component {
         orderedProfileResults = orderedProfileResults.map( item => {
           let titleIndex = item.deptids.indexOf(feedData.ids[0].toString())
           item.selectedDepTitle = item.titles[titleIndex]
+          //console.log(item.titles);
           if(item.titleSource[titleIndex] == 'workingTitle') {
             item.selectedDepTitle = item.workingTitle
-            console.log('use working title')
+            //console.log('use working title')
           }
           if (feedData.sortType === 'rank') {
             item.selectedDepRank = item.employeeWeight[titleIndex]
@@ -70,14 +66,14 @@ class D8isearchPicker extends Component {
         orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
         if (typeof feedData.titleFilter !== 'undefined') {
           if (feedData.titleFilter[0] === '/') {
-            console.log('its regex')
+            //console.log('its regex')
             const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
             const flags = feedData.titleFilter.substr(feedData.titleFilter.lastIndexOf('/') + 1 )
             let regexConstructor = new RegExp(pattern, flags);
             orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.selectedDepTitle))
           }
           else{
-            console.log('its a string')
+            //console.log('its a string')
             orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle === feedData.titleFilter)
           }
         }
@@ -96,11 +92,6 @@ class D8isearchPicker extends Component {
         else {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
-
-
-
-        console.log(orderedProfileResults);
-
       }
 
 
@@ -110,7 +101,7 @@ class D8isearchPicker extends Component {
         callErr: false,
         displayType: feedData.displayType
       }, () => {
-        console.log(this.state.ourData);
+        //console.log(this.state.ourData);
       })
     }).catch((error) => {
         // API call error catching
@@ -155,7 +146,7 @@ class D8isearchPicker extends Component {
                 <div class="ch-info-wrap">
                   <div class="ch-info">
                     <div class="ch-info-front ch-img-1"></div>
-                    <div class="ch-info-back">
+                    <div class="ch-info-back">  
                       <h3>{thisNode.displayName}</h3>
                       <p>{thisNode.selectedDepTitle}</p>
                     </div>
