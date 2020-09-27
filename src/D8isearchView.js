@@ -6,19 +6,19 @@ import Loader from 'react-loader-spinner';
 // import Fade from 'react-reveal/Fade'; Todo: allow for multiple fade instances
 
 class D8isearchPicker extends Component {
-
+  
   state = {
     ourData: [],
     isLoaded: false,
     callErr: true,
     errMsg: '',
     displayType: 'classic',
-    sortType: 'alpha'
+    sortType: 'alpha',
   };
 
   componentDidMount() {
     // const feedURL = this.props.dataFromPage.config
-    console.log(this.props.dataFromPage.config)
+    //console.log(this.props.dataFromPage)
     const feedData = JSON.parse(this.props.dataFromPage.config)
     let feedURL = ''
 
@@ -32,7 +32,7 @@ class D8isearchPicker extends Component {
 
     axios.get(feedURL).then(response => {
 
-      console.log(response);
+      //console.log(response);
       let orderedProfileResults = response.data.response.docs
       if (feedData.type === 'customList') {
         // order results and assign custom titles
@@ -46,7 +46,6 @@ class D8isearchPicker extends Component {
         })
       }
       else {
-
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
           let titleIndex = item.deptids.indexOf(feedData.ids[0].toString())
@@ -136,8 +135,8 @@ class D8isearchPicker extends Component {
 
 
   render() {
+    let config = JSON.parse(this.props.dataFromPage.config);
     let results = this.state.ourData.map(( thisNode, index ) => {
-
       switch (this.state.displayType) {
         case 'modern':
         return(
@@ -199,20 +198,27 @@ class D8isearchPicker extends Component {
         return(
             <tr key={thisNode.eid}>
               <th scope="row">
-                <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                {(config.classicOptionPhoto) ? 
+                  null :
+                  <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  } 
               </th>
               <td>
                 <p>
                   <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
                 </p>
-                <p className="titleOriginal">{thisNode.selectedDepTitle}</p>
-                <p>{thisNode.shortBio}</p>
+                { (config.classicOptionTitle) ? null : <p className="titleOriginal">{thisNode.selectedDepTitle}</p> }
+                <p>
+                  {(config.classicOptionDescription) ? null : thisNode.shortBio}
+                </p>
               </td>
               <td>
                 <p>
-                  <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>
+                  {(config.classicOptionEmail) ? null : <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>}
                 </p>
-                <p>{thisNode.phone}</p>
+                <p>
+                  {(config.classicOptionPhone) ? null : thisNode.phone }
+                </p>
               </td>
             </tr>
           )
