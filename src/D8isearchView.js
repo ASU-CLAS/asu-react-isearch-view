@@ -6,7 +6,7 @@ import Loader from 'react-loader-spinner';
 // import Fade from 'react-reveal/Fade'; Todo: allow for multiple fade instances
 
 class D8isearchPicker extends Component {
-  
+
   state = {
     ourData: [],
     isLoaded: false,
@@ -39,7 +39,26 @@ class D8isearchPicker extends Component {
         orderedProfileResults = feedData.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.response.docs.length; i++) {
             if (item === response.data.response.docs[i].asuriteId) {
-              response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+              console.log('---')
+              console.log('Processing title for: ' + response.data.response.docs[i].asuriteId)
+              // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
+              let titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
+              // if there is no sourceID for this profile, then we should default to the workingTitle field
+              if(titleIndex == -1) {
+                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                console.log('No titleIndex, use working title')
+              }
+              // if there is a sourceID index, use it to select the correct title from the titles array
+              else {
+                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
+                console.log('Set title via titleIndex')
+                // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
+                if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
+                  response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                  console.log('Title source override, use working title')
+                }
+              }
+
               return response.data.response.docs[i]
             }
           }
@@ -145,7 +164,7 @@ class D8isearchPicker extends Component {
                 <div class="ch-info-wrap">
                   <div class="ch-info">
                     <div class="ch-info-front ch-img-1"></div>
-                    <div class="ch-info-back">  
+                    <div class="ch-info-back">
                       <h3>{thisNode.displayName}</h3>
                       <p>{thisNode.selectedDepTitle}</p>
                     </div>
@@ -198,10 +217,10 @@ class D8isearchPicker extends Component {
         return(
             <tr key={thisNode.eid}>
               <th scope="row">
-                {(config.classicOptionPhoto) ? 
+                {(config.classicOptionPhoto) ?
                   null :
                   <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
-                  } 
+                  }
               </th>
               <td>
                 <p>
