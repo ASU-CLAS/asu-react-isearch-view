@@ -152,7 +152,9 @@ class D8isearchPicker extends Component {
     });
   }
 
-
+  // circles -> Circle View
+  // cards -> Card View
+  // default -> Table View
   render() {
     console.log("Rendering "+this.state.displayType+"... ");
     let config = JSON.parse(this.props.dataFromPage.config);
@@ -221,13 +223,13 @@ class D8isearchPicker extends Component {
                   }
                   <div class="card-header">
                     <h3 class="card-title">
-                    { (config.cardsOptionTitle) ? null : 
                       <a className="" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
-                    }
                     </h3>
                   </div>
                   <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted titleOriginal">{thisNode.selectedDepTitle}</h6>
+                    { (config.cardsOptionTitle) ? null : 
+                      <h6 class="card-subtitle mb-2 text-muted titleOriginal">{thisNode.selectedDepTitle}</h6>
+                    }
                     {(config.cardsOptionDescription) ? null : 
                       <p>{thisNode.shortBio}</p>
                     } 
@@ -252,9 +254,9 @@ class D8isearchPicker extends Component {
                   }
               </th>
               <td>
-                <p>
-                  <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
-                </p>
+                <h3 className="card-title">
+                  <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                </h3>
                 { (config.classicOptionTitle) ? null : <p className="titleOriginal">{thisNode.selectedDepTitle}</p> }
                 <p>
                   {(config.classicOptionDescription) ? null : thisNode.shortBio}
