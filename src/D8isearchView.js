@@ -154,12 +154,14 @@ class D8isearchPicker extends Component {
 
 
   render() {
+    console.log("Rendering "+this.state.displayType+"... ");
     let config = JSON.parse(this.props.dataFromPage.config);
     let results = this.state.ourData.map(( thisNode, index ) => {
       switch (this.state.displayType) {
-        case 'modern':
+        case 'circles':
         return(
-            <Col sm="3" key={thisNode.eid} className="modernCol">
+          <Col sm="3" key={thisNode.eid} className="modernCol">
+          {(config.circlesOptionHover) ?
               <div class="ch-item ch-img-1" data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url(https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png)'}}>
                 <div class="ch-info-wrap">
                   <div class="ch-info">
@@ -171,6 +173,18 @@ class D8isearchPicker extends Component {
                   </div>
                 </div>
               </div>
+              :
+              <div>
+                <div className="modernProfile">
+                  <img src={thisNode.photoUrl} data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                </div>
+                <div style={{textAlign: 'center'}}>
+                  <a className="" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                  <p className="">{thisNode.selectedDepTitle}</p>
+                </div>
+              </div>
+          } 
+              
               <div class={"modal fade bd-isearch-modal-"+thisNode.eid} tabindex="-1" role="dialog">
                 <div class="modal-dialog isearch-card-modal">
                   <div class="modal-content">
@@ -197,18 +211,33 @@ class D8isearchPicker extends Component {
             </Col>
           )
           break;
-        case 'modernOG':
+        case 'cards':
         return(
             <Col sm="3" key={thisNode.eid}>
-              <div className="modernProfile">
-                <img src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
-                <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
-                <p className="titleOriginal">{thisNode.selectedDepTitle}</p>
-                <p>{thisNode.shortBio}</p>
-                <p>
-                  <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>
-                </p>
-                <p>{thisNode.phone}</p>
+              <div class="card isearch-card">
+                  {(config.cardsOptionPhoto) ?
+                    null :
+                    <img class="card-img-top" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  }
+                  <div class="card-header">
+                    <h3 class="card-title">
+                    { (config.cardsOptionTitle) ? null : 
+                      <a className="" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                    }
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted titleOriginal">{thisNode.selectedDepTitle}</h6>
+                    {(config.cardsOptionDescription) ? null : 
+                      <p>{thisNode.shortBio}</p>
+                    } 
+                    <p>
+                    {(config.cardsOptionEmail) ? null : <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>}
+                    </p>
+                    <p>
+                    {(config.cardsOptionPhone) ? null : thisNode.phone }
+                    </p>
+                  </div>
               </div>
             </Col>
           )
@@ -273,7 +302,7 @@ class D8isearchPicker extends Component {
           </div>
       );
     }
-    else if (this.state.displayType === 'modern') {
+    else if (this.state.displayType === 'circles' || this.state.displayType === 'cards') {
       return (
           <div id="D8isearchPicker">
             <Container>
