@@ -21,13 +21,14 @@ class D8isearchPicker extends Component {
     //console.log(this.props.dataFromPage)
     const feedData = JSON.parse(this.props.dataFromPage.config)
     let feedURL = ''
+    let testURL = 'https://thecollege.asu.edu'
 
     if (feedData.type === 'depList') {
-      feedURL = '/clas-feeds/isearch/solr/q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
+      feedURL = testURL+'/clas-feeds/isearch/solr/q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
     }
     else {
       let asuriteIds = feedData.ids.join(' OR ')
-      feedURL = '/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
+      feedURL = testURL+'/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
     }
 
     axios.get(feedURL).then(response => {
@@ -42,7 +43,15 @@ class D8isearchPicker extends Component {
               console.log('---')
               console.log('Processing title for: ' + response.data.response.docs[i].asuriteId)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
-              let titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
+              var titleIndex = -1;
+              // some profiles don't have deptids ???
+              if(response.data.response.docs[i].deptids != undefined) {
+                titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
+              }
+              // if there is no eid then use asurite in place
+              if(response.data.response.docs[i].eid == undefined) {
+                response.data.response.docs[i].eid = response.data.response.docs[i].asuriteId
+              }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
                 response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
@@ -159,6 +168,10 @@ class D8isearchPicker extends Component {
     console.log("Rendering "+this.state.displayType+"... ");
     let config = JSON.parse(this.props.dataFromPage.config);
     let results = this.state.ourData.map(( thisNode, index ) => {
+      // Don't know why thisNode would be undefined but sometimes it is
+      if(thisNode == undefined) {
+        return null;
+      }
       switch (this.state.displayType) {
         case 'circles':
         return(
@@ -185,8 +198,8 @@ class D8isearchPicker extends Component {
                   <p className="">{thisNode.selectedDepTitle}</p>
                 </div>
               </div>
-          } 
-              
+          }
+
               <div class={"modal fade bd-isearch-modal-"+thisNode.eid} tabindex="-1" role="dialog">
                 <div class="modal-dialog isearch-card-modal">
                   <div class="modal-content">
@@ -227,12 +240,12 @@ class D8isearchPicker extends Component {
                     </h3>
                   </div>
                   <div class="card-body">
-                    { (config.cardsOptionTitle) ? null : 
+                    { (config.cardsOptionTitle) ? null :
                       <h6 class="card-subtitle mb-2 text-muted titleOriginal">{thisNode.selectedDepTitle}</h6>
                     }
-                    {(config.cardsOptionDescription) ? null : 
+                    {(config.cardsOptionDescription) ? null :
                       <p>{thisNode.shortBio}</p>
-                    } 
+                    }
                     <p>
                     {(config.cardsOptionEmail) ? null : <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>}
                     </p>
