@@ -21,7 +21,7 @@ class D8isearchPicker extends Component {
     //console.log(this.props.dataFromPage)
     const feedData = JSON.parse(this.props.dataFromPage.config)
     let feedURL = ''
-    let testURL = 'https://thecollege.asu.edu'
+    let testURL = ''
 
     if (feedData.type === 'depList') {
       feedURL = testURL+'/clas-feeds/isearch/solr/q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
@@ -263,7 +263,7 @@ class D8isearchPicker extends Component {
               <th scope="row">
                 {(config.classicOptionPhoto) ?
                   null :
-                  <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="/profiles/openclas/modules/custom/clas_isearch/images/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
                   }
               </th>
               <td>
