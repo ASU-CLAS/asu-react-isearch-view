@@ -3,13 +3,13 @@ React component for displaying ASU directory listings from isearch.asu.edu. This
 ### Demo: <a href="https://codepen.io/tkilbour/pen/qBqQwRQ" target="blank">iSearch directory React component on CodePen</a>
 
 ## Install (Stand Alone)
-* `git clone https://github.com/ASU-CLAS/asu-react-d8news.git`
+* `git clone https://github.com/ASU-CLAS/asu-react-d8isearch-view.git`
 * `yarn` - install all dependencies
 * `yarn build` - build project files (Includes React Library- will need to install ASU UDS Bootstrap separately )
 
 
 ## Install (Drupal)
-* `git clone https://github.com/ASU-CLAS/asu-react-d8news.git`
+* `git clone https://github.com/ASU-CLAS/asu-react-d8isearch-view.git`
 * `yarn` - install all dependencies
 * `yarn drupal` - build project files (Excludes React Library)
 
