@@ -20,16 +20,22 @@ class D8isearchPicker extends Component {
     // const feedURL = this.props.dataFromPage.config
     //console.log(this.props.dataFromPage)
     const feedData = JSON.parse(this.props.dataFromPage.config)
-    let feedURL = ''
-    let testURL = ''
+    let feedURL = '/clas-feeds/isearch/solr/'
+
+    if(feedData.testURL != undefined) {
+      feedURL = feedData.testURL
+      console.log('test feed')
+    }
 
     if (feedData.type === 'depList') {
-      feedURL = testURL+'/clas-feeds/isearch/solr/q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
+      feedURL = feedURL + 'q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
     }
     else {
       let asuriteIds = feedData.ids.join(' OR ')
-      feedURL = testURL+'/clas-feeds/isearch/solr/q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
+      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
     }
+
+
 
     axios.get(feedURL).then(response => {
 
@@ -167,6 +173,9 @@ class D8isearchPicker extends Component {
   render() {
     console.log("Rendering "+this.state.displayType+"... ");
     let config = JSON.parse(this.props.dataFromPage.config);
+    if(config.defaultPhoto == undefined) {
+      config.defaultPhoto = "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+    }
     let results = this.state.ourData.map(( thisNode, index ) => {
       // Don't know why thisNode would be undefined but sometimes it is
       if(thisNode == undefined) {
@@ -177,7 +186,7 @@ class D8isearchPicker extends Component {
         return(
           <Col sm="3" key={thisNode.eid} className="modernCol">
           {(config.circlesOptionHover) ?
-              <div class="ch-item ch-img-1" data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url(https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png)'}}>
+              <div class="ch-item ch-img-1" data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} style={{backgroundImage: 'url(' + thisNode.photoUrl + '), url('+config.defaultPhoto+')'}}>
                 <div class="ch-info-wrap">
                   <div class="ch-info">
                     <div class="ch-info-front ch-img-1"></div>
@@ -191,7 +200,7 @@ class D8isearchPicker extends Component {
               :
               <div>
                 <div className="modernProfile">
-                  <img src={thisNode.photoUrl} data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  <img src={thisNode.photoUrl} data-toggle="modal" data-target={".bd-isearch-modal-"+thisNode.eid} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
                 </div>
                 <div style={{textAlign: 'center'}}>
                   <a className="" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
@@ -207,7 +216,7 @@ class D8isearchPicker extends Component {
                       <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
                       </button>
-                        <img class="pictureModal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                        <img class="pictureModal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
                         <div class="card-body">
                           <h5 class="card-title">
                             <a className="linkOriginal" href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
@@ -232,7 +241,7 @@ class D8isearchPicker extends Component {
               <div class="card isearch-card">
                   {(config.cardsOptionPhoto) ?
                     null :
-                    <img class="card-img-top" src={thisNode.photoUrl} onError={(e)=>{e.target.src="https://clas.asu.edu/sites/default/files/styles/panopoly_image_original/public/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                    <img class="card-img-top" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
                   }
                   <div class="card-header">
                     <h3 class="card-title">
@@ -263,7 +272,9 @@ class D8isearchPicker extends Component {
               <th scope="row">
                 {(config.classicOptionPhoto) ?
                   null :
-                  <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src="/profiles/openclas/modules/custom/clas_isearch/images/avatar.png"}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>
+                    <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
+                    </a>
                   }
               </th>
               <td>
