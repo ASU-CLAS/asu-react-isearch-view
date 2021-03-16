@@ -3,3 +3,105 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+a:hover {
+  text-decoration: underline;
+  opacity: 0.7;
+}
+
+.masthead {
+  padding-top: 75px;
+  padding-bottom: 54px;
+  background: #FAFAFA;
+}
+
+.masthead h1 {
+  margin-bottom: 10px;
+}
+
+img.profileViewThumbnail {
+  width: 235px;
+  height: 235px;
+  margin-top: 17px;
+}
+
+.titleOrgArea {
+  margin-bottom: 16px;
+}
+
+.contactArea {
+  margin-bottom: 11px;
+}
+
+.contactArea > div {
+  float: left;
+  margin-right: 30px;
+}
+
+.contactArea > div:last-of-type {
+  margin-right: 0;
+}
+
+.contactArea:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+.socialArea > a {
+  margin-right: 22px;
+  font-size: 28px;
+  color: #000;
+}
+
+.socialArea > a:hover {
+  color: maroon;
+}
+
+.breadcrumbs {
+  padding-top: 33px;
+}
+
+.breadcrumbs .breadcrumb {
+  padding-left: 0;
+}
+
+.breadcrumbs .breadcrumb a {
+  text-decoration: none;
+  color: maroon;
+}
+
+ul.nav-tabs a.nav-link {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+ul.nav-tabs a.nav-link:hover {
+  opacity: 1;
+}
+
+.tabContentArea {
+  padding-top: 30px;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom: solid 8px !important;
+}
+
+.expertise {
+  border: 1px solid gainsboro;
+  padding: 15px 30px 20px;
+}
+
+.expertise h4 {
+  margin-bottom: 20px;
+}
+
+.expertise a {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.expertise a:hover {
+  text-decoration: underline;
+}

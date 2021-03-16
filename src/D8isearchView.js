@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Container, Row, Col } from 'reactstrap';
 import './D8isearchView.css';
 import Loader from 'react-loader-spinner';
+import {
+  Link
+} from "react-router-dom";
 // import Fade from 'react-reveal/Fade'; Todo: allow for multiple fade instances
 
 class D8isearchPicker extends Component {
@@ -126,7 +129,6 @@ class D8isearchPicker extends Component {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
       }
-
 
       this.setState({
         ourData: orderedProfileResults,
@@ -272,14 +274,26 @@ class D8isearchPicker extends Component {
               <th scope="row">
                 {(config.classicOptionPhoto) ?
                   null :
-                  <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>
-                    <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
+                  (config.externalIsearch) ? (
+                    <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>
+                      <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
                     </a>
-                  }
+                  ) :
+                  (
+                    <Link to={ '/profiles/' + thisNode.eid }>
+                      <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
+                    </Link>
+                  )
+                }
               </th>
               <td>
                 <h3 className="card-title">
-                  <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                { (config.externalIsearch) ? (
+                    <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                  ) : (
+                    <Link to={ '/profiles/' + thisNode.eid }>{thisNode.displayName}</Link>
+                  )
+                }
                 </h3>
                 { (config.classicOptionTitle) ? null : <p className="titleOriginal">{thisNode.selectedDepTitle}</p> }
                 <p>
