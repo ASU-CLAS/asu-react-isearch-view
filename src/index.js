@@ -15,14 +15,14 @@ for (let element of appRoots) {
 
   ReactDOM.render(
     <Router basename={"/"} forceRefresh={false}>
-      <Switch>
-        <Route path={"profiles/:eid"}>
-          <IsearchProfileView dataFromPage={element.dataset} />
-        </Route>
-        <Route path={"profiles"}>
+      <div>
+        <Route exact path={"/"}>
           <D8isearchPicker dataFromPage={element.dataset} />
         </Route>
-      </Switch>
+        <Route path={"/profiles/:eid"}>
+          <IsearchProfileView dataFromPage={element.dataset} />
+        </Route>
+      </div>
     </Router>,
     element
   );
