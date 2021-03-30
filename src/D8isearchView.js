@@ -170,6 +170,7 @@ class D8isearchPicker extends Component {
   // circles -> Circle View
   // cards -> Card View
   // default -> Table View
+  // standard -> list view
   render() {
     console.log("Rendering "+this.state.displayType+"... ");
     let config = JSON.parse(this.props.dataFromPage.config);
@@ -181,6 +182,7 @@ class D8isearchPicker extends Component {
       if(thisNode == undefined) {
         return null;
       }
+      console.log(thisNode);
       switch (this.state.displayType) {
         case 'circles':
         return(
@@ -266,6 +268,59 @@ class D8isearchPicker extends Component {
             </Col>
           )
           break;
+          case 'standard':
+          return(
+              <div key={thisNode.eid} className="profile profile-type-standard">
+                <div className="profile-row">
+                  <div className="profile-photo-column">
+                    {(config.classicOptionPhoto) ?
+                      null :
+                      <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>
+                        <img className="pictureOriginal" src={thisNode.photoUrl} onError={(e)=>{e.target.src=config.defaultPhoto}} alt={ 'profile picture for ' + thisNode.displayName } />
+                        </a>
+                      }
+                  </div>
+                  <div className="profile-bio-column">
+                    <h3 className="profile-name">
+                      <a href={ 'https://isearch.asu.edu/profile/' + thisNode.eid }>{thisNode.displayName}</a>
+                    </h3>
+                    <div className="profile-title">
+                    { (config.classicOptionTitle) ? null : <p className="titleOriginal">{thisNode.selectedDepTitle}</p> }
+                    </div>
+
+                    <div className="profile-contact-row">
+                      <div className="">
+                      <p>
+                        {(config.classicOptionEmail) ? null : <a className="linkOriginal" href={ 'mailto:' + thisNode.emailAddress }>{thisNode.emailAddress}</a>}
+                      </p>
+                      </div>
+                      <div className="">
+                      <p>
+                        {(config.classicOptionPhone) ? null : <a className="" href={ 'tel:' + thisNode.phone }>{thisNode.phone}</a>}
+                      </p>
+                      </div>
+                      <div className="">
+                      <p>
+                        {(config.classicOptionPhone) ? null :
+
+                          <div>{thisNode.addressLine1}<br/>{thisNode.addressLine2}</div>
+
+                         }
+                      </p>
+                      </div>
+                    </div>
+
+                    <p>
+                      {(config.classicOptionDescription) ? null : thisNode.shortBio}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+            )
+          break;
         default:
         return(
             <tr key={thisNode.eid}>
@@ -328,7 +383,7 @@ class D8isearchPicker extends Component {
           </div>
       );
     }
-    else if (this.state.displayType === 'circles' || this.state.displayType === 'cards') {
+    else if (this.state.displayType === 'circles' || this.state.displayType === 'cards' || this.state.displayType === 'standard') {
       return (
           <div id="D8isearchPicker">
             <Container>
