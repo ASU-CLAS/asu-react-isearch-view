@@ -65,7 +65,7 @@ export const IsearchTableView = ({
   );
 };
 
-IsearchListView.propTypes = {
+IsearchTableView.propTypes = {
   /**
    * Render classic description format?
    */
@@ -120,7 +120,7 @@ IsearchListView.propTypes = {
   shortBio: PropTypes.string,
 };
 
-IsearchListView.defaultProps = {
+IsearchTableView.defaultProps = {
   classicDescription: false,
   classicEmail: false,
   classicPhone: false,
