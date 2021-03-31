@@ -1,17 +1,17 @@
-import faker from "faker";
+import faker from 'faker';
 
-import { IsearchCircleView } from ".";
+import {IsearchCircleView} from '.';
 
 export default {
-  title: "iSearch/CircleView",
+  title: 'iSearch/CircleView',
   component: IsearchCircleView,
 };
 
 const Template = args => (
   <div className="container pt-3">
-    <div class="row">
-      <div class="col col-8">
-        <div class="clas-isearch-view">
+    <div className="row">
+      <div className="col col-8">
+        <div className="clas-isearch-view">
           <IsearchCircleView {...args} />
         </div>
       </div>
@@ -23,7 +23,7 @@ export const Basic = Template.bind({});
 Basic.args = {
   circlesHover: true,
   defaultPhoto:
-    "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+    'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   loaded: true,
   eid: 1234,
   photoUrl: faker.image.avatar(),

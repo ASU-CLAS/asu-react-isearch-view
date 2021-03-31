@@ -1,17 +1,17 @@
-import faker from "faker";
+import faker from 'faker';
 
-import { IsearchTableView } from ".";
+import {IsearchTableView} from '.';
 
 export default {
-  title: "iSearch/TableView",
+  title: 'iSearch/TableView',
   component: IsearchTableView,
 };
 
 const Template = args => (
   <div className="container pt-3">
-    <div class="row">
-      <div class="col col-8">
-        <div class="clas-isearch-view">
+    <div className="row">
+      <div className="col col-8">
+        <div className="clas-isearch-view">
           <IsearchTableView {...args} />
         </div>
       </div>
@@ -27,7 +27,7 @@ Modern.args = {
   classicPhoto: false,
   classicTitle: false,
   defaultPhoto:
-    "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+    'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   loaded: true,
   eid: 1234,
   photoUrl: faker.image.avatar(),
@@ -46,7 +46,7 @@ Classic.args = {
   classicPhoto: true,
   classicTitle: true,
   defaultPhoto:
-    "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+    'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   loaded: true,
   eid: 1234,
   photoUrl: faker.image.avatar(),
