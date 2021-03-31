@@ -110,7 +110,7 @@ IsearchCircleView.propTypes = {
   /**
    * Circle view hovers (?)
    */
-  circlesHover: PropTypes.string,
+  circlesHover: PropTypes.bool,
   /**
    * String path to default photo
    */
@@ -122,7 +122,7 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.string.isRequired,
+  eid: PropTypes.number.isRequired,
   /**
    * iSearch profile email address
    */
@@ -130,7 +130,7 @@ IsearchCircleView.propTypes = {
   /**
    * Is application data currently loading?
    */
-  loaded: PropTypes.string,
+  loaded: PropTypes.bool,
   /**
    * iSearch profile phone
    */

@@ -101,7 +101,7 @@ IsearchListView.propTypes = {
   /**
    * Is application data currently loading?
    */
-  loaded: PropTypes.string,
+  loaded: PropTypes.bool,
   /**
    * iSearch profile phone
    */
