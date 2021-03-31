@@ -17,11 +17,6 @@ export const IsearchCardView = ({
   selectedDepTitle,
   shortBio,
 }) => {
-  // Don't know why node would be undefined but sometimes it is
-  if (node == undefined) {
-    return null;
-  }
-
   if (!loaded) {
     return (
       <div className="loader">

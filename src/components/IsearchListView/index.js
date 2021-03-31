@@ -20,10 +20,6 @@ export const IsearchListView = ({
   selectedDepTitle,
   shortBio,
 }) => {
-  if (node == undefined) {
-    return null;
-  }
-
   if (!loaded) {
     return (
       <div className="loader">
