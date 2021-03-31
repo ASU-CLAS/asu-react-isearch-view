@@ -10,8 +10,14 @@ export const IsearchListView = ({
   classicPhoto,
   classicTitle,
   defaultPhoto,
+  displayName,
+  eid,
+  emailAddress,
   loaded,
-  node,
+  phone,
+  photoUrl,
+  selectedDepTitle,
+  shortBio,
 }) => {
   if (node == undefined) {
     return null;
@@ -26,31 +32,29 @@ export const IsearchListView = ({
   }
 
   return (
-    <div key={node.eid} className="profile profile-type-standard">
+    <div key={eid} className="profile profile-type-standard">
       <div className="profile-row">
         <div className="profile-photo-column">
           {classicPhoto ? null : (
-            <a href={"https://isearch.asu.edu/profile/" + node.eid}>
+            <a href={"https://isearch.asu.edu/profile/" + eid}>
               <img
                 className="pictureOriginal"
-                src={node.photoUrl}
+                src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={"profile picture for " + node.displayName}
+                alt={"profile picture for " + displayName}
               />
             </a>
           )}
         </div>
         <div className="profile-bio-column">
           <h3 className="profile-name">
-            <a href={"https://isearch.asu.edu/profile/" + node.eid}>
-              {node.displayName}
-            </a>
+            <a href={"https://isearch.asu.edu/profile/" + eid}>{displayName}</a>
           </h3>
           <div className="profile-title">
             {classicTitle ? null : (
-              <p className="titleOriginal">{node.selectedDepTitle}</p>
+              <p className="titleOriginal">{selectedDepTitle}</p>
             )}
           </div>
 
@@ -58,11 +62,8 @@ export const IsearchListView = ({
             <div className="">
               <p>
                 {classicEmail ? null : (
-                  <a
-                    className="linkOriginal"
-                    href={"mailto:" + node.emailAddress}
-                  >
-                    {node.emailAddress}
+                  <a className="linkOriginal" href={"mailto:" + emailAddress}>
+                    {emailAddress}
                   </a>
                 )}
               </p>
@@ -70,8 +71,8 @@ export const IsearchListView = ({
             <div className="">
               <p>
                 {classicPhone ? null : (
-                  <a className="" href={"tel:" + node.phone}>
-                    {node.phone}
+                  <a className="" href={"tel:" + phone}>
+                    {phone}
                   </a>
                 )}
               </p>
@@ -80,16 +81,16 @@ export const IsearchListView = ({
               <p>
                 {classicPhone ? null : (
                   <div>
-                    {node.addressLine1}
+                    {addressLine1}
                     <br />
-                    {node.addressLine2}
+                    {addressLine2}
                   </div>
                 )}
               </p>
             </div>
           </div>
 
-          <p>{classicDescription ? null : node.shortBio}</p>
+          <p>{classicDescription ? null : shortBio}</p>
         </div>
       </div>
     </div>
@@ -118,13 +119,37 @@ IsearchListView.propTypes = {
    */
   defaultPhoto: PropTypes.string,
   /**
+   * iSearch profile Display Name
+   */
+  displayName: PropTypes.string.isRequired,
+  /**
+   * iSearch profile EID
+   */
+  eid: PropTypes.string.isRequired,
+  /**
+   * iSearch profile email address
+   */
+  emailAddress: PropTypes.string,
+  /**
    * Is application data currently loading?
    */
   loaded: PropTypes.string,
   /**
-   * An individual profile node
+   * iSearch profile phone
    */
-  node: PropTypes.string.isRequired,
+  phone: PropTypes.string,
+  /**
+   * iSearch profile photo
+   */
+  photoUrl: PropTypes.string,
+  /**
+   * iSearch profile selected department title
+   */
+  selectedDepTitle: PropTypes.string,
+  /**
+   * iSearch profile short bio
+   */
+  shortBio: PropTypes.string,
 };
 
 IsearchListView.defaultProps = {
@@ -134,5 +159,10 @@ IsearchListView.defaultProps = {
   classicTitle: false,
   defaultPhoto:
     "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+  emailAddress: "",
   loaded: true,
+  phone: "",
+  photoUrl: "",
+  selectedDepTitle: "",
+  shortBio: "",
 };

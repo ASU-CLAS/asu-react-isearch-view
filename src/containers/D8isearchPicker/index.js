@@ -206,21 +206,85 @@ const D8IsearchPicker = ({ dataFromPage }) => {
 
     switch (displayType) {
       case "circles":
-        return <IsearchCircleView />;
+        return (
+          <IsearchCircleView
+            key={index}
+            circlesHover={config.circlesHover}
+            defaultPhoto={config.defaultPhoto}
+            displayName={node.displayName}
+            eid={node.eid}
+            emailAddress={node.emailAddress}
+            loaded={loaded}
+            phone={node.phone}
+            photoUrl={node.photoUrl}
+            selectedDepTitle={node.selectedDepTitle}
+            shortBio={node.shortBio}
+          />
+        );
         break;
 
       case "cards":
-        return <IsearchCardView />;
+        return (
+          <IsearchCardView
+            key={index}
+            circlesHover={config.circlesHover}
+            defaultPhoto={config.defaultPhoto}
+            displayName={node.displayName}
+            eid={node.eid}
+            emailAddress={node.emailAddress}
+            loaded={loaded}
+            phone={node.phone}
+            photoUrl={node.photoUrl}
+            selectedDepTitle={node.selectedDepTitle}
+            shortBio={node.shortBio}
+          />
+        );
         break;
 
       case "standard":
-        return <IsearchListView />;
+        return (
+          <IsearchListView
+            key={index}
+            classicDescription={config.classicOptionDescription}
+            classicEmail={config.classicOptionEmail}
+            classicPhone={config.classicOptionPhone}
+            classicPhoto={config.classicOptionPhoto}
+            classicTitle={config.classicOptionTitle}
+            defaultPhoto={config.defaultPhoto}
+            displayName={node.displayName}
+            eid={node.eid}
+            emailAddress={node.emailAddress}
+            loaded={loaded}
+            phone={node.phone}
+            photoUrl={node.photoUrl}
+            selectedDepTitle={node.selectedDepTitle}
+            shortBio={node.shortBio}
+          />
+        );
         break;
 
       default:
-        return <IsearchTableView />;
+        return (
+          <IsearchTableView
+            key={index}
+            classicDescription={config.classicOptionDescription}
+            classicEmail={config.classicOptionEmail}
+            classicPhone={config.classicOptionPhone}
+            classicPhoto={config.classicOptionPhoto}
+            classicTitle={config.classicOptionTitle}
+            defaultPhoto={config.defaultPhoto}
+            displayName={node.displayName}
+            eid={node.eid}
+            emailAddress={node.emailAddress}
+            loaded={loaded}
+            phone={node.phone}
+            photoUrl={node.photoUrl}
+            selectedDepTitle={node.selectedDepTitle}
+            shortBio={node.shortBio}
+          />
+        );
     }
   });
 };
 
-export default D8isearchPicker;
+export default D8IsearchPicker;

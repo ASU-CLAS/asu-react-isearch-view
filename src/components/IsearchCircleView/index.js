@@ -7,14 +7,15 @@ import "./index.css";
 export const IsearchCircleView = ({
   circlesHover,
   defaultPhoto,
+  displayName,
+  eid,
+  emailAddress,
   loaded,
-  node,
+  phone,
+  photoUrl,
+  selectedDepTitle,
+  shortBio,
 }) => {
-  // Don't know why node would be undefined but sometimes it is
-  if (node == undefined) {
-    return null;
-  }
-
   if (!loaded) {
     return (
       <div className="loader">
@@ -24,23 +25,22 @@ export const IsearchCircleView = ({
   }
 
   return (
-    <Col sm="3" key={node.eid} className="modernCol">
+    <Col sm="3" key={eid} className="modernCol">
       {circlesHover ? (
         <div
           class="ch-item ch-img-1"
           data-toggle="modal"
-          data-target={".bd-isearch-modal-" + node.eid}
+          data-target={".bd-isearch-modal-" + eid}
           style={{
-            backgroundImage:
-              "url(" + node.photoUrl + "), url(" + defaultPhoto + ")",
+            backgroundImage: "url(" + photoUrl + "), url(" + defaultPhoto + ")",
           }}
         >
           <div class="ch-info-wrap">
             <div class="ch-info">
               <div class="ch-info-front ch-img-1"></div>
               <div class="ch-info-back">
-                <h3>{node.displayName}</h3>
-                <p>{node.selectedDepTitle}</p>
+                <h3>{displayName}</h3>
+                <p>{selectedDepTitle}</p>
               </div>
             </div>
           </div>
@@ -49,29 +49,26 @@ export const IsearchCircleView = ({
         <div>
           <div className="modernProfile">
             <img
-              src={node.photoUrl}
+              src={photoUrl}
               data-toggle="modal"
-              data-target={".bd-isearch-modal-" + node.eid}
+              data-target={".bd-isearch-modal-" + eid}
               onError={e => {
                 e.target.src = defaultPhoto;
               }}
-              alt={"profile picture for " + node.displayName}
+              alt={"profile picture for " + displayName}
             />
           </div>
           <div style={{ textAlign: "center" }}>
-            <a
-              className=""
-              href={"https://isearch.asu.edu/profile/" + node.eid}
-            >
-              {node.displayName}
+            <a className="" href={"https://isearch.asu.edu/profile/" + eid}>
+              {displayName}
             </a>
-            <p className="">{node.selectedDepTitle}</p>
+            <p className="">{selectedDepTitle}</p>
           </div>
         </div>
       )}
 
       <div
-        class={"modal fade bd-isearch-modal-" + node.eid}
+        class={"modal fade bd-isearch-modal-" + eid}
         tabindex="-1"
         role="dialog"
       >
@@ -88,34 +85,31 @@ export const IsearchCircleView = ({
               </button>
               <img
                 class="pictureModal"
-                src={node.photoUrl}
+                src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={"profile picture for " + node.displayName}
+                alt={"profile picture for " + displayName}
               />
               <div class="card-body">
                 <h5 class="card-title">
                   <a
                     className="linkOriginal"
-                    href={"https://isearch.asu.edu/profile/" + node.eid}
+                    href={"https://isearch.asu.edu/profile/" + eid}
                   >
-                    {node.displayName}
+                    {displayName}
                   </a>
                 </h5>
                 <h6 class="card-subtitle mb-2 text-muted titleOriginal">
-                  {node.selectedDepTitle}
+                  {selectedDepTitle}
                 </h6>
-                <p>{node.shortBio}</p>
+                <p>{shortBio}</p>
                 <p>
-                  <a
-                    className="linkOriginal"
-                    href={"mailto:" + node.emailAddress}
-                  >
-                    {node.emailAddress}
+                  <a className="linkOriginal" href={"mailto:" + emailAddress}>
+                    {emailAddress}
                   </a>
                 </p>
-                <p>{node.phone}</p>
+                <p>{phone}</p>
               </div>
             </div>
           </div>
@@ -135,18 +129,47 @@ IsearchCircleView.propTypes = {
    */
   defaultPhoto: PropTypes.string,
   /**
+   * iSearch profile Display Name
+   */
+  displayName: PropTypes.string.isRequired,
+  /**
+   * iSearch profile EID
+   */
+  eid: PropTypes.string.isRequired,
+  /**
+   * iSearch profile email address
+   */
+  emailAddress: PropTypes.string,
+  /**
    * Is application data currently loading?
    */
   loaded: PropTypes.string,
   /**
-   * An individual profile node
+   * iSearch profile phone
    */
-  node: PropTypes.string.isRequired,
+  phone: PropTypes.string,
+  /**
+   * iSearch profile photo
+   */
+  photoUrl: PropTypes.string,
+  /**
+   * iSearch profile selected department title
+   */
+  selectedDepTitle: PropTypes.string,
+  /**
+   * iSearch profile short bio
+   */
+  shortBio: PropTypes.string,
 };
 
 IsearchCircleView.defaultProps = {
   circlesHover: false,
   defaultPhoto:
     "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+  emailAddress: "",
   loaded: true,
+  phone: "",
+  photoUrl: "",
+  selectedDepTitle: "",
+  shortBio: "",
 };

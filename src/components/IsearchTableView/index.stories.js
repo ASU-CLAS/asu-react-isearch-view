@@ -29,15 +29,13 @@ Modern.args = {
   defaultPhoto:
     "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
   loaded: true,
-  node: {
-    eid: 1234,
-    photoUrl: faker.image.avatar(),
-    displayName: faker.name.findName(),
-    selectedDepTitle: faker.name.jobTitle(),
-    shortBio: faker.lorem.paragraph(),
-    emailAddress: faker.internet.email(),
-    phone: faker.phone.phoneNumber(),
-  },
+  eid: 1234,
+  photoUrl: faker.image.avatar(),
+  displayName: faker.name.findName(),
+  selectedDepTitle: faker.name.jobTitle(),
+  shortBio: faker.lorem.paragraph(),
+  emailAddress: faker.internet.email(),
+  phone: faker.phone.phoneNumber(),
 };
 
 export const Classic = Template.bind({});
@@ -50,13 +48,11 @@ Classic.args = {
   defaultPhoto:
     "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
   loaded: true,
-  node: {
-    eid: 1234,
-    photoUrl: faker.image.avatar(),
-    displayName: faker.name.findName(),
-    selectedDepTitle: faker.name.jobTitle(),
-    shortBio: faker.lorem.paragraph(),
-    emailAddress: faker.internet.email(),
-    phone: faker.phone.phoneNumber(),
-  },
+  eid: 1234,
+  photoUrl: faker.image.avatar(),
+  displayName: faker.name.findName(),
+  selectedDepTitle: faker.name.jobTitle(),
+  shortBio: faker.lorem.paragraph(),
+  emailAddress: faker.internet.email(),
+  phone: faker.phone.phoneNumber(),
 };

@@ -10,14 +10,15 @@ export const IsearchTableView = ({
   classicPhoto,
   classicTitle,
   defaultPhoto,
+  displayName,
+  eid,
+  emailAddress,
   loaded,
-  node,
+  phone,
+  photoUrl,
+  selectedDepTitle,
+  shortBio,
 }) => {
-  // Don't know why node would be undefined but sometimes it is
-  if (node == undefined) {
-    return null;
-  }
-
   if (!loaded) {
     return (
       <div className="loader">
@@ -27,41 +28,39 @@ export const IsearchTableView = ({
   }
 
   return (
-    <tr key={node.eid}>
+    <tr key={eid}>
       <th scope="row">
         {classicPhoto ? null : (
-          <a href={"https://isearch.asu.edu/profile/" + node.eid}>
+          <a href={"https://isearch.asu.edu/profile/" + eid}>
             <img
               className="pictureOriginal"
-              src={node.photoUrl}
+              src={photoUrl}
               onError={e => {
                 e.target.src = defaultPhoto;
               }}
-              alt={"profile picture for " + node.displayName}
+              alt={"profile picture for " + displayName}
             />
           </a>
         )}
       </th>
       <td>
         <h3 className="card-title">
-          <a href={"https://isearch.asu.edu/profile/" + node.eid}>
-            {node.displayName}
-          </a>
+          <a href={"https://isearch.asu.edu/profile/" + eid}>{displayName}</a>
         </h3>
         {classicTitle ? null : (
-          <p className="titleOriginal">{node.selectedDepTitle}</p>
+          <p className="titleOriginal">{selectedDepTitle}</p>
         )}
-        <p>{classicDescription ? null : node.shortBio}</p>
+        <p>{classicDescription ? null : shortBio}</p>
       </td>
       <td>
         <p>
           {classicEmail ? null : (
-            <a className="linkOriginal" href={"mailto:" + node.emailAddress}>
-              {node.emailAddress}
+            <a className="linkOriginal" href={"mailto:" + emailAddress}>
+              {emailAddress}
             </a>
           )}
         </p>
-        <p>{classicPhone ? null : node.phone}</p>
+        <p>{classicPhone ? null : phone}</p>
       </td>
     </tr>
   );
@@ -89,13 +88,37 @@ IsearchListView.propTypes = {
    */
   defaultPhoto: PropTypes.string,
   /**
+   * iSearch profile Display Name
+   */
+  displayName: PropTypes.string.isRequired,
+  /**
+   * iSearch profile EID
+   */
+  eid: PropTypes.string.isRequired,
+  /**
+   * iSearch profile email address
+   */
+  emailAddress: PropTypes.string,
+  /**
    * Is application data currently loading?
    */
   loaded: PropTypes.string,
   /**
-   * An individual profile node
+   * iSearch profile phone
    */
-  node: PropTypes.string.isRequired,
+  phone: PropTypes.string,
+  /**
+   * iSearch profile photo
+   */
+  photoUrl: PropTypes.string,
+  /**
+   * iSearch profile selected department title
+   */
+  selectedDepTitle: PropTypes.string,
+  /**
+   * iSearch profile short bio
+   */
+  shortBio: PropTypes.string,
 };
 
 IsearchListView.defaultProps = {
@@ -105,5 +128,10 @@ IsearchListView.defaultProps = {
   classicTitle: false,
   defaultPhoto:
     "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
+  emailAddress: "",
   loaded: true,
+  phone: "",
+  photoUrl: "",
+  selectedDepTitle: "",
+  shortBio: "",
 };
