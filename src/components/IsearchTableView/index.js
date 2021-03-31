@@ -1,7 +1,8 @@
-import PropTypes from "prop-types";
-import Loader from "react-loader-spinner";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Loader from 'react-loader-spinner';
 
-import "./index.css";
+import './index.css';
 
 export const IsearchTableView = ({
   classicDescription,
@@ -30,37 +31,35 @@ export const IsearchTableView = ({
   return (
     <tr key={eid}>
       <th scope="row">
-        {classicPhoto ? null : (
-          <a href={"https://isearch.asu.edu/profile/" + eid}>
+        {classicPhoto && (
+          <a href={`https://isearch.asu.edu/profile/${eid}`}>
             <img
               className="pictureOriginal"
               src={photoUrl}
               onError={e => {
                 e.target.src = defaultPhoto;
               }}
-              alt={"profile picture for " + displayName}
+              alt={`profile picture for ${displayName}`}
             />
           </a>
         )}
       </th>
       <td>
         <h3 className="card-title">
-          <a href={"https://isearch.asu.edu/profile/" + eid}>{displayName}</a>
+          <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
         </h3>
-        {classicTitle ? null : (
-          <p className="titleOriginal">{selectedDepTitle}</p>
-        )}
-        <p>{classicDescription ? null : shortBio}</p>
+        {classicTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
+        <p>{classicDescription && shortBio}</p>
       </td>
       <td>
         <p>
-          {classicEmail ? null : (
-            <a className="linkOriginal" href={"mailto:" + emailAddress}>
+          {classicEmail && (
+            <a className="linkOriginal" href={`mailto:${emailAddress}`}>
               {emailAddress}
             </a>
           )}
         </p>
-        <p>{classicPhone ? null : phone}</p>
+        <p>{classicPhone && phone}</p>
       </td>
     </tr>
   );
@@ -126,12 +125,11 @@ IsearchListView.defaultProps = {
   classicEmail: false,
   classicPhone: false,
   classicTitle: false,
-  defaultPhoto:
-    "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  emailAddress: "",
+  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  emailAddress: '',
   loaded: true,
-  phone: "",
-  photoUrl: "",
-  selectedDepTitle: "",
-  shortBio: "",
+  phone: '',
+  photoUrl: '',
+  selectedDepTitle: '',
+  shortBio: '',
 };

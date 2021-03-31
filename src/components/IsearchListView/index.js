@@ -1,7 +1,8 @@
-import PropTypes from "prop-types";
-import Loader from "react-loader-spinner";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Loader from 'react-loader-spinner';
 
-import "./index.css";
+import './index.css';
 
 export const IsearchListView = ({
   classicDescription,
@@ -35,34 +36,32 @@ export const IsearchListView = ({
     <div key={eid} className="profile profile-type-standard">
       <div className="profile-row">
         <div className="profile-photo-column">
-          {classicPhoto ? null : (
-            <a href={"https://isearch.asu.edu/profile/" + eid}>
+          {classicPhoto && (
+            <a href={`https://isearch.asu.edu/profile/${eid}`}>
               <img
                 className="pictureOriginal"
                 src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={"profile picture for " + displayName}
+                alt={`profile picture for ${displayName}`}
               />
             </a>
           )}
         </div>
         <div className="profile-bio-column">
           <h3 className="profile-name">
-            <a href={"https://isearch.asu.edu/profile/" + eid}>{displayName}</a>
+            <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
           </h3>
           <div className="profile-title">
-            {classicTitle ? null : (
-              <p className="titleOriginal">{selectedDepTitle}</p>
-            )}
+            {classicTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
           </div>
 
           <div className="profile-contact-row">
             <div className="">
               <p>
-                {classicEmail ? null : (
-                  <a className="linkOriginal" href={"mailto:" + emailAddress}>
+                {classicEmail && (
+                  <a className="linkOriginal" href={`mailto:${emailAddress}`}>
                     {emailAddress}
                   </a>
                 )}
@@ -70,8 +69,8 @@ export const IsearchListView = ({
             </div>
             <div className="">
               <p>
-                {classicPhone ? null : (
-                  <a className="" href={"tel:" + phone}>
+                {classicPhone && (
+                  <a className="" href={`tel:${phone}`}>
                     {phone}
                   </a>
                 )}
@@ -79,7 +78,7 @@ export const IsearchListView = ({
             </div>
             <div className="">
               <p>
-                {classicPhone ? null : (
+                {classicPhone && (
                   <div>
                     {addressLine1}
                     <br />
@@ -90,7 +89,7 @@ export const IsearchListView = ({
             </div>
           </div>
 
-          <p>{classicDescription ? null : shortBio}</p>
+          <p>{classicDescription && shortBio}</p>
         </div>
       </div>
     </div>
@@ -157,12 +156,11 @@ IsearchListView.defaultProps = {
   classicEmail: false,
   classicPhone: false,
   classicTitle: false,
-  defaultPhoto:
-    "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  emailAddress: "",
+  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  emailAddress: '',
   loaded: true,
-  phone: "",
-  photoUrl: "",
-  selectedDepTitle: "",
-  shortBio: "",
+  phone: '',
+  photoUrl: '',
+  selectedDepTitle: '',
+  shortBio: '',
 };

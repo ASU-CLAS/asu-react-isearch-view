@@ -1,8 +1,9 @@
-import PropTypes from "prop-types";
-import { Col } from "reactstrap";
-import Loader from "react-loader-spinner";
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Col} from 'reactstrap';
+import Loader from 'react-loader-spinner';
 
-import "./index.css";
+import './index.css';
 
 export const IsearchCircleView = ({
   circlesHover,
@@ -28,17 +29,17 @@ export const IsearchCircleView = ({
     <Col sm="3" key={eid} className="modernCol">
       {circlesHover ? (
         <div
-          class="ch-item ch-img-1"
+          className="ch-item ch-img-1"
           data-toggle="modal"
-          data-target={".bd-isearch-modal-" + eid}
+          data-target={`.bd-isearch-modal-${eid}`}
           style={{
-            backgroundImage: "url(" + photoUrl + "), url(" + defaultPhoto + ")",
+            backgroundImage: `url(${photoUrl}), url(${defaultPhoto})`,
           }}
         >
-          <div class="ch-info-wrap">
-            <div class="ch-info">
-              <div class="ch-info-front ch-img-1"></div>
-              <div class="ch-info-back">
+          <div className="ch-info-wrap">
+            <div className="ch-info">
+              <div className="ch-info-front ch-img-1"></div>
+              <div className="ch-info-back">
                 <h3>{displayName}</h3>
                 <p>{selectedDepTitle}</p>
               </div>
@@ -51,15 +52,15 @@ export const IsearchCircleView = ({
             <img
               src={photoUrl}
               data-toggle="modal"
-              data-target={".bd-isearch-modal-" + eid}
+              data-target={`.bd-isearch-modal-${eid}`}
               onError={e => {
                 e.target.src = defaultPhoto;
               }}
-              alt={"profile picture for " + displayName}
+              alt={`profile picture for ${displayName}`}
             />
           </div>
-          <div style={{ textAlign: "center" }}>
-            <a className="" href={"https://isearch.asu.edu/profile/" + eid}>
+          <div style={{textAlign: 'center'}}>
+            <a className="" href={`https://isearch.asu.edu/profile/${eid}`}>
               {displayName}
             </a>
             <p className="">{selectedDepTitle}</p>
@@ -67,45 +68,31 @@ export const IsearchCircleView = ({
         </div>
       )}
 
-      <div
-        class={"modal fade bd-isearch-modal-" + eid}
-        tabindex="-1"
-        role="dialog"
-      >
-        <div class="modal-dialog isearch-card-modal">
-          <div class="modal-content">
-            <div class="card isearch-card">
-              <button
-                type="button"
-                class="close x"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+      <div className={`modal fade bd-isearch-modal-${eid}`} tabIndex="-1" role="dialog">
+        <div className="modal-dialog isearch-card-modal">
+          <div className="modal-content">
+            <div className="card isearch-card">
+              <button type="button" className="close x" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
               <img
-                class="pictureModal"
+                className="pictureModal"
                 src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={"profile picture for " + displayName}
+                alt={`profile picture for ${displayName}`}
               />
-              <div class="card-body">
-                <h5 class="card-title">
-                  <a
-                    className="linkOriginal"
-                    href={"https://isearch.asu.edu/profile/" + eid}
-                  >
+              <div className="card-body">
+                <h5 className="card-title">
+                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
                     {displayName}
                   </a>
                 </h5>
-                <h6 class="card-subtitle mb-2 text-muted titleOriginal">
-                  {selectedDepTitle}
-                </h6>
+                <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
                 <p>{shortBio}</p>
                 <p>
-                  <a className="linkOriginal" href={"mailto:" + emailAddress}>
+                  <a className="linkOriginal" href={`mailto:${emailAddress}`}>
                     {emailAddress}
                   </a>
                 </p>
@@ -164,12 +151,11 @@ IsearchCircleView.propTypes = {
 
 IsearchCircleView.defaultProps = {
   circlesHover: false,
-  defaultPhoto:
-    "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  emailAddress: "",
+  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  emailAddress: '',
   loaded: true,
-  phone: "",
-  photoUrl: "",
-  selectedDepTitle: "",
-  shortBio: "",
+  phone: '',
+  photoUrl: '',
+  selectedDepTitle: '',
+  shortBio: '',
 };
