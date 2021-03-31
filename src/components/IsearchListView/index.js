@@ -11,6 +11,8 @@ export const IsearchListView = ({
   classicPhoto,
   classicTitle,
   defaultPhoto,
+  addressLine1,
+  addressLine2,
   displayName,
   eid,
   emailAddress,
@@ -122,6 +124,14 @@ IsearchListView.propTypes = {
    */
   eid: PropTypes.number.isRequired,
   /**
+   * iSearch profile address line 1
+   */
+  addressLine1: PropTypes.string,
+  /**
+   * iSearch profile address line 2
+   */
+  addressLine2: PropTypes.string,
+  /**
    * iSearch profile email address
    */
   emailAddress: PropTypes.string,
@@ -153,6 +163,8 @@ IsearchListView.defaultProps = {
   classicPhone: false,
   classicTitle: false,
   defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  addressLine1: '',
+  addressLine2: '',
   emailAddress: '',
   loaded: true,
   phone: '',
