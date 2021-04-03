@@ -5,11 +5,6 @@ import Loader from 'react-loader-spinner';
 import './index.css';
 
 export const IsearchTableView = ({
-  classicDescription,
-  classicEmail,
-  classicPhone,
-  classicPhoto,
-  classicTitle,
   defaultPhoto,
   displayName,
   eid,
@@ -19,6 +14,11 @@ export const IsearchTableView = ({
   photoUrl,
   selectedDepTitle,
   shortBio,
+  showDescription,
+  showEmail,
+  showPhone,
+  showPhoto,
+  showTitle,
 }) => {
   if (!loaded) {
     return (
@@ -29,9 +29,9 @@ export const IsearchTableView = ({
   }
 
   return (
-    <tr key={eid}>
+    <tr>
       <th scope="row">
-        {classicPhoto && (
+        {showPhoto && (
           <a href={`https://isearch.asu.edu/profile/${eid}`}>
             <img
               className="pictureOriginal"
@@ -48,40 +48,24 @@ export const IsearchTableView = ({
         <h3 className="card-title">
           <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
         </h3>
-        {classicTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
-        <p>{classicDescription && shortBio}</p>
+        {showTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
+        {showDescription && <p>{shortBio}</p>}
       </td>
       <td>
-        <p>
-          {classicEmail && (
+        {showEmail && (
+          <p>
             <a className="linkOriginal" href={`mailto:${emailAddress}`}>
               {emailAddress}
             </a>
-          )}
-        </p>
-        <p>{classicPhone && phone}</p>
+          </p>
+        )}
+        {showPhone && <p>{phone}</p>}
       </td>
     </tr>
   );
 };
 
 IsearchTableView.propTypes = {
-  /**
-   * Render classic description format?
-   */
-  classicDescription: PropTypes.bool,
-  /**
-   * Render classic email format?
-   */
-  classicEmail: PropTypes.bool,
-  /**
-   * Render classic phone format?
-   */
-  classicPhone: PropTypes.bool,
-  /**
-   * Render classic title format?
-   */
-  classicTitle: PropTypes.bool,
   /**
    * String path to default photo
    */
@@ -118,13 +102,25 @@ IsearchTableView.propTypes = {
    * iSearch profile short bio
    */
   shortBio: PropTypes.string,
+  /**
+   * Show profile description?
+   */
+  showDescription: PropTypes.bool,
+  /**
+   * Show profile email?
+   */
+  showEmail: PropTypes.bool,
+  /**
+   * Show profile phone?
+   */
+  showPhone: PropTypes.bool,
+  /**
+   * Show profile title?
+   */
+  showTitle: PropTypes.bool,
 };
 
 IsearchTableView.defaultProps = {
-  classicDescription: false,
-  classicEmail: false,
-  classicPhone: false,
-  classicTitle: false,
   defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   emailAddress: '',
   loaded: true,
@@ -132,4 +128,8 @@ IsearchTableView.defaultProps = {
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
+  showDescription: true,
+  showEmail: true,
+  showPhone: true,
+  showTitle: true,
 };
