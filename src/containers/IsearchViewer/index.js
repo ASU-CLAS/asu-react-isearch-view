@@ -194,8 +194,8 @@ const IsearchViewer = ({dataFromPage}) => {
       case 'circles':
         return (
           <IsearchCircleView
-            key={index}
-            circlesHover={config.circlesHover}
+            key={node.eid}
+            circleHover={config.circleHover}
             defaultPhoto={config.defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}

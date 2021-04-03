@@ -8,20 +8,28 @@ export default {
 };
 
 const Template = args => (
-  <div className="container pt-3">
+  <div role="main" className="main-container container js-quickedit-main-content">
     <div className="row">
-      <div className="col col-8">
-        <div className="clas-isearch-view">
-          <IsearchCircleView {...args} />
+      <section className="col-lg-8 col-12 node-type-page container" aria-label="Main content">
+        <div className="main-content-wrapper ">
+          <div className="container pt-3">
+            <div className="row">
+              <div className="col col-8">
+                <div className="clas-isearch-view">
+                  <IsearchCircleView {...args} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 );
 
 export const Basic = Template.bind({});
 Basic.args = {
-  circlesHover: true,
+  circleHover: true,
   defaultPhoto:
     'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   loaded: true,

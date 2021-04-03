@@ -6,7 +6,7 @@ import Loader from 'react-loader-spinner';
 import './index.css';
 
 export const IsearchCircleView = ({
-  circlesHover,
+  circleHover,
   defaultPhoto,
   displayName,
   eid,
@@ -26,20 +26,20 @@ export const IsearchCircleView = ({
   }
 
   return (
-    <Col sm="3" key={eid} className="modernCol">
-      {circlesHover ? (
+    <Col sm="3" className="modernCol">
+      {circleHover ? (
         <div
-          className="ch-item ch-img-1"
+          class="ch-item ch-img-1"
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid}`}
           style={{
             backgroundImage: `url(${photoUrl}), url(${defaultPhoto})`,
           }}
         >
-          <div className="ch-info-wrap">
-            <div className="ch-info">
-              <div className="ch-info-front ch-img-1"></div>
-              <div className="ch-info-back">
+          <div class="ch-info-wrap">
+            <div class="ch-info">
+              <div class="ch-info-front ch-img-1"></div>
+              <div class="ch-info-back">
                 <h3>{displayName}</h3>
                 <p>{selectedDepTitle}</p>
               </div>
@@ -68,28 +68,28 @@ export const IsearchCircleView = ({
         </div>
       )}
 
-      <div className={`modal fade bd-isearch-modal-${eid}`} tabIndex="-1" role="dialog">
-        <div className="modal-dialog isearch-card-modal">
-          <div className="modal-content">
-            <div className="card isearch-card">
-              <button type="button" className="close x" data-dismiss="modal" aria-label="Close">
+      <div class={`modal fade bd-isearch-modal-${eid}`} tabindex="-1" role="dialog">
+        <div class="modal-dialog isearch-card-modal">
+          <div class="modal-content">
+            <div class="card isearch-card">
+              <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
               <img
-                className="pictureModal"
+                class="pictureModal"
                 src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
                 alt={`profile picture for ${displayName}`}
               />
-              <div className="card-body">
-                <h5 className="card-title">
+              <div class="card-body">
+                <h5 class="card-title">
                   <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
                     {displayName}
                   </a>
                 </h5>
-                <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
+                <h6 class="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
                 <p>{shortBio}</p>
                 <p>
                   <a className="linkOriginal" href={`mailto:${emailAddress}`}>
@@ -110,7 +110,7 @@ IsearchCircleView.propTypes = {
   /**
    * Circle view hovers (?)
    */
-  circlesHover: PropTypes.bool,
+  circleHover: PropTypes.bool,
   /**
    * String path to default photo
    */
@@ -150,7 +150,7 @@ IsearchCircleView.propTypes = {
 };
 
 IsearchCircleView.defaultProps = {
-  circlesHover: false,
+  circleHover: false,
   defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   emailAddress: '',
   loaded: true,
