@@ -9,30 +9,41 @@ import {IsearchTableView} from '../../components/IsearchTableView';
 
 import './index.css';
 
-const IsearchViewer = ({dataFromPage}) => {
+const IsearchViewer = ({
+  circleHover,
+  defaultPhoto,
+  displayType,
+  ids,
+  selectedFilters,
+  showPhoto,
+  showTitle,
+  showDescription,
+  showEmail,
+  showPhone,
+  sortType,
+  sourceIds,
+  testURL,
+  titleFilter,
+  type,
+}) => {
   const [data, setData] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [callErr, setCallErr] = useState(true);
   const [errMsg, setErrMsg] = useState('');
-  const [displayType, setDisplayType] = useState('classic');
-  const [sortType, setSortType] = useState('alpha');
 
   useEffect(async () => {
-    // const feedURL = dataFromPage.config
-    // console.log(dataFromPage);
-    const feedData = JSON.parse(dataFromPage.config);
     let feedURL = '/clas-feeds/isearch/solr/';
 
-    if (feedData.testURL != undefined) {
-      feedURL = feedData.testURL;
+    if (testURL != undefined) {
+      feedURL = testURL;
       console.log('test feed');
     }
 
-    if (feedData.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json';
+    if (type === 'depList') {
+      feedURL = `${feedURL}q=deptids:${ids[0]}&rows=2000&wt=json`;
     } else {
-      let asuriteIds = feedData.ids.join(' OR ');
-      feedURL = feedURL + 'q=asuriteId:(' + asuriteIds + ')&rows=300&wt=json';
+      let asuriteIds = ids.join(' OR ');
+      feedURL = `${feedURL}q=asuriteId:(${asuriteIds})&rows=300&wt=json`;
     }
 
     axios
@@ -40,9 +51,9 @@ const IsearchViewer = ({dataFromPage}) => {
       .then(response => {
         //console.log(response);
         let orderedProfileResults = response.data.response.docs;
-        if (feedData.type === 'customList') {
+        if (type === 'customList') {
           // order results and assign custom titles
-          orderedProfileResults = feedData.ids.map((item, index) => {
+          orderedProfileResults = ids.map((item, index) => {
             for (var i = 0; i < response.data.response.docs.length; i++) {
               if (item === response.data.response.docs[i].asuriteId) {
                 console.log('---');
@@ -52,7 +63,7 @@ const IsearchViewer = ({dataFromPage}) => {
                 // some profiles don't have deptids ???
                 if (response.data.response.docs[i].deptids != undefined) {
                   titleIndex = response.data.response.docs[i].deptids.indexOf(
-                    feedData.sourceIds[index].toString()
+                    sourceIds[index].toString()
                   );
                 }
                 // if there is no eid then use asurite in place
@@ -85,14 +96,14 @@ const IsearchViewer = ({dataFromPage}) => {
         } else {
           //assign custom titles and rank
           orderedProfileResults = orderedProfileResults.map(item => {
-            let titleIndex = item.deptids.indexOf(feedData.ids[0].toString());
+            let titleIndex = item.deptids.indexOf(ids[0].toString());
             item.selectedDepTitle = item.titles[titleIndex];
             //console.log(item.titles);
             if (item.titleSource[titleIndex] == 'workingTitle') {
               item.selectedDepTitle = item.workingTitle;
               //console.log('use working title')
             }
-            if (feedData.sortType === 'rank') {
+            if (sortType === 'rank') {
               item.selectedDepRank = item.employeeWeight[titleIndex];
             }
             return item;
@@ -100,13 +111,13 @@ const IsearchViewer = ({dataFromPage}) => {
 
           // order filtered results
           orderedProfileResults = orderedProfileResults.filter(profile =>
-            feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass)
+            selectedFilters.includes(profile.primarySimplifiedEmplClass)
           );
-          if (typeof feedData.titleFilter !== 'undefined') {
-            if (feedData.titleFilter[0] === '/') {
+          if (typeof titleFilter !== 'undefined') {
+            if (titleFilter[0] === '/') {
               //console.log('its regex')
-              const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
-              const flags = feedData.titleFilter.substr(feedData.titleFilter.lastIndexOf('/') + 1);
+              const pattern = titleFilter.match(/\/(.*)\//).pop();
+              const flags = titleFilter.substr(titleFilter.lastIndexOf('/') + 1);
               let regexConstructor = new RegExp(pattern, flags);
               orderedProfileResults = orderedProfileResults.filter(profile =>
                 regexConstructor.test(profile.selectedDepTitle)
@@ -114,13 +125,13 @@ const IsearchViewer = ({dataFromPage}) => {
             } else {
               //console.log('its a string')
               orderedProfileResults = orderedProfileResults.filter(
-                profile => profile.selectedDepTitle === feedData.titleFilter
+                profile => profile.selectedDepTitle === titleFilter
               );
             }
           }
 
           // sort results
-          if (feedData.sortType === 'rank') {
+          if (sortType === 'rank') {
             orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if (a.selectedDepRank === b.selectedDepRank) {
                 return a.lastName.localeCompare(b.lastName);
@@ -138,7 +149,6 @@ const IsearchViewer = ({dataFromPage}) => {
         setData(orderedProfileResults);
         setLoaded(true);
         setCallErr(false);
-        setDisplayType(feedData.displayType);
       })
       .catch(error => {
         // API call error catching
@@ -168,15 +178,11 @@ const IsearchViewer = ({dataFromPage}) => {
       });
   });
 
-  // circles -> Circle View
-  // cards -> Card View
-  // default -> Table View
-  // standard -> list view
-  let config = JSON.parse(dataFromPage.config);
-  if (config.defaultPhoto == undefined) {
-    config.defaultPhoto = '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png';
+  if (defaultPhoto == undefined) {
+    defaultPhoto = '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png';
   }
-  let results = data.map((node, index) => {
+
+  data.map(node => {
     // Don't know why node would be undefined but sometimes it is
     if (node == undefined) {
       return null;
@@ -195,8 +201,8 @@ const IsearchViewer = ({dataFromPage}) => {
         return (
           <IsearchCircleView
             key={node.eid}
-            circleHover={config.circleHover}
-            defaultPhoto={config.defaultPhoto}
+            circleHover={circleHover}
+            defaultPhoto={defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
             emailAddress={node.emailAddress}
@@ -213,7 +219,7 @@ const IsearchViewer = ({dataFromPage}) => {
         return (
           <IsearchCardView
             key={node.eid}
-            defaultPhoto={config.defaultPhoto}
+            defaultPhoto={defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
             emailAddress={node.emailAddress}
@@ -222,11 +228,11 @@ const IsearchViewer = ({dataFromPage}) => {
             photoUrl={node.photoUrl}
             selectedDepTitle={node.selectedDepTitle}
             shortBio={node.shortBio}
-            showDescription={config.cardsOptionDescription}
-            showEmail={config.cardsOptionEmail}
-            showPhone={config.cardsOptionPhone}
-            showPhoto={config.cardsOptionPhoto}
-            showTitle={config.cardsOptionTitle}
+            showDescription={showDescription}
+            showEmail={showEmail}
+            showPhone={showPhone}
+            showPhoto={showPhoto}
+            showTitle={showTitle}
           />
         );
         break;
@@ -235,7 +241,7 @@ const IsearchViewer = ({dataFromPage}) => {
         return (
           <IsearchListView
             key={node.eid}
-            defaultPhoto={config.defaultPhoto}
+            defaultPhoto={defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
             emailAddress={node.emailAddress}
@@ -244,11 +250,11 @@ const IsearchViewer = ({dataFromPage}) => {
             photoUrl={node.photoUrl}
             selectedDepTitle={node.selectedDepTitle}
             shortBio={node.shortBio}
-            showDescription={config.classicOptionDescription}
-            showEmail={config.classicOptionEmail}
-            showPhone={config.classicOptionPhone}
-            showPhoto={config.classicOptionPhoto}
-            showTitle={config.classicOptionTitle}
+            showDescription={showDescription}
+            showEmail={showEmail}
+            showPhone={showPhone}
+            showPhoto={showPhoto}
+            showTitle={showTitle}
           />
         );
         break;
@@ -257,7 +263,7 @@ const IsearchViewer = ({dataFromPage}) => {
         return (
           <IsearchTableView
             key={node.eid}
-            defaultPhoto={config.defaultPhoto}
+            defaultPhoto={defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
             emailAddress={node.emailAddress}
@@ -266,15 +272,96 @@ const IsearchViewer = ({dataFromPage}) => {
             photoUrl={node.photoUrl}
             selectedDepTitle={node.selectedDepTitle}
             shortBio={node.shortBio}
-            showDescription={config.classicOptionDescription}
-            showEmail={config.classicOptionEmail}
-            showPhone={config.classicOptionPhone}
-            showPhoto={config.classicOptionPhoto}
-            showTitle={config.classicOptionTitle}
+            showDescription={showDescription}
+            showEmail={showEmail}
+            showPhone={showPhone}
+            showPhoto={showPhoto}
+            showTitle={showTitle}
           />
         );
     }
   });
+};
+
+IsearchViewer.propTypes = {
+  /**
+   * Enable circle profile with hover info
+   */
+  circleHover: PropTypes.bool,
+  /**
+   * String path to default photo
+   */
+  defaultPhoto: PropTypes.string,
+  /**
+   * iSearch profile Display Name
+   */
+  displayType: PropTypes.oneOf(['card', 'circle', 'standard', 'table']),
+  /**
+   * Array of ASURITE ids to query
+   */
+  ids: PropTypes.array,
+  /**
+   * Selected search filters
+   */
+  selectedFilters: PropTypes.string,
+  /**
+   * Display profile description?
+   */
+  showDescription: PropTypes.bool,
+  /**
+   * Display profile email?
+   */
+  showEmail: PropTypes.bool,
+  /**
+   * Display profile phone?
+   */
+  showPhone: PropTypes.bool,
+  /**
+   * Display profile photo?
+   */
+  showPhoto: PropTypes.bool,
+  /**
+   * Display profile title?
+   */
+  showTitle: PropTypes.bool,
+  /**
+   * Sort profiles
+   */
+  sortType: PropTypes.oneOf(['alpha', 'rank']),
+  /**
+   * Array of ids (for primary title) to display
+   */
+  sourceIds: PropTypes.array,
+  /**
+   * Test URL for querying iSearch API
+   */
+  testURL: PropTypes.string,
+  /**
+   * Title fitler string for search
+   */
+  titleFilter: PropTypes.string,
+  /**
+   * Type (?)
+   */
+  type: PropTypes.string,
+};
+
+IsearchViewer.defaultProps = {
+  circleHover: true,
+  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  displayType: 'standard',
+  ids: [],
+  selectedFilters: '',
+  showDescription: true,
+  showEmail: true,
+  showPhone: true,
+  showPhoto: true,
+  showTitle: true,
+  sortType: 'alpha',
+  sourceIds: [],
+  testURL: 'https://cd8.lndo.site/clas-feeds/isearch/solr/',
+  titleFilter: '',
+  type: 'customList',
 };
 
 export default IsearchViewer;
