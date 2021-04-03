@@ -9,7 +9,7 @@ import {IsearchTableView} from '../../components/IsearchTableView';
 
 import './index.css';
 
-const D8IsearchPicker = ({dataFromPage}) => {
+const IsearchViewer = ({dataFromPage}) => {
   const [data, setData] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [callErr, setCallErr] = useState(true);
@@ -273,4 +273,4 @@ const D8IsearchPicker = ({dataFromPage}) => {
   });
 };
 
-export default D8IsearchPicker;
+export default IsearchViewer;
