@@ -5,13 +5,6 @@ const jest = require('@neutrinojs/jest');
 module.exports = {
   options: {
     root: __dirname,
-    mains: {
-      // Compile isearchPicker
-      D8isearchPicker: 'isearchPicker',
-
-      // Compile profilePage view
-      // profilePage: "profilePage"
-    },
   },
   use: [
     process.env.NODE_ENV === 'development' ? airbnb() : false,
