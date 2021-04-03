@@ -5,11 +5,6 @@ import Loader from 'react-loader-spinner';
 import './index.css';
 
 export const IsearchListView = ({
-  classicDescription,
-  classicEmail,
-  classicPhone,
-  classicPhoto,
-  classicTitle,
   defaultPhoto,
   addressLine1,
   addressLine2,
@@ -21,6 +16,11 @@ export const IsearchListView = ({
   photoUrl,
   selectedDepTitle,
   shortBio,
+  showDescription,
+  showEmail,
+  showPhone,
+  showPhoto,
+  showTitle,
 }) => {
   if (!loaded) {
     return (
@@ -34,7 +34,7 @@ export const IsearchListView = ({
     <div key={eid} className="profile profile-type-standard">
       <div className="profile-row">
         <div className="profile-photo-column">
-          {classicPhoto && (
+          {showPhoto && (
             <a href={`https://isearch.asu.edu/profile/${eid}`}>
               <img
                 className="pictureOriginal"
@@ -51,43 +51,45 @@ export const IsearchListView = ({
           <h3 className="profile-name">
             <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
           </h3>
-          <div className="profile-title">
-            {classicTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
-          </div>
+          {showTitle && (
+            <div className="profile-title">
+              <p className="titleOriginal">{selectedDepTitle}</p>
+            </div>
+          )}
 
           <div className="profile-contact-row">
-            <div className="">
-              <p>
-                {classicEmail && (
+            {showEmail && (
+              <div className="">
+                <p>
                   <a className="linkOriginal" href={`mailto:${emailAddress}`}>
                     {emailAddress}
                   </a>
-                )}
-              </p>
-            </div>
-            <div className="">
-              <p>
-                {classicPhone && (
+                </p>
+              </div>
+            )}
+            {showPhone && (
+              <div className="">
+                <p>
                   <a className="" href={`tel:${phone}`}>
                     {phone}
                   </a>
-                )}
-              </p>
-            </div>
-            <div className="">
-              <p>
-                {classicPhone && (
+                </p>
+              </div>
+            )}
+            {showPhone && (
+              <div className="">
+                <p>
                   <div>
                     {addressLine1}
                     <br />
                     {addressLine2}
                   </div>
-                )}
-              </p>
-            </div>
+                </p>
+              </div>
+            )}
           </div>
 
-          <p>{classicDescription && shortBio}</p>
+          <p>{showDescription && shortBio}</p>
         </div>
       </div>
     </div>
@@ -95,22 +97,6 @@ export const IsearchListView = ({
 };
 
 IsearchListView.propTypes = {
-  /**
-   * Render classic description format?
-   */
-  classicDescription: PropTypes.bool,
-  /**
-   * Render classic email format?
-   */
-  classicEmail: PropTypes.bool,
-  /**
-   * Render classic phone format?
-   */
-  classicPhone: PropTypes.bool,
-  /**
-   * Render classic title format?
-   */
-  classicTitle: PropTypes.bool,
   /**
    * String path to default photo
    */
@@ -155,13 +141,25 @@ IsearchListView.propTypes = {
    * iSearch profile short bio
    */
   shortBio: PropTypes.string,
+  /**
+   * Render show description format?
+   */
+  showDescription: PropTypes.bool,
+  /**
+   * Render show email format?
+   */
+  showEmail: PropTypes.bool,
+  /**
+   * Render show phone format?
+   */
+  showPhone: PropTypes.bool,
+  /**
+   * Render show title format?
+   */
+  showTitle: PropTypes.bool,
 };
 
 IsearchListView.defaultProps = {
-  classicDescription: false,
-  classicEmail: false,
-  classicPhone: false,
-  classicTitle: false,
   defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   addressLine1: '',
   addressLine2: '',
@@ -171,4 +169,8 @@ IsearchListView.defaultProps = {
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
+  showDescription: true,
+  showEmail: true,
+  showPhone: true,
+  showTitle: true,
 };

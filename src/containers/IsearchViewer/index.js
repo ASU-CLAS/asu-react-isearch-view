@@ -234,12 +234,7 @@ const IsearchViewer = ({dataFromPage}) => {
       case 'standard':
         return (
           <IsearchListView
-            key={index}
-            classicDescription={config.classicOptionDescription}
-            classicEmail={config.classicOptionEmail}
-            classicPhone={config.classicOptionPhone}
-            classicPhoto={config.classicOptionPhoto}
-            classicTitle={config.classicOptionTitle}
+            key={node.eid}
             defaultPhoto={config.defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
@@ -249,6 +244,11 @@ const IsearchViewer = ({dataFromPage}) => {
             photoUrl={node.photoUrl}
             selectedDepTitle={node.selectedDepTitle}
             shortBio={node.shortBio}
+            showDescription={config.classicOptionDescription}
+            showEmail={config.classicOptionEmail}
+            showPhone={config.classicOptionPhone}
+            showPhoto={config.classicOptionPhoto}
+            showTitle={config.classicOptionTitle}
           />
         );
         break;
