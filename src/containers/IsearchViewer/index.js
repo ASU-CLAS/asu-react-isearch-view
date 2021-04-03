@@ -212,8 +212,7 @@ const IsearchViewer = ({dataFromPage}) => {
       case 'cards':
         return (
           <IsearchCardView
-            key={index}
-            circlesHover={config.circlesHover}
+            key={node.eid}
             defaultPhoto={config.defaultPhoto}
             displayName={node.displayName}
             eid={node.eid}
@@ -223,6 +222,11 @@ const IsearchViewer = ({dataFromPage}) => {
             photoUrl={node.photoUrl}
             selectedDepTitle={node.selectedDepTitle}
             shortBio={node.shortBio}
+            showDescription={config.cardsOptionDescription}
+            showEmail={config.cardsOptionEmail}
+            showPhone={config.cardsOptionPhone}
+            showPhoto={config.cardsOptionPhoto}
+            showTitle={config.cardsOptionTitle}
           />
         );
         break;
