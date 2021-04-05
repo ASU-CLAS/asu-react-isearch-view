@@ -8,7 +8,7 @@
     "build": "webpack --mode production",
     "drupal-light": "webpack --mode production",
     "drupal": "webpack --mode production && yarn run drupal:dist",
-    "drupal:dist": "cd build && cp static/js/*.js ../../js/clas_isearch_view_react.min.js && cp static/css/*.css ../../css/clas_isearch_view.css",
+    "drupal:dist": "cd build && cp build/*.js ../../js/clas_isearch_view_react.min.js && cp build/*.css ../../css/clas_isearch_view.css",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
