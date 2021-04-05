@@ -28,21 +28,21 @@ for (let element of appRoots) {
 
   render(
     <IsearchViewer
-      circleHover
-      defaultPhoto
-      displayType
-      ids
-      selectedFilters
-      showPhoto
-      showTitle
-      showDescription
-      showEmail
-      showPhone
-      sortType
-      sourceIds
-      testURL
-      titleFilter
-      type
+      circleHover={circleHover}
+      defaultPhoto={defaultPhoto}
+      displayType={displayType}
+      ids={ids}
+      selectedFilters={selectedFilters}
+      showPhoto={showPhoto}
+      showTitle={showTitle}
+      showDescription={showDescription}
+      showEmail={showEmail}
+      showPhone={showPhone}
+      sortType={sortType}
+      sourceIds={sourceIds}
+      testURL={testURL}
+      titleFilter={titleFilter}
+      type={type}
     />,
     element
   );
