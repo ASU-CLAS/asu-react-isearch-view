@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drupal iSearch component example</title>
+    <link href="/public/bootstrap-asu.css" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="/dist/vendor.js"></script>
+  </head>
+  <body>
+
+    <div class="container"><div class="row"><div class="col col-12 col-sm-12">
+
+      <h3>This is the Drupal version of the app using data attributes to pass config</h3>
+
+    <div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/","displayType":"circles","ids":[
+      "atpjk",
+      "saibaba",
+      "acerropa",
+      "jjcohen4",
+      "pmahdav2",
+      "kkusumi",
+      "kazilek",
+      "lluecke",
+      "fmilner"
+      ],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true}'></div>
+
+      <!-- <div class="clas-isearch-view" data-config='{"type":"depList","displayType":"default","defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/","selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],"ids":[1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true}'></div> -->
+
+    <script src="/drupalIsearchViewer.js"></script>
+    </div></div></div>
+  </body>
+</html>
