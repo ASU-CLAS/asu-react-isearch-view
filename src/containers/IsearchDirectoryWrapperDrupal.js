@@ -4,6 +4,7 @@ import {IsearchTableView} from '../components/IsearchTableView';
 import {IsearchTableList} from '../containers/IsearchTableList';
 import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
+import {IsearchCardList} from '../containers/IsearchCardList';
 import Loader from 'react-loader-spinner';
 
 class IsearchDirectoryWrapperDrupal extends Component {
@@ -188,6 +189,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log("-- v results v --");
     console.log(results);
 
+    console.log("Rendering "+this.state.displayType+"... ");
+
     // loading animation
     if ( !this.state.isLoaded ) {
       return(
@@ -207,15 +210,18 @@ class IsearchDirectoryWrapperDrupal extends Component {
       );
     }
     else if (this.state.displayType === 'table' || this.state.displayType === 'classic') {
-      console.log("Rendering "+this.state.displayType+"... ");
-      console.log(results);
       return (
         <IsearchTableList profileList={results} listConfig={config} />
       );
     }
-    else if (this.state.displayType === 'circles' || this.state.displayType === 'cards') {
+    else if (this.state.displayType === 'circles') {
       return (
         <IsearchCircleList profileList={results} listConfig={config} />
+      );
+    }
+    else if (this.state.displayType === 'cards') {
+      return (
+        <IsearchCardList profileList={results} listConfig={config} />
       );
     }
 

@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import './index.css';
 
 export const IsearchCardView = ({
-  defaultPhoto,
+  addressLine1,
+  addressLine2,
   displayName,
   eid,
   emailAddress,
@@ -13,11 +14,7 @@ export const IsearchCardView = ({
   photoUrl,
   selectedDepTitle,
   shortBio,
-  showBio,
-  showEmail,
-  showPhone,
-  showPhoto,
-  showTitle,
+  listConfig,
 }) => {
   if (!loaded) {
     return (
@@ -29,7 +26,7 @@ export const IsearchCardView = ({
 
   return (
       <div className="card card-isearch">
-        {showPhoto && (
+        {listConfig.showPhoto && (
           <img
             className="card-img-top"
             src={photoUrl}
@@ -47,18 +44,18 @@ export const IsearchCardView = ({
           </h3>
         </div>
         <div className="card-body">
-          {showTitle && (
+          {listConfig.showTitle && (
             <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
           )}
-          {showBio && <p>{shortBio}</p>}
-          {showEmail && (
+          {listConfig.showBio && <p>{shortBio}</p>}
+          {listConfig.showEmail && (
             <p>
               <a className="linkOriginal" href={'mailto:' + emailAddress}>
                 {emailAddress}
               </a>
             </p>
           )}
-          <p>{showPhone && phone}</p>
+          <p>{listConfig.showPhone && phone}</p>
         </div>
       </div>
   );
@@ -124,16 +121,20 @@ IsearchCardView.propTypes = {
 };
 
 IsearchCardView.defaultProps = {
-  defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  addressLine1: '',
+  addressLine2: '',
   emailAddress: '',
   loaded: true,
   phone: '',
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
-  showBio: true,
-  showEmail: true,
-  showPhone: true,
-  showPhoto: true,
-  showTitle: true,
+  listConfig: {
+    showBio: true,
+    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+    showEmail: true,
+    showPhone: true,
+    showPhoto: true,
+    showTitle: true,
+  }
 };
