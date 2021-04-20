@@ -20,35 +20,33 @@ class IsearchDirectoryWrapperDrupal extends Component {
     };
   }
 
-
   componentDidMount() {
-    // const feedURL = this.props.dataFromPage.config
-    //console.log(this.props.dataFromPage)
-    const feedData = JSON.parse(this.props.dataFromPage.config)
-    let feedURL = '/clas-feeds/isearch/solr/'
 
-    if(feedData.testURL != undefined) {
-      feedURL = feedData.testURL
-      console.log('test feed')
+    const isearchConfig = JSON.parse(this.props.dataFromPage.config)
+
+    let feedURL = isearchConfig.endpointURL
+
+    // fallback for older CLAS CMS usage
+    if(isearchConfig.endpointURL == undefined) {
+      feedURL = '/clas-feeds/isearch/solr/'
     }
 
-    if (feedData.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + feedData.ids[0] + '&rows=2000&wt=json'
+    // depList and customList need to use different solr queries
+    if (isearchConfig.type === 'depList') {
+      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=2000&wt=json'
     }
     else {
-      let asuriteIds = feedData.ids.join(' OR ')
+      let asuriteIds = isearchConfig.ids.join(' OR ')
       feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
     }
 
-
-
     axios.get(feedURL).then(response => {
 
-      //console.log(response);
       let orderedProfileResults = response.data.response.docs
-      if (feedData.type === 'customList') {
+
+      if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
-        orderedProfileResults = feedData.ids.map(( item, index ) => {
+        orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.response.docs.length; i++) {
             if (item === response.data.response.docs[i].asuriteId) {
               console.log('---')
@@ -57,7 +55,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
               var titleIndex = -1;
               // some profiles don't have deptids ???
               if(response.data.response.docs[i].deptids != undefined) {
-                titleIndex = response.data.response.docs[i].deptids.indexOf(feedData.sourceIds[index].toString())
+                titleIndex = response.data.response.docs[i].deptids.indexOf(isearchConfig.sourceIds[index].toString())
               }
               // if there is no eid then use asurite in place
               if(response.data.response.docs[i].eid == undefined) {
@@ -87,37 +85,40 @@ class IsearchDirectoryWrapperDrupal extends Component {
       else {
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
-          let titleIndex = item.deptids.indexOf(feedData.ids[0].toString())
+          let titleIndex = item.deptids.indexOf(isearchConfig.ids[0].toString())
           item.selectedDepTitle = item.titles[titleIndex]
           //console.log(item.titles);
           if(item.titleSource[titleIndex] == 'workingTitle') {
             item.selectedDepTitle = item.workingTitle
             //console.log('use working title')
           }
-          if (feedData.sortType === 'rank') {
+          if (isearchConfig.sortType === 'rank') {
             item.selectedDepRank = item.employeeWeight[titleIndex]
           }
           return item
         })
 
-        // order filtered results
-        orderedProfileResults = orderedProfileResults.filter( profile => feedData.selectedFilters.includes(profile.primarySimplifiedEmplClass))
-        if (typeof feedData.titleFilter !== 'undefined') {
-          if (feedData.titleFilter[0] === '/') {
-            //console.log('its regex')
-            const pattern = feedData.titleFilter.match(/\/(.*)\//).pop();
-            const flags = feedData.titleFilter.substr(feedData.titleFilter.lastIndexOf('/') + 1 )
+        // filter results by employee type (selectedFilters)
+        if (typeof isearchConfig.selectedFilters !== 'undefined') {
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass))
+        }
+
+        // filter results by title (titleFilter)
+        if (typeof isearchConfig.titleFilter !== 'undefined') {
+          // check if the title filter is in regex format
+          if (isearchConfig.titleFilter[0] === '/') {
+            const pattern = isearchConfig.titleFilter.match(/\/(.*)\//).pop();
+            const flags = isearchConfig.titleFilter.substr(isearchConfig.titleFilter.lastIndexOf('/') + 1 )
             let regexConstructor = new RegExp(pattern, flags);
             orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.selectedDepTitle))
           }
           else{
-            //console.log('its a string')
-            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle === feedData.titleFilter)
+            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle === isearchConfig.titleFilter)
           }
         }
 
-        // sort results
-        if (feedData.sortType === 'rank') {
+        // sort results by isearch weight/rank
+        if (isearchConfig.sortType === 'rank') {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
                 return a.lastName.localeCompare(b.lastName)
@@ -127,17 +128,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
           })
         }
+        // otherwise sort alpha
         else {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
       }
 
-
       this.setState({
         ourData: orderedProfileResults,
         isLoaded: true,
         callErr: false,
-        displayType: feedData.displayType
+        displayType: isearchConfig.displayType
       }, () => {
         //console.log(this.state.ourData);
       })
@@ -172,24 +173,21 @@ class IsearchDirectoryWrapperDrupal extends Component {
     });
   }
 
-  // circles -> Circle View
-  // cards -> Card View
-  // default -> Table View
   render() {
-    console.log("Display type is "+this.state.displayType+"... ");
 
     let config = JSON.parse(this.props.dataFromPage.config);
+
+    // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
-      config.defaultPhoto = "/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+      config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
     }
-    let results = this.state.ourData.filter(Boolean);;
+    if(config.showBio == undefined) { config.showBio = true; }
+    if(config.showTitle == undefined) { config.showTitle = true; }
+    if(config.showPhoto == undefined) { config.showPhoto = true; }
+    if(config.showPhone == undefined) { config.showPhone = true; }
+    if(config.showEmail == undefined) { config.showEmail = true; }
 
-    console.log("-- v config v --");
-    console.log(config);
-    console.log("-- v results v --");
-    console.log(results);
-
-    console.log("Rendering "+this.state.displayType+"... ");
+    let results = this.state.ourData.filter(Boolean);
 
     // loading animation
     if ( !this.state.isLoaded ) {
