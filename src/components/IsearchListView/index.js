@@ -72,13 +72,11 @@ export const IsearchListView = ({
             )}
             {listConfig.showPhone && (
               <div className="">
-                <p>
                   <div>
                     {addressLine1}
                     <br />
                     {addressLine2}
                   </div>
-                </p>
               </div>
             )}
           </div>
@@ -102,7 +100,7 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.number.isRequired,
+  eid: PropTypes.string.isRequired,
   /**
    * iSearch profile address line 1
    */
