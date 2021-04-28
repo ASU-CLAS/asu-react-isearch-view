@@ -57,10 +57,6 @@ export const IsearchTableView = ({
 
 IsearchTableView.propTypes = {
   /**
-   * String path to default photo
-   */
-  defaultPhoto: PropTypes.string,
-  /**
    * iSearch profile Display Name
    */
   displayName: PropTypes.string.isRequired,
@@ -93,21 +89,9 @@ IsearchTableView.propTypes = {
    */
   shortBio: PropTypes.string,
   /**
-   * Show profile description?
+   * config to show/hide profile data
    */
-  showDescription: PropTypes.bool,
-  /**
-   * Show profile email?
-   */
-  showEmail: PropTypes.bool,
-  /**
-   * Show profile phone?
-   */
-  showPhone: PropTypes.bool,
-  /**
-   * Show profile title?
-   */
-  showTitle: PropTypes.bool,
+  listConfig: PropTypes.object,
 };
 
 IsearchTableView.defaultProps = {

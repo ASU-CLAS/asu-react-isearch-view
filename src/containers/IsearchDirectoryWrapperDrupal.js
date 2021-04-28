@@ -6,17 +6,17 @@ import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
 import Loader from 'react-loader-spinner';
+import PropTypes from 'prop-types';
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       ourData: [],
       isLoaded: false,
       callErr: true,
       errMsg: '',
-      displayType: 'classic',
-      sortType: 'alpha',
     };
   }
 
@@ -137,8 +137,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       this.setState({
         ourData: orderedProfileResults,
         isLoaded: true,
-        callErr: false,
-        displayType: isearchConfig.displayType
+        callErr: false
       }, () => {
         //console.log(this.state.ourData);
       })
@@ -202,28 +201,47 @@ class IsearchDirectoryWrapperDrupal extends Component {
         </div>
       )
     }
-    else if (this.state.displayType === 'default') {
+    else if (config.displayType === 'default') {
       return (
         <IsearchDefaultList profileList={results} listConfig={config} />
       );
     }
-    else if (this.state.displayType === 'table' || this.state.displayType === 'classic') {
+    else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
         <IsearchTableList profileList={results} listConfig={config} />
       );
     }
-    else if (this.state.displayType === 'circles') {
+    else if (config.displayType === 'circles') {
       return (
         <IsearchCircleList profileList={results} listConfig={config} />
       );
     }
-    else if (this.state.displayType === 'cards') {
+    else if (config.displayType === 'cards') {
       return (
         <IsearchCardList profileList={results} listConfig={config} />
       );
     }
 
   }
+}
+
+IsearchDirectoryWrapperDrupal.propTypes = {
+  dataFromPage: PropTypes.object.isRequired,
+  /*
+  dataFromPage: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    defaultPhoto: PropTypes.string,
+    endpointURL: PropTypes.string,
+    displayType: PropTypes.string.isRequired,
+    ids: PropTypes.array.isRequired,
+    sourceIds: PropTypes.array,
+    showPhoto: PropTypes.string,
+    showTitle: PropTypes.string,
+    showBio: PropTypes.string,
+    showEmail: PropTypes.string,
+    showPhone: PropTypes.string,
+  }).isRequired,
+  */
 }
 
 export default IsearchDirectoryWrapperDrupal;

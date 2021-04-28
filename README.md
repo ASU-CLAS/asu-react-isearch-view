@@ -59,7 +59,7 @@ This type has no sorting or filtering options because the asurites would be plac
 {
   "type":"customList",
   "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
+  "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
   "displayType":"default",
   "ids":[
     "atpjk",
@@ -90,7 +90,7 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
   "type":"depList",
   "displayType":"default",
   "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
+  "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
   "selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],
   "titleFilter":"/(Director)/i",
   "sortType":"alphabetical",

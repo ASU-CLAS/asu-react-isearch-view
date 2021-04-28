@@ -41,8 +41,8 @@ module.exports = {
       hash: true,
     }),
     new HtmlWebPackPlugin({
-      template: path.resolve( __dirname, 'public/wordpress.html' ),
-      filename: 'wordpress.html',
+      template: path.resolve( __dirname, 'public/example.html' ),
+      filename: 'example.html',
       inject: false,
     })
   ],

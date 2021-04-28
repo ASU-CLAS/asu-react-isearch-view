@@ -31,7 +31,7 @@ export const IsearchCardView = ({
             className="card-img-top"
             src={photoUrl}
             onError={e => {
-              e.target.src = defaultPhoto;
+              e.target.src = listConfig.defaultPhoto;
             }}
             alt={'profile picture for ' + displayName}
           />
@@ -62,10 +62,6 @@ export const IsearchCardView = ({
 };
 
 IsearchCardView.propTypes = {
-  /**
-   * String path to default photo
-   */
-  defaultPhoto: PropTypes.string,
   /**
    * iSearch profile Display Name
    */
@@ -99,25 +95,9 @@ IsearchCardView.propTypes = {
    */
   shortBio: PropTypes.string,
   /**
-   * iSearch display profile description
+   * config to show/hide profile data
    */
-  showBio: PropTypes.bool,
-  /**
-   * iSearch display profile email
-   */
-  showEmail: PropTypes.bool,
-  /**
-   * iSearch display profile phone
-   */
-  showPhone: PropTypes.bool,
-  /**
-   * iSearch display profile photo
-   */
-  showPhoto: PropTypes.bool,
-  /**
-   * iSearch display profile title
-   */
-  showTitle: PropTypes.bool,
+  listConfig: PropTypes.object,
 };
 
 IsearchCardView.defaultProps = {

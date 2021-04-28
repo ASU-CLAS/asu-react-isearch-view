@@ -90,10 +90,6 @@ export const IsearchListView = ({
 
 IsearchListView.propTypes = {
   /**
-   * String path to default photo
-   */
-  defaultPhoto: PropTypes.string,
-  /**
    * iSearch profile Display Name
    */
   displayName: PropTypes.string.isRequired,
@@ -134,21 +130,9 @@ IsearchListView.propTypes = {
    */
   shortBio: PropTypes.string,
   /**
-   * Render show description format?
+   * config to show/hide profile data
    */
-  showDescription: PropTypes.bool,
-  /**
-   * Render show email format?
-   */
-  showEmail: PropTypes.bool,
-  /**
-   * Render show phone format?
-   */
-  showPhone: PropTypes.bool,
-  /**
-   * Render show title format?
-   */
-  showTitle: PropTypes.bool,
+  listConfig: PropTypes.object,
 };
 
 IsearchListView.defaultProps = {
