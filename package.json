@@ -8,7 +8,9 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode production && webpack serve --mode=development",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "drupal": "webpack --mode production && yarn run drupal:dist",
+    "drupal:dist": "cd dist && cp drupalIsearchViewer.js ../../js/clas_isearch_view_react.min.js"
   },
   "keywords": [],
   "author": "",
