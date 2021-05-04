@@ -34,6 +34,7 @@ Basic.args = {
   showPhone: true,
   showPhoto: true,
   showTitle: true,
+  showExpertise: true
 };
 
 export const DefaultPhoto = Template.bind({});
@@ -47,9 +48,11 @@ DefaultPhoto.args = {
   shortBio: faker.lorem.paragraph(),
   emailAddress: faker.internet.email(),
   phone: faker.phone.phoneNumber(),
+  expertiseAreas: faker.datatype.array(),
   showDescription: true,
   showEmail: true,
   showPhone: true,
   showPhoto: true,
   showTitle: true,
+  showExpertise: true
 };

@@ -5,6 +5,7 @@ React component for displaying ASU directory listings from isearch.asu.edu. This
 ## Install (Stand Alone)
 * `git clone https://github.com/ASU-CLAS/asu-react-isearch-view.git`
 * `yarn` - install all dependencies
+* register/login to the ASU Unity npm registry
 * `yarn build` - build project files in dist folder (react/react-dom are separated into vendor.js)
 * `yarn dev` - build project files in dist folder and start webpack dev server (visit /drupal.html or /wordpress.html)
 
@@ -13,43 +14,21 @@ React component for displaying ASU directory listings from isearch.asu.edu. This
 This React component will render inside an element with a class name of `clas-isearch-view`. The component requires the following options:
 
 | Parameter     |  Options |
-| ------------- | :------|  :------|
+| ------------- | :------|
 | data-config      | A JSON object with configuration options |
 
-| Parameter     |  Allowed values |  Notes |
+| Config key     |  Allowed values |  Notes |
 | ------------- | ------|  :------|
 | type      | "customList", "depList" | If deplist, will assume ids is a list of isearch departments, if customList will assume a list of asurite ids |
+| displayType      | "default", "table", "cards", "circles" | Changes the visual style of the list |
 | defaultPhoto      | absolute url string | |
-| testURL      | absolute url string | |
-| type      | "default", "classic", "cards", "circles" | default is the only Web Standards compliant option |
+| endpointURL      | absolute url string | |
+| type      | "default", "classic", "cards", "circles" | default is the new Web Standards 2.0 design |
 | ids      | array of strings | either asurite ids or dept ids |
 | sourceIds      | array of numbers | list of dept ids to use titles from |
+| titleFilter      | string or regex | filter depList by title |
+| expertiseFilter      | string or regex | filter depList by expertise areas |
 
-```JSON
-{
-  "type":"customList",
-  "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
-  "displayType":"default",
-  "ids":[
-    "atpjk",
-    "saibaba",
-    "acerropa",
-    "jjcohen4",
-    "pmahdav2",
-    "kkusumi",
-    "kazilek",
-    "lluecke",
-    "fmilner"
-  ],
-  "sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],
-    "showPhoto":true,
-    "showTitle":true,
-    "showBio":true,
-    "showEmail":true,
-    "showPhone":true
-  }
-```
 
 There are 2 different structures for the config data depending on the 'type': customList, deptList
 
@@ -77,7 +56,8 @@ This type has no sorting or filtering options because the asurites would be plac
     "showTitle":true,
     "showBio":true,
     "showEmail":true,
-    "showPhone":true
+    "showPhone":true,
+    "showExpertise":false
   }
 ```
 
@@ -93,13 +73,15 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
   "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
   "selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],
   "titleFilter":"/(Director)/i",
+  "expertiseFilter":"",
   "sortType":"alphabetical",
   "ids":[1409],
   "showPhoto":true,
   "showTitle":true,
   "showBio":true,
   "showEmail":true,
-  "showPhone":true
+  "showPhone":true,
+  "showExpertise":false
 }
 ```
 

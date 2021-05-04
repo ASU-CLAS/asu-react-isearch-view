@@ -122,7 +122,31 @@ class IsearchDirectoryWrapperDrupal extends Component {
             orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.selectedDepTitle))
           }
           else{
-            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle === isearchConfig.titleFilter)
+            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle.toLowerCase().includes(isearchConfig.titleFilter.toLowerCase()) )
+          }
+        }
+
+        // filter results by expertise (expertiseFilter)
+        if (typeof isearchConfig.expertiseFilter === 'string' && isearchConfig.expertiseFilter !== '') {
+          // check if the expertisefilter is in regex format
+          if (isearchConfig.expertiseFilter[0] === '/') {
+            const pattern = isearchConfig.expertiseFilter.match(/\/(.*)\//).pop();
+            const flags = isearchConfig.expertiseFilter.substr(isearchConfig.expertiseFilter.lastIndexOf('/') + 1 )
+            let regexConstructor = new RegExp(pattern, flags);
+            orderedProfileResults = orderedProfileResults.filter( profile => {
+              if ( profile.expertiseAreas ) {
+                let matches = profile.expertiseAreas.filter( exp => regexConstructor.test(exp) )
+                return matches.length > 0
+              }
+            })
+          }
+          else {
+            orderedProfileResults = orderedProfileResults.filter( profile => {
+              if ( profile.expertiseAreas ) {
+                let matches = profile.expertiseAreas.filter( exp => exp.toLowerCase().includes(isearchConfig.expertiseFilter.toLowerCase() ))
+                return matches.length > 0
+              }
+            })
           }
         }
 
@@ -194,6 +218,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(config.showPhoto == undefined) { config.showPhoto = true; }
     if(config.showPhone == undefined) { config.showPhone = true; }
     if(config.showEmail == undefined) { config.showEmail = true; }
+    if(config.showExpertise == undefined) { config.showExpertise = true; }
 
     let results = this.state.ourData.filter(Boolean);
 
@@ -249,6 +274,7 @@ IsearchDirectoryWrapperDrupal.propTypes = {
     showBio: PropTypes.string,
     showEmail: PropTypes.string,
     showPhone: PropTypes.string,
+    showExpertise: PropTypes.string
   }).isRequired,
   */
 }
