@@ -37,5 +37,6 @@ Basic.args = {
   selectedDepTitle: faker.name.jobTitle(),
   shortBio: faker.lorem.paragraph(),
   emailAddress: faker.internet.email(),
+  expertiseAreas: faker.datatype.array(),
   phone: faker.phone.phoneNumber(),
 };

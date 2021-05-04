@@ -35,6 +35,7 @@ Basic.args = {
   displayName: faker.name.findName(),
   selectedDepTitle: faker.name.jobTitle(),
   shortBio: faker.lorem.paragraph(),
+  expertiseAreas: faker.datatype.array(),
   emailAddress: faker.internet.email(),
   phone: faker.phone.phoneNumber(),
   listConfig: {
@@ -44,5 +45,6 @@ Basic.args = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
+    showExpertise: true
   }
 };

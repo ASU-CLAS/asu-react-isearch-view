@@ -14,6 +14,7 @@ export const IsearchCardView = ({
   photoUrl,
   selectedDepTitle,
   shortBio,
+  expertiseAreas,
   listConfig,
 }) => {
   if (!loaded) {
@@ -48,6 +49,7 @@ export const IsearchCardView = ({
             <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
           )}
           {listConfig.showBio && <p>{shortBio}</p>}
+          {listConfig.showExpertise && expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
           {listConfig.showEmail && (
             <p>
               <a className="linkOriginal" href={'mailto:' + emailAddress}>
@@ -90,6 +92,10 @@ IsearchCardView.propTypes = {
    * iSearch profile selected department title
    */
   selectedDepTitle: PropTypes.string,
+    /**
+   * iSearch profile selected expertise areas
+   */
+  expertiseAreas: PropTypes.array,
   /**
    * iSearch profile short bio
    */
@@ -109,6 +115,7 @@ IsearchCardView.defaultProps = {
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
+  expertiseAreas: [],
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',

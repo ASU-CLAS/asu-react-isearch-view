@@ -26,6 +26,7 @@ IsearchDefaultList.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
+    showExpertise: true
   },
   profileList: [
     {

@@ -15,6 +15,7 @@ export const IsearchTableView = ({
   photoUrl,
   selectedDepTitle,
   shortBio,
+  expertiseAreas,
   listConfig,
 }) => {
   console.log('returning table row')
@@ -40,6 +41,7 @@ export const IsearchTableView = ({
         </h3>
         {listConfig.showTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
         {listConfig.showBio && <p>{shortBio}</p>}
+        {listConfig.showExpertise && expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
       </td>
       <td>
         {listConfig.showEmail && (
@@ -85,6 +87,10 @@ IsearchTableView.propTypes = {
    */
   selectedDepTitle: PropTypes.string,
   /**
+   * iSearch profile selected expertise areas
+   */
+  expertiseAreas: PropTypes.array,
+  /**
    * iSearch profile short bio
    */
   shortBio: PropTypes.string,
@@ -105,6 +111,7 @@ IsearchTableView.defaultProps = {
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
+  expertiseAreas: [],
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
@@ -112,5 +119,6 @@ IsearchTableView.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
+    showExpertise: true
   }
 };
