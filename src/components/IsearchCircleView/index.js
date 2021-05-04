@@ -15,6 +15,7 @@ export const IsearchCircleView = ({
   phone,
   photoUrl,
   selectedDepTitle,
+  expertiseAreas,
   shortBio,
 }) => {
   if (!loaded) {
@@ -84,13 +85,14 @@ export const IsearchCircleView = ({
                 alt={`profile picture for ${displayName}`}
               />
               <div class="card-body">
-                <h5 class="card-title">
+                <h4 class="card-title">
                   <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
                     {displayName}
                   </a>
-                </h5>
+                </h4>
                 <h6 class="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
                 <p>{shortBio}</p>
+                {expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
                 <p>
                   <a className="linkOriginal" href={`mailto:${emailAddress}`}>
                     {emailAddress}
@@ -144,6 +146,10 @@ IsearchCircleView.propTypes = {
    */
   selectedDepTitle: PropTypes.string,
   /**
+   * iSearch profile selected expertise areas
+   */
+   expertiseAreas: PropTypes.array,
+  /**
    * iSearch profile short bio
    */
   shortBio: PropTypes.string,
@@ -158,4 +164,5 @@ IsearchCircleView.defaultProps = {
   photoUrl: '',
   selectedDepTitle: '',
   shortBio: '',
+  expertiseAreas: '',
 };
