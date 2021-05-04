@@ -33,7 +33,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=2000&wt=json'
+      if ('deptList' === 1409) {
+        feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=2000&wt=json'
+      } else {
+        feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=2000&wt=json'
+      }
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
@@ -100,8 +104,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass))
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primaryEmplClass))
         }
+
+        // filter results by subaffilation type (subAffFilters)
+         if (typeof isearchConfig.subAffFilters !== 'undefined') {
+            orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.subAffFilters.includes(profile.subaffiliations))
+          }
 
         // filter results by title (titleFilter)
         if (typeof isearchConfig.titleFilter !== 'undefined') {
