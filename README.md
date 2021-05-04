@@ -20,11 +20,14 @@ This React component will render inside an element with a class name of `clas-is
 | Config key     |  Allowed values |  Notes |
 | ------------- | ------|  :------|
 | type      | "customList", "depList" | If deplist, will assume ids is a list of isearch departments, if customList will assume a list of asurite ids |
+| displayType      | "default", "table", "cards", "circles" | Changes the visual style of the list |
 | defaultPhoto      | absolute url string | |
 | endpointURL      | absolute url string | |
 | type      | "default", "classic", "cards", "circles" | default is the new Web Standards 2.0 design |
 | ids      | array of strings | either asurite ids or dept ids |
 | sourceIds      | array of numbers | list of dept ids to use titles from |
+| titleFilter      | string or regex | filter depList by title |
+| expertiseFilter      | string or regex | filter depList by expertise areas |
 
 
 There are 2 different structures for the config data depending on the 'type': customList, deptList
@@ -53,7 +56,8 @@ This type has no sorting or filtering options because the asurites would be plac
     "showTitle":true,
     "showBio":true,
     "showEmail":true,
-    "showPhone":true
+    "showPhone":true,
+    "showExpertise":false
   }
 ```
 
@@ -69,13 +73,15 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
   "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
   "selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],
   "titleFilter":"/(Director)/i",
+  "expertiseFilter":"",
   "sortType":"alphabetical",
   "ids":[1409],
   "showPhoto":true,
   "showTitle":true,
   "showBio":true,
   "showEmail":true,
-  "showPhone":true
+  "showPhone":true,
+  "showExpertise":false
 }
 ```
 
