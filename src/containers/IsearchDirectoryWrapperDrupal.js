@@ -104,8 +104,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
           subAffProfiles = response.data.response.docs
             .filter(profile => profile.subaffiliations !== undefined)
-            .filter(profile => isearchConfig.subAffFilters
-            .some(filter => profile.subaffiliations.includes(filter)))
+            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.includes(filter)))
         }
 
         // filter results by employee type (selectedFilters)
