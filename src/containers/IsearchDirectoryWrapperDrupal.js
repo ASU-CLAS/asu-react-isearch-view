@@ -47,7 +47,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
     axios.get(feedURL).then(response => {
 
       let orderedProfileResults = response.data.response.docs
-
+      let subAffProfiles = []
+      
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
@@ -102,15 +103,19 @@ class IsearchDirectoryWrapperDrupal extends Component {
           return item
         })
 
+        // filter results by subaffilation type (subAffFilters)
+        if (typeof isearchConfig.subAffFilters !== 'undefined') {
+
+          subAffProfiles = response.data.response.docs
+            .filter(profile => profile.subaffiliations !== undefined)
+            .filter(profile => isearchConfig.subAffFilters
+            .some(filter => profile.subaffiliations.includes(filter)))
+        }
+
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
         orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primaryEmplClass))
         }
-
-        // filter results by subaffilation type (subAffFilters)
-         if (typeof isearchConfig.subAffFilters !== 'undefined') {
-            orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.subAffFilters.includes(profile.subaffiliations))
-          }
 
         // filter results by title (titleFilter)
         if (typeof isearchConfig.titleFilter !== 'undefined') {
@@ -148,6 +153,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
             })
           }
+        }
+
+        // add subaffiliates to array before sorting
+        if(subAffProfiles.length > 0) {
+          orderedProfileResults.push(...subAffProfiles)
         }
 
         // sort results by isearch weight/rank
