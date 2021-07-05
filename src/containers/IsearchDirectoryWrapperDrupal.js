@@ -26,6 +26,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
 
+    console.log(feedURL);
+
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
       feedURL = '/clas-feeds/isearch/solr/'
@@ -100,7 +102,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass))
+        console.log(orderedProfileResults, "i am chiken");
+        // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
+        console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -134,7 +139,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           else {
             orderedProfileResults = orderedProfileResults.filter( profile => {
               if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => exp.toLowerCase().includes(isearchConfig.expertiseFilter.toLowerCase() ))
+                let matches = profile.expertiseAreas.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
                 return matches.length > 0
               }
             })
