@@ -65,6 +65,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
               if(titleIndex == -1) {
                 response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
                 console.log('No titleIndex, use working title')
+                console.log(response.data.response.docs[i].workingTitle)
+                // courtesy affiliates don't have workingTitle :( so just use the first title in the list
+                if(response.data.response.docs[i].workingTitle == undefined) {
+                  response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
