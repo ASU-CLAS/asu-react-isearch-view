@@ -5,8 +5,10 @@ import {IsearchTableList} from '../containers/IsearchTableList';
 import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
+import IsearchAtoZFilter from '../components/IsearchAtoZFilter/index.js'
 import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
+import EventEmitter from 'events';
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -201,6 +203,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
     });
   }
 
+  handleClick(element) {
+      event.preventDefault();
+      console.log(element, "weewoo");
+  }
+
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
@@ -233,22 +240,34 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
     else if (config.displayType === 'default') {
       return (
-        <IsearchDefaultList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter />
+          <IsearchDefaultList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
-        <IsearchTableList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter />
+          <IsearchTableList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'circles') {
       return (
-        <IsearchCircleList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter />
+          <IsearchCircleList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'cards') {
       return (
-        <IsearchCardList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter />
+          <IsearchCardList profileList={results} listConfig={config} />
+        </div>
       );
     }
 
