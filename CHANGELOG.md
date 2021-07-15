@@ -1,7 +1,9 @@
 # Changelog
 
 ## 2.0.2 - 20210714
-* Fixed missing title when courtesy affiliates are added without a sourceId 
+* Fixed missing title when courtesy affiliates don't have a sourceId in the config
+* Added support for filtering emeritus employee type
+* Added support for filtering on sub affiliations
 
 ## 2.0.1 - 20210504
 * Added new optional config (showExpertise) for toggling the display of expertise areas on profiles (only shown on table view)
