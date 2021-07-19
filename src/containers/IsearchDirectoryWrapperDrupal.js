@@ -16,6 +16,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log(props);
     this.state = {
       ourData: [],
+      filterActive: false,
+      filterLetter: '',
       isLoaded: false,
       callErr: true,
       errMsg: '',
@@ -163,8 +165,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
         else {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
-      }
 
+        if (this.state.filterActive === true){
+          console.log("we happy in here")
+        }
+
+        
+      }
+      
+     
       this.setState({
         ourData: orderedProfileResults,
         isLoaded: true,
@@ -203,15 +212,33 @@ class IsearchDirectoryWrapperDrupal extends Component {
     });
   }
 
-  handleClick(element) {
-      event.preventDefault();
-      console.log(element, "weewoo");
-  }
+  handleClick(element){
+    console.log(element, this.state.filterActive, this.state.filterLetter, "walla walla")
+
+    if (this.state.filterActive === true && this.state.filterLetter === element) {
+      this.setState({
+        filterActive: false
+      })
+    }
+
+    else {
+      this.setState({
+        filterActive: true,
+        filterLetter: element
+      })
+    }
+    console.log(this.state.filterActive, "after test")
+
+    event.preventDefault();
+
+    
+}
 
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
+    console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
@@ -241,7 +268,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'default') {
       return (
         <div>
-          <IsearchAtoZFilter />
+          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
           <IsearchDefaultList profileList={results} listConfig={config} />
         </div>
       );
@@ -249,7 +276,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
         <div>
-          <IsearchAtoZFilter />
+          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
           <IsearchTableList profileList={results} listConfig={config} />
         </div>
       );
@@ -257,7 +284,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'circles') {
       return (
         <div>
-          <IsearchAtoZFilter />
+          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
           <IsearchCircleList profileList={results} listConfig={config} />
         </div>
       );
@@ -265,7 +292,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'cards') {
       return (
         <div>
-          <IsearchAtoZFilter />
+          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
           <IsearchCardList profileList={results} listConfig={config} />
         </div>
       );
