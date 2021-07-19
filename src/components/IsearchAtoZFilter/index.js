@@ -16,8 +16,6 @@ render(){
         }
     )
 
-    console.log(alphabet, alphabetList, "beepo")
-
   return (
      <div className="chonk">{alphabetList}</div>
   );}

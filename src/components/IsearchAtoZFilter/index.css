@@ -1,0 +1,7 @@
+.alphabet {
+    list-style-type: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}

@@ -16,6 +16,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log(props);
     this.state = {
       ourData: [],
+      profileList: [],
       filterActive: false,
       filterLetter: '',
       isLoaded: false,
@@ -175,6 +176,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       
      
       this.setState({
+        profileList: orderedProfileResults,
         ourData: orderedProfileResults,
         isLoaded: true,
         callErr: false
@@ -213,26 +215,30 @@ class IsearchDirectoryWrapperDrupal extends Component {
   }
 
   handleClick(element){
-    console.log(element, this.state.filterActive, this.state.filterLetter, "walla walla")
+   // console.log(element, this.state.filterActive, this.state.filterLetter, "walla walla")
 
+    // if user clicks the same letter twice, it undos the filter and repopulates display profiles  arraywith orig data
     if (this.state.filterActive === true && this.state.filterLetter === element) {
       this.setState({
+        ourData: this.state.profileList,
         filterActive: false
       })
     }
 
     else {
+      // filters through original data on each change, adds letter filter, and then sets results to display profiles array
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element)
+
       this.setState({
+        ourData: filteredProfileResults,
         filterActive: true,
         filterLetter: element
       })
     }
-    console.log(this.state.filterActive, "after test")
+   // console.log(this.state.filterActive, "after test")
 
     event.preventDefault();
-
-    
-}
+  }
 
   render() {
 
@@ -268,7 +274,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'default') {
       return (
         <div>
-          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id, )}/>
           <IsearchDefaultList profileList={results} listConfig={config} />
         </div>
       );
