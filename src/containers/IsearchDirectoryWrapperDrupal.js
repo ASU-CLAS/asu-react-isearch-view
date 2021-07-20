@@ -167,11 +167,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
 
-        if (this.state.filterActive === true){
-          console.log("we happy in here")
-        }
-
-        
       }
       
      
@@ -215,24 +210,24 @@ class IsearchDirectoryWrapperDrupal extends Component {
   }
 
   handleClick(element){
-   // console.log(element, this.state.filterActive, this.state.filterLetter, "walla walla")
 
-    // if user clicks the same letter twice, it undos the filter and repopulates display profiles  arraywith orig data
+    // if user clicks the same letter twice, it undos the filter and repopulates display profiles array with orig data
     if (this.state.filterActive === true && this.state.filterLetter === element) {
       this.setState({
         ourData: this.state.profileList,
-        filterActive: false
+        filterActive: false,
+        filterLetter: ''
       })
     }
 
     else {
       // filters through original data on each change, adds letter filter, and then sets results to display profiles array
-      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element)
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element.toLowerCase())
 
       this.setState({
         ourData: filteredProfileResults,
         filterActive: true,
-        filterLetter: element
+        filterLetter: element,
       })
     }
    // console.log(this.state.filterActive, "after test")
@@ -274,7 +269,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'default') {
       return (
         <div>
-          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id, )}/>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           <IsearchDefaultList profileList={results} listConfig={config} />
         </div>
       );
@@ -282,7 +277,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
         <div>
-          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           <IsearchTableList profileList={results} listConfig={config} />
         </div>
       );
@@ -290,7 +285,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'circles') {
       return (
         <div>
-          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           <IsearchCircleList profileList={results} listConfig={config} />
         </div>
       );
@@ -298,7 +293,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     else if (config.displayType === 'cards') {
       return (
         <div>
-          <IsearchAtoZFilter onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           <IsearchCardList profileList={results} listConfig={config} />
         </div>
       );

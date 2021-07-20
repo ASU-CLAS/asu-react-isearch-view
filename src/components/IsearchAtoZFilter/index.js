@@ -6,18 +6,20 @@ class IsearchAtoZFilter extends React.Component {
 
 
 render(){
- let alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
+ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+ // uses selected letter state found in main component onClick function
  let alphabetList = alphabet.map( letter =>
         {
             return(
-                <a href="" onClick={this.props.onClick}><span className="" id={letter}>{letter}</span></a>
+                <a href="" className={this.props.selectedLetter === letter ? 'active-letter' : null} onClick={this.props.onClick} id={letter}><span className="" id={letter}>{letter}</span></a>
             )
         }
     )
 
   return (
-     <div className="chonk">{alphabetList}</div>
+     <div className="alphabet">{alphabetList}</div>
   );}
 };  
 
