@@ -39,14 +39,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
-      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
+      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
     }
 
     axios.get(feedURL).then(response => {
 
       let orderedProfileResults = response.data.response.docs
       let subAffProfiles = []
-      
+
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
