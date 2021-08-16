@@ -5,8 +5,10 @@ import {IsearchTableList} from '../containers/IsearchTableList';
 import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
+import IsearchAtoZFilter from '../components/IsearchAtoZFilter/index.js'
 import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
+import EventEmitter from 'events';
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -14,6 +16,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log(props);
     this.state = {
       ourData: [],
+      profileList: [],
+      filterActive: false,
+      filterLetter: '',
       isLoaded: false,
       callErr: true,
       errMsg: '',
@@ -180,9 +185,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
         else {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
-      }
 
+      }
+      
+     
       this.setState({
+        profileList: orderedProfileResults,
         ourData: orderedProfileResults,
         isLoaded: true,
         callErr: false
@@ -220,10 +228,37 @@ class IsearchDirectoryWrapperDrupal extends Component {
     });
   }
 
+  handleClick(element){
+
+    // if user clicks the same letter twice, it undos the filter and repopulates display profiles array with orig data
+    if (this.state.filterActive === true && this.state.filterLetter === element) {
+      this.setState({
+        ourData: this.state.profileList,
+        filterActive: false,
+        filterLetter: ''
+      })
+    }
+
+    else {
+      // filters through original data on each change, adds letter filter, and then sets results to display profiles array
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element.toLowerCase())
+
+      this.setState({
+        ourData: filteredProfileResults,
+        filterActive: true,
+        filterLetter: element,
+      })
+    }
+   // console.log(this.state.filterActive, "after test")
+
+    event.preventDefault();
+  }
+
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
+    console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
@@ -252,22 +287,34 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
     else if (config.displayType === 'default') {
       return (
-        <IsearchDefaultList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchDefaultList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
-        <IsearchTableList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchTableList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'circles') {
       return (
-        <IsearchCircleList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchCircleList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'cards') {
       return (
-        <IsearchCardList profileList={results} listConfig={config} />
+        <div>
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchCardList profileList={results} listConfig={config} />
+        </div>
       );
     }
 
