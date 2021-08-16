@@ -49,7 +49,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     axios.get(feedURL).then(response => {
 
-      let orderedProfileResults = response.data.response.docs
+      let orderedProfileResults = response.data.response.docs    
 
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
@@ -64,9 +64,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
               if(response.data.response.docs[i].deptids != undefined) {
                 titleIndex = response.data.response.docs[i].deptids.indexOf(isearchConfig.sourceIds[index].toString())
               }
-              // if there is no eid then use asurite in place
+              // if there is no eid then use asurite in place   
               if(response.data.response.docs[i].eid == undefined) {
                 response.data.response.docs[i].eid = response.data.response.docs[i].asuriteId
+              }
+
+              if(response.data.response.docs[i].asuriteId == undefined){
+                this.setState({
+                  isLoaded: true,
+                  callErr: true,
+                  errMsg: 'Oops! an error has been encountered while loading your profiles.'
+                })
               }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
@@ -226,7 +234,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
       this.setState({
         ourData: filteredProfileResults,
-        filterActive: true,
+        filterActive: true, 
         filterLetter: element,
       })
     }
@@ -270,7 +278,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return (
         <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
-          <IsearchDefaultList profileList={results} listConfig={config} />
+          <IsearchDefaultList profileList={results} listConfig={config} /> 
         </div>
       );
     }
