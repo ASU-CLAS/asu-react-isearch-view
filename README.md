@@ -32,6 +32,8 @@ This React component will render inside an element with a class name of `clas-is
 
 There are 2 different structures for the config data depending on the 'type': customList, deptList
 
+### Custom list usage
+
 Example config object for customList (designed to give the end user complete control over who is displayed in the list):
 This type has no sorting or filtering options because the asurites would be place manually in the correct order
 ```JSON
@@ -60,6 +62,8 @@ This type has no sorting or filtering options because the asurites would be plac
     "showExpertise":false
   }
 ```
+
+### Department list usage
 
 Example config object for depList (designed to be an easy to configure list that displays a single isearch dept):
 selectedFilters is a list of employee types to show

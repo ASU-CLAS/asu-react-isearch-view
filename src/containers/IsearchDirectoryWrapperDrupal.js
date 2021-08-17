@@ -26,6 +26,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
 
+    console.log(feedURL);
+
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
       feedURL = '/clas-feeds/isearch/solr/'
@@ -33,16 +35,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=2000&wt=json'
+      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=3000&wt=json'
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
-      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=300&wt=json'
+      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
     }
 
     axios.get(feedURL).then(response => {
 
       let orderedProfileResults = response.data.response.docs
+      let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
@@ -65,6 +68,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
               if(titleIndex == -1) {
                 response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
                 console.log('No titleIndex, use working title')
+                console.log(response.data.response.docs[i].workingTitle)
+                // courtesy affiliates don't have workingTitle :( so just use the first title in the list
+                if(response.data.response.docs[i].workingTitle == undefined) {
+                  response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
@@ -98,9 +106,20 @@ class IsearchDirectoryWrapperDrupal extends Component {
           return item
         })
 
+        // filter results by subaffilation type (subAffFilters)
+        if (typeof isearchConfig.subAffFilters !== 'undefined') {
+
+          subAffProfiles = response.data.response.docs
+            .filter(profile => profile.subaffiliations !== undefined)
+            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.includes(filter)))
+        }
+
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass))
+        console.log(orderedProfileResults, "i am chiken");
+        // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
+        console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -134,11 +153,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
           else {
             orderedProfileResults = orderedProfileResults.filter( profile => {
               if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => exp.toLowerCase().includes(isearchConfig.expertiseFilter.toLowerCase() ))
+                let matches = profile.expertiseAreas.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
                 return matches.length > 0
               }
             })
           }
+        }
+
+        // add subaffiliates to array before sorting
+        if(subAffProfiles.length > 0) {
+          orderedProfileResults.push(...subAffProfiles)
         }
 
         // sort results by isearch weight/rank
