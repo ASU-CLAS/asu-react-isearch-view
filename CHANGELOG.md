@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.3 - 20210914
+* Fixed a bug in handling titles
+* Added optional A-Z index 
+
 ## 2.0.2 - 20210810
 * Fixed missing title when courtesy affiliates don't have a sourceId in the config
 * Added support for filtering emeritus employee type
