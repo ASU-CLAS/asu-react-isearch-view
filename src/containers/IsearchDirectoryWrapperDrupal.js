@@ -5,8 +5,10 @@ import {IsearchTableList} from '../containers/IsearchTableList';
 import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
+import IsearchAtoZFilter from '../components/IsearchAtoZFilter/index.js'
 import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
+import EventEmitter from 'events';
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -14,6 +16,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log(props);
     this.state = {
       ourData: [],
+      profileList: [],
+      filterActive: false,
+      filterLetter: '',
       isLoaded: false,
       callErr: true,
       errMsg: '',
@@ -26,6 +31,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
 
+    console.log('iSearch Viewer - 2.0.3')
+    console.log('Developed by The College of Liberal Arts and Sciences')
+    console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
+    console.log('---')
     console.log(feedURL);
 
     // fallback for older CLAS CMS usage
@@ -71,7 +80,33 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 console.log(response.data.response.docs[i].workingTitle)
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
                 if(response.data.response.docs[i].workingTitle == undefined) {
-                  response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                  // check if the titles array exists and use that... can't take anything for granted
+                  if(response.data.response.docs[i].titles != undefined && response.data.response.docs[i].titles[0] != undefined) {
+                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                  }
+                  else {
+
+                    console.log('No titleIndex, no titles array, no title?')
+                    // if the titles array doesn't exist, they just don't get a title I guess...
+                    response.data.response.docs[i].selectedDepTitle = '';
+
+                    // unless they are a student? we can test for student affiliation and make up a title
+                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Student') {
+                      console.log('Might be a student')
+                      response.data.response.docs[i].selectedDepTitle = 'Student';
+                      if(response.data.response.docs[i].careers != undefined) {
+                        response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].careers[0];
+                      }
+                    }
+
+                    // or maybe a courtesy affiliate?
+                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Courtesy Affiliate"') {
+                      console.log('Is a courtesy affiliate')
+                      // not sure what to do here now, could be anything!
+                    }
+
+                  }
+
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
@@ -80,8 +115,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 console.log('Set title via titleIndex')
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
                 if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
-                  response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
                   console.log('Title source override, use working title')
+                  // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
+                  if(response.data.response.docs[i].workingTitle != undefined) {
+                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                  }
+                  else {
+                    console.log('They said use working title, but there is none!')
+                  }
+
+
                 }
               }
 
@@ -116,10 +159,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        console.log(orderedProfileResults, "i am chiken");
+        //console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
         orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
-        console.log(orderedProfileResults, "after filter")
+        //console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -180,9 +223,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
         else {
           orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
         }
+
       }
 
+
       this.setState({
+        profileList: orderedProfileResults,
         ourData: orderedProfileResults,
         isLoaded: true,
         callErr: false
@@ -220,10 +266,37 @@ class IsearchDirectoryWrapperDrupal extends Component {
     });
   }
 
+  handleClick(element){
+
+    // if user clicks the same letter twice, it undos the filter and repopulates display profiles array with orig data
+    if (this.state.filterActive === true && this.state.filterLetter === element) {
+      this.setState({
+        ourData: this.state.profileList,
+        filterActive: false,
+        filterLetter: ''
+      })
+    }
+
+    else {
+      // filters through original data on each change, adds letter filter, and then sets results to display profiles array
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element.toLowerCase())
+
+      this.setState({
+        ourData: filteredProfileResults,
+        filterActive: true,
+        filterLetter: element,
+      })
+    }
+   // console.log(this.state.filterActive, "after test")
+
+    event.preventDefault();
+  }
+
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
+    console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
@@ -234,6 +307,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(config.showPhone == undefined) { config.showPhone = true; }
     if(config.showEmail == undefined) { config.showEmail = true; }
     if(config.showExpertise == undefined) { config.showExpertise = true; }
+    if(config.showFilterAZ == undefined) { config.showFilterAZ = false; }
 
     let results = this.state.ourData.filter(Boolean);
 
@@ -252,22 +326,42 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
     else if (config.displayType === 'default') {
       return (
-        <IsearchDefaultList profileList={results} listConfig={config} />
+        <div>
+          {config.showFilterAZ == true &&
+            <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          }
+          <IsearchDefaultList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'table' || config.displayType === 'classic') {
       return (
-        <IsearchTableList profileList={results} listConfig={config} />
+        <div>
+        {config.showFilterAZ == true &&
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+        }
+          <IsearchTableList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'circles') {
       return (
-        <IsearchCircleList profileList={results} listConfig={config} />
+        <div>
+        {config.showFilterAZ == true &&
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+        }
+          <IsearchCircleList profileList={results} listConfig={config} />
+        </div>
       );
     }
     else if (config.displayType === 'cards') {
       return (
-        <IsearchCardList profileList={results} listConfig={config} />
+        <div>
+        {config.showFilterAZ == true &&
+          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+        }
+          <IsearchCardList profileList={results} listConfig={config} />
+        </div>
       );
     }
 
