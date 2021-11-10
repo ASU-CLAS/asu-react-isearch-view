@@ -27,7 +27,7 @@ This React component will render inside an element with a class name of `clas-is
 | sourceIds      | array of numbers | list of dept ids to use titles from |
 | titleFilter      | string or regex | filter depList by title |
 | expertiseFilter      | string or regex | filter depList by expertise areas |
-| showFilterAZ      | display A-Z filter |
+| showFilterAZ    | boolean | display A-Z filter |
 
 
 There are 2 different structures for the config data depending on the 'type': customList, deptList
