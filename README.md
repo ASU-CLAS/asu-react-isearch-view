@@ -59,7 +59,8 @@ This type has no sorting or filtering options because the asurites would be plac
   "showBio":true,
   "showEmail":true,
   "showPhone":true,
-  "showExpertise":false
+  "showExpertise":false,
+  "showFilterAZ":false
   }
 ```
 
@@ -85,11 +86,12 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
   "showBio":true,
   "showEmail":true,
   "showPhone":true,
-  "showExpertise":false
+  "showExpertise":false,
+  "showFilterAZ":false
 }
 ```
 
 ### Full example code snippet
 ```html
-<div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true}'></div>
+<div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"showExpertise":false,"showFilterAZ":false}'></div>
 ```
