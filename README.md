@@ -20,11 +20,10 @@ This React component will render inside an element with a class name of `clas-is
 | Config key     |  Allowed values |  Notes |
 | ------------- | ------|  :------|
 | type      | "customList", "depList" | If deplist, will assume ids is a list of isearch departments, if customList will assume a list of asurite ids |
-| displayType      | "default", "table", "cards", "circles" | Changes the visual style of the list |
-| defaultPhoto      | absolute url string | |
-| endpointURL      | absolute url string | |
-| type      | "default", "classic", "cards", "circles" | default is the new Web Standards 2.0 design |
-| ids      | array of strings | either asurite ids or dept ids |
+| displayType      | "default", "table", "cards", "circles" | Changes the visual style of the list. Default is the new Web Standards 2.0 design |
+| defaultPhoto      | absolute url string | If a profile has no photo, use this one instead |
+| endpointURL      | absolute url string | This should be a proxy url that connects to https://asudir-solr.asu.edu/asudir/directory/select? because CORS prevents accessing the endpoint directly |
+| ids      | array of strings | either asurite ids or dept ids depending on the config "type" |
 | sourceIds      | array of numbers | list of dept ids to use titles from |
 | titleFilter      | string or regex | filter depList by title |
 | expertiseFilter      | string or regex | filter depList by expertise areas |
@@ -40,7 +39,7 @@ This type has no sorting or filtering options because the asurites would be plac
 {
   "type":"customList",
   "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
+  "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?",
   "displayType":"default",
   "ids":[
     "atpjk",
@@ -54,12 +53,12 @@ This type has no sorting or filtering options because the asurites would be plac
     "fmilner"
   ],
   "sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],
-    "showPhoto":true,
-    "showTitle":true,
-    "showBio":true,
-    "showEmail":true,
-    "showPhone":true,
-    "showExpertise":false
+  "showPhoto":true,
+  "showTitle":true,
+  "showBio":true,
+  "showEmail":true,
+  "showPhone":true,
+  "showExpertise":false
   }
 ```
 
@@ -74,7 +73,7 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
   "type":"depList",
   "displayType":"default",
   "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-  "endpointURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/",
+  "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?",
   "selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],
   "titleFilter":"/(Director)/i",
   "expertiseFilter":"",
@@ -89,6 +88,7 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
 }
 ```
 
+### Full example code snippet
 ```html
-<div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "testURL":"https://cd8.lndo.site/clas-feeds/isearch/solr/","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true}'></div>
+<div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true}'></div>
 ```
