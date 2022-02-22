@@ -19,6 +19,13 @@ export const IsearchTableView = ({
   listConfig,
 }) => {
   console.log('returning table row')
+  let targetTab
+  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+    targetTab = "_blank"
+  }
+  else{
+    targetTab = "_self"
+  }
   return (
     <tr>
       <th scope="row">
@@ -98,6 +105,7 @@ IsearchTableView.propTypes = {
    * config to show/hide profile data
    */
   listConfig: PropTypes.object,
+
 };
 
 IsearchTableView.defaultProps = {
@@ -119,6 +127,7 @@ IsearchTableView.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-    showExpertise: true
+    showExpertise: true,
+    newTab: 'newtab'
   }
 };

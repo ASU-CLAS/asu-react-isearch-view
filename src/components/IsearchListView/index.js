@@ -24,12 +24,21 @@ export const IsearchListView = ({
       </div>
     );
   }
+
+  let targetTab
+  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+    targetTab = "_blank"
+  }
+  else{
+    targetTab = "_self"
+  }
+
   return (
     <div key={eid} className="profile profile-type-standard">
       <div className="profile-row">
         <div className="profile-photo-column">
           {listConfig.showPhoto && (
-            <a href={`https://isearch.asu.edu/profile/${eid}`}>
+            <a href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
               <img
                 className="pictureOriginal"
                 src={photoUrl}
@@ -43,7 +52,7 @@ export const IsearchListView = ({
         </div>
         <div className="profile-bio-column">
           <h3 className="profile-name">
-            <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
+            <a href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>{displayName}</a>
           </h3>
           {listConfig.showTitle && (
             <div className="profile-title">
@@ -133,6 +142,7 @@ IsearchListView.propTypes = {
    * config to show/hide profile data
    */
   listConfig: PropTypes.object,
+
 };
 
 IsearchListView.defaultProps = {
@@ -151,5 +161,6 @@ IsearchListView.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
+    newTab: 'newtab'
   }
 };

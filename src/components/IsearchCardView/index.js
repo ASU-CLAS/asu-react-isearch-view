@@ -15,7 +15,7 @@ export const IsearchCardView = ({
   selectedDepTitle,
   shortBio,
   expertiseAreas,
-  listConfig,
+  listConfig,  
 }) => {
   if (!loaded) {
     return (
@@ -23,6 +23,14 @@ export const IsearchCardView = ({
         <Loader type="ThreeDots" color="#5C6670" height="100" width="100" />
       </div>
     );
+  }
+
+  let targetTab
+  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+    targetTab = "_blank"
+  }
+  else{
+    targetTab = "_self"
   }
 
   return (
@@ -39,7 +47,7 @@ export const IsearchCardView = ({
         )}
         <div className="card-header">
           <h3 className="card-title">
-            <a className="" href={'https://isearch.asu.edu/profile/' + eid}>
+            <a className="" href={'https://isearch.asu.edu/profile/' + eid} target={targetTab}>
               {displayName}
             </a>
           </h3>
@@ -104,6 +112,7 @@ IsearchCardView.propTypes = {
    * config to show/hide profile data
    */
   listConfig: PropTypes.object,
+
 };
 
 IsearchCardView.defaultProps = {
@@ -123,5 +132,6 @@ IsearchCardView.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
+    newTab: 'newtab'
   }
 };

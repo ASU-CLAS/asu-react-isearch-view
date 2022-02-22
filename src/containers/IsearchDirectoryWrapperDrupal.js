@@ -308,6 +308,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(config.showEmail == undefined) { config.showEmail = true; }
     if(config.showExpertise == undefined) { config.showExpertise = true; }
     if(config.showFilterAZ == undefined) { config.showFilterAZ = false; }
+    if(config.newTab == undefined) { config.newTab = "newtab"; }
 
     let results = this.state.ourData.filter(Boolean);
 

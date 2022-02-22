@@ -27,7 +27,8 @@ IsearchCircleList.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-    showExpertise: true
+    showExpertise: true,
+    newTab: "newTab"
   },
   profileList: [
     {
@@ -39,6 +40,7 @@ IsearchCircleList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     },
     {
       loaded: true,
@@ -49,6 +51,7 @@ IsearchCircleList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     },
     {
       loaded: true,
@@ -59,6 +62,7 @@ IsearchCircleList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     }
   ],
 };

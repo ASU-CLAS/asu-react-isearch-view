@@ -30,7 +30,8 @@ IsearchTableList.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-    showExpertise: true
+    showExpertise: true,
+    newTab: "newTab"
   },
   profileList: [
     {
@@ -42,6 +43,7 @@ IsearchTableList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     },
     {
       loaded: true,
@@ -52,6 +54,7 @@ IsearchTableList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     },
     {
       loaded: true,
@@ -62,6 +65,7 @@ IsearchTableList.defaultProps = {
       shortBio: '',
       emailAddress: '',
       phone: '',
+
     }
   ],
 };

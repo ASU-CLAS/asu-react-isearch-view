@@ -17,6 +17,7 @@ export const IsearchCircleView = ({
   selectedDepTitle,
   expertiseAreas,
   shortBio,
+  newTab
 }) => {
   if (!loaded) {
     return (
@@ -24,6 +25,14 @@ export const IsearchCircleView = ({
         <Loader type="ThreeDots" color="#5C6670" height="100" width="100" />
       </div>
     );
+  }
+
+  let targetTab
+  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+    targetTab = "_blank"
+  }
+  else{
+    targetTab = "_self"
   }
 
   return (
@@ -61,7 +70,7 @@ export const IsearchCircleView = ({
             />
           </div>
           <div style={{textAlign: 'center'}}>
-            <a className="" href={`https://isearch.asu.edu/profile/${eid}`}>
+            <a className="" href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
               {displayName}
             </a>
             <p className="">{selectedDepTitle}</p>
@@ -86,7 +95,7 @@ export const IsearchCircleView = ({
               />
               <div class="card-body">
                 <h4 class="card-title">
-                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
+                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
                     {displayName}
                   </a>
                 </h4>
@@ -153,6 +162,7 @@ IsearchCircleView.propTypes = {
    * iSearch profile short bio
    */
   shortBio: PropTypes.string,
+
 };
 
 IsearchCircleView.defaultProps = {
@@ -165,4 +175,5 @@ IsearchCircleView.defaultProps = {
   selectedDepTitle: '',
   shortBio: '',
   expertiseAreas: '',
+  newTab: 'newtab'
 };
