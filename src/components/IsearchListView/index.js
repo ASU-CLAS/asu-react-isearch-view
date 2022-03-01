@@ -26,7 +26,7 @@ export const IsearchListView = ({
   }
 
   let targetTab
-  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+  if(listConfig.newTab == true){
     targetTab = "_blank"
   }
   else{
@@ -38,7 +38,7 @@ export const IsearchListView = ({
       <div className="profile-row">
         <div className="profile-photo-column">
           {listConfig.showPhoto && (
-            <a href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
+            <a href={`https://isearch.asu.edu/profile/${eid}`} target={`${targetTab}`}>
               <img
                 className="pictureOriginal"
                 src={photoUrl}
@@ -52,7 +52,7 @@ export const IsearchListView = ({
         </div>
         <div className="profile-bio-column">
           <h3 className="profile-name">
-            <a href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>{displayName}</a>
+            <a href={`https://isearch.asu.edu/profile/${eid}`} target={`${targetTab}`}>{displayName}</a>
           </h3>
           {listConfig.showTitle && (
             <div className="profile-title">

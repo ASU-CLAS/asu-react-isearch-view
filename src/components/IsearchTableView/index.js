@@ -20,7 +20,7 @@ export const IsearchTableView = ({
 }) => {
   console.log('returning table row')
   let targetTab
-  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+  if(listConfig.newTab == true){
     targetTab = "_blank"
   }
   else{
@@ -44,7 +44,7 @@ export const IsearchTableView = ({
       </th>
       <td>
         <h3 className="card-title">
-          <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
+          <a href={`https://isearch.asu.edu/profile/${eid}`} target={`${targetTab}`}>{displayName}</a>
         </h3>
         {listConfig.showTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
         {listConfig.showBio && <p>{shortBio}</p>}

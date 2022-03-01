@@ -28,7 +28,7 @@ export const IsearchCircleView = ({
   }
 
   let targetTab
-  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+  if(listConfig.newTab == true){
     targetTab = "_blank"
   }
   else{
@@ -70,7 +70,7 @@ export const IsearchCircleView = ({
             />
           </div>
           <div style={{textAlign: 'center'}}>
-            <a className="" href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
+            <a className="" href={`https://isearch.asu.edu/profile/${eid}`} target={`${targetTab}`}>
               {displayName}
             </a>
             <p className="">{selectedDepTitle}</p>
@@ -95,7 +95,7 @@ export const IsearchCircleView = ({
               />
               <div class="card-body">
                 <h4 class="card-title">
-                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`} target={targetTab}>
+                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`} target={`${targetTab}`}>
                     {displayName}
                   </a>
                 </h4>

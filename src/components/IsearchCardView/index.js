@@ -26,7 +26,7 @@ export const IsearchCardView = ({
   }
 
   let targetTab
-  if(listConfig.newTab == "newtab" || listConfig.newTab == "newTab"){
+  if(listConfig.newTab == true){
     targetTab = "_blank"
   }
   else{
@@ -47,7 +47,7 @@ export const IsearchCardView = ({
         )}
         <div className="card-header">
           <h3 className="card-title">
-            <a className="" href={'https://isearch.asu.edu/profile/' + eid} target={targetTab}>
+            <a className="" href={'https://isearch.asu.edu/profile/' + eid} target={`${targetTab}`}>
               {displayName}
             </a>
           </h3>
