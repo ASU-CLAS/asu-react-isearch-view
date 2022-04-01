@@ -6,6 +6,7 @@ import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
 import IsearchAtoZFilter from '../components/userFilters/IsearchAtoZFilter/index.js'
+import Avatar from "../components/images/avatar.png"
 import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
 import EventEmitter from 'events';
@@ -299,7 +300,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
-      config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+      config.defaultPhoto = Avatar;
     }
     if(config.showBio == undefined) { config.showBio = true; }
     if(config.showTitle == undefined) { config.showTitle = true; }

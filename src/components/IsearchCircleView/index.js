@@ -30,17 +30,17 @@ export const IsearchCircleView = ({
     <div>
       {circleHover ? (
         <div
-          class="ch-item ch-img-1"
+        className="ch-item ch-img-1"
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid}`}
           style={{
             backgroundImage: `url(${photoUrl}), url(${defaultPhoto})`,
           }}
         >
-          <div class="ch-info-wrap">
-            <div class="ch-info">
-              <div class="ch-info-front ch-img-1"></div>
-              <div class="ch-info-back">
+          <div className="ch-info-wrap">
+            <div className="ch-info">
+              <div className="ch-info-front ch-img-1"></div>
+              <div className="ch-info-back">
                 <h3>{displayName}</h3>
                 <p>{selectedDepTitle}</p>
               </div>
@@ -69,28 +69,28 @@ export const IsearchCircleView = ({
         </div>
       )}
 
-      <div class={`modal fade bd-isearch-modal-${eid}`} tabindex="-1" role="dialog">
-        <div class="modal-dialog isearch-card-modal">
-          <div class="modal-content">
-            <div class="card isearch-card">
-              <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+      <div className={`modal fade bd-isearch-modal-${eid}`} tabIndex="-1" role="dialog">
+        <div className="modal-dialog isearch-card-modal">
+          <div className="modal-content">
+            <div className="card isearch-card">
+              <button type="button" className="close x" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
               <img
-                class="pictureModal"
+                className="pictureModal"
                 src={photoUrl}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
                 alt={`profile picture for ${displayName}`}
               />
-              <div class="card-body">
-                <h4 class="card-title">
+              <div className="card-body">
+                <h4 className="card-title">
                   <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
                     {displayName}
                   </a>
                 </h4>
-                <h6 class="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
+                <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
                 <p>{shortBio}</p>
                 {expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
                 <p>
@@ -157,7 +157,7 @@ IsearchCircleView.propTypes = {
 
 IsearchCircleView.defaultProps = {
   circleHover: true,
-  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  defaultPhoto: '',
   emailAddress: '',
   loaded: true,
   phone: '',
