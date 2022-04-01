@@ -5,7 +5,7 @@ import {IsearchTableList} from '../containers/IsearchTableList';
 import {IsearchDefaultList} from '../containers/IsearchDefaultList';
 import {IsearchCircleList} from '../containers/IsearchCircleList';
 import {IsearchCardList} from '../containers/IsearchCardList';
-import IsearchAtoZFilter from '../components/IsearchAtoZFilter/index.js'
+import IsearchAtoZFilter from '../components/userFilters/IsearchAtoZFilter/index.js'
 import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
 import EventEmitter from 'events';
