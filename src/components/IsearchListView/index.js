@@ -161,6 +161,6 @@ IsearchListView.defaultProps = {
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-    newTab: 'newtab'
+    newTab: false
   }
 };

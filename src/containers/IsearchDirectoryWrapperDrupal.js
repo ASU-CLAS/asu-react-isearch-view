@@ -301,14 +301,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
     }
-    if(config.showBio == undefined) { config.showBio = true; }
-    if(config.showTitle == undefined) { config.showTitle = true; }
-    if(config.showPhoto == undefined) { config.showPhoto = true; }
-    if(config.showPhone == undefined) { config.showPhone = true; }
-    if(config.showEmail == undefined) { config.showEmail = true; }
+    if(config.showBio == undefined)       { config.showBio = true; }
+    if(config.showTitle == undefined)     { config.showTitle = true; }
+    if(config.showPhoto == undefined)     { config.showPhoto = true; }
+    if(config.showPhone == undefined)     { config.showPhone = true; }
+    if(config.showEmail == undefined)     { config.showEmail = true; }
     if(config.showExpertise == undefined) { config.showExpertise = true; }
-    if(config.showFilterAZ == undefined) { config.showFilterAZ = false; }
-    if(config.newTab == undefined) { config.newTab = "newtab"; }
+    if(config.showFilterAZ == undefined)  { config.showFilterAZ = false; }
+    if(config.newTab == undefined)        { config.newTab = false; }
 
     let results = this.state.ourData.filter(Boolean);
 

@@ -175,5 +175,5 @@ IsearchCircleView.defaultProps = {
   selectedDepTitle: '',
   shortBio: '',
   expertiseAreas: '',
-  newTab: 'newtab'
+  newTab: false
 };

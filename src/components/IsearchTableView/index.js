@@ -128,6 +128,6 @@ IsearchTableView.defaultProps = {
     showPhoto: true,
     showTitle: true,
     showExpertise: true,
-    newTab: 'newtab'
+    newTab: 'false'
   }
 };
