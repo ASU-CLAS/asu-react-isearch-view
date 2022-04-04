@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Col} from 'reactstrap';
-import Loader from 'react-loader-spinner';
-
-import './index.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import {Col} from 'reactstrap'
+import Loader from 'react-loader-spinner'
+import Avatar from '../../components/images/avatar.png'
+import './index.css'
 
 export const IsearchCircleView = ({
   circleHover,
@@ -26,6 +26,8 @@ export const IsearchCircleView = ({
     );
   }
 
+  let handlePhotoUrlError = () => e.target.src = Avatar
+
   return (
     <div>
       {circleHover ? (
@@ -34,8 +36,9 @@ export const IsearchCircleView = ({
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid}`}
           style={{
-            backgroundImage: `url(${photoUrl}), url(${defaultPhoto})`,
+            backgroundImage: `url(${photoUrl})`
           }}
+          onError={handlePhotoUrlError}
         >
           <div className="ch-info-wrap">
             <div className="ch-info">
@@ -54,9 +57,7 @@ export const IsearchCircleView = ({
               src={photoUrl}
               data-toggle="modal"
               data-target={`.bd-isearch-modal-${eid}`}
-              onError={e => {
-                e.target.src = defaultPhoto;
-              }}
+              onError={handlePhotoUrlError}
               alt={`profile picture for ${displayName}`}
             />
           </div>
@@ -157,7 +158,7 @@ IsearchCircleView.propTypes = {
 
 IsearchCircleView.defaultProps = {
   circleHover: true,
-  defaultPhoto: '',
+  defaultPhoto: Avatar,
   emailAddress: '',
   loaded: true,
   phone: '',

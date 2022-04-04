@@ -1,7 +1,8 @@
 // ./src/components/App.js
-import React from 'react';
-import {IsearchCircleView} from '../components/IsearchCircleView';
-import Loader from 'react-loader-spinner';
+import React from 'react'
+import {IsearchCircleView} from '../components/IsearchCircleView'
+import Loader from 'react-loader-spinner'
+import Avatar from "../components/images/avatar.png"
 
 export const IsearchCircleList = ({
   profileList,
@@ -21,7 +22,7 @@ export const IsearchCircleList = ({
 
 IsearchCircleList.defaultProps = {
   listConfig: {
-    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+    defaultPhoto: Avatar,
     showBio: true,
     showEmail: true,
     showPhone: true,
