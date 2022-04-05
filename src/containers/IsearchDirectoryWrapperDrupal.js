@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import {IsearchTableView} from '../components/IsearchTableView';
-import {IsearchTableList} from '../containers/IsearchTableList';
-import {IsearchDefaultList} from '../containers/IsearchDefaultList';
-import {IsearchCircleList} from '../containers/IsearchCircleList';
-import {IsearchCardList} from '../containers/IsearchCardList';
-import IsearchAtoZFilter from '../components/userFilters/IsearchAtoZFilter/index.js'
+import React, { Component } from 'react'
+import axios from 'axios'
+import {IsearchTableView} from '../components/IsearchTableView'
+import {IsearchTableList} from '../containers/IsearchTableList'
+import {IsearchDefaultList} from '../containers/IsearchDefaultList'
+import {IsearchCircleList} from '../containers/IsearchCircleList'
+import {IsearchCardList} from '../containers/IsearchCardList'
+import IsearchAtoZFilter from '../components/userFilters/IsearchAtoZFilter'
+import IsearchExpertiseFilter from '../components/userFilters/IsearchExpertiseFilter'
 import Avatar from "../components/images/avatar.png"
-import Loader from 'react-loader-spinner';
+import Loader from 'react-loader-spinner'
 import PropTypes from 'prop-types';
-import EventEmitter from 'events';
+import EventEmitter from 'events'
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -293,6 +294,19 @@ class IsearchDirectoryWrapperDrupal extends Component {
     event.preventDefault();
   }
 
+  getExpertiseOptions(profiles) {
+    let expertiseOptionList = []
+    profiles.forEach(profile => {
+      if (profile.primaryTitle !== undefined) {
+        expertiseOptionList.push({'value': profile.primaryTitle, 'label': profile.primaryTitle})
+      }
+    })
+    console.log(expertiseOptionList)
+    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
+    console.log(filteredExpertiseOptionList)
+    return expertiseOptionList
+  }
+
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
@@ -349,7 +363,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return (
         <div>
         {config.showFilterAZ == true &&
+        <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchExpertiseFilter options={this.getExpertiseOptions}  onClick={this.getExpertiseOptions(results)} />
+        </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />
         </div>
