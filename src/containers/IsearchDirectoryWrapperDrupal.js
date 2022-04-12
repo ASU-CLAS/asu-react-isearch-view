@@ -21,10 +21,37 @@ class IsearchDirectoryWrapperDrupal extends Component {
       profileList: [],
       filterActive: false,
       filterLetter: '',
+      selectFilterOptions: [],
       isLoaded: false,
       callErr: true,
       errMsg: '',
     };
+  }
+
+  getExpertiseOptions(profiles) {
+    let expertiseOptionList = []
+    profiles.forEach(profile => {
+      if (profile.primaryTitle !== undefined) {
+        expertiseOptionList.push({value: profile.primaryTitle, label: profile.primaryTitle})
+      }
+    })
+    console.log(expertiseOptionList)
+    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
+    console.log(filteredExpertiseOptionList)
+    this.setState({selectFilterOptions: filteredExpertiseOptionList}) 
+  }
+
+  getTitleOptions(profiles) {
+    let titleOptionList = []
+    profiles.forEach(profile => {
+      if (profile.primaryTitle !== undefined) {
+        titleOptionList.push({value: profile.primaryTitle, label: profile.primaryTitle})
+      }
+    })
+    console.log(titleOptionList)
+    let filteredTitleOptionList = titleOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
+    console.log(filteredTitleOptionList)
+    return filteredTitleOptionList
   }
 
   componentDidMount() {
@@ -227,7 +254,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
 
       }
-
+      this.getExpertiseOptions(orderedProfileResults)
 
       this.setState({
         profileList: orderedProfileResults,
@@ -294,19 +321,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
     event.preventDefault();
   }
 
-  getExpertiseOptions(profiles) {
-    let expertiseOptionList = []
-    profiles.forEach(profile => {
-      if (profile.primaryTitle !== undefined) {
-        expertiseOptionList.push({'value': profile.primaryTitle, 'label': profile.primaryTitle})
-      }
-    })
-    console.log(expertiseOptionList)
-    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
-    console.log(filteredExpertiseOptionList)
-    return expertiseOptionList
-  }
-
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
@@ -365,7 +379,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         {config.showFilterAZ == true &&
         <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
-          <IsearchExpertiseFilter options={this.getExpertiseOptions}  onClick={this.getExpertiseOptions(results)} />
+          <IsearchExpertiseFilter options={this.state.selectFilterOptions} />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />

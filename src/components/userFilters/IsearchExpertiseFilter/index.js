@@ -30,10 +30,9 @@ class IsearchExpertiseFilter extends React.Component {
         <Select
         value={selectedOption}
         onChange={this.handleChange}
-        options={this.state.profileList}
-        getOptionLabel ={(option)=>option.primaryTitle}
-        getOptionValue ={(option)=>option.primaryTitle}
         isMulti={true}
+        options={this.props.selectFilterOptions}
+        
       />
       </div>
       
