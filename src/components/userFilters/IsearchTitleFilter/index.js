@@ -1,51 +1,44 @@
 import React from 'react';
-
+import Select from 'react-select';
 import './index.css';
 
 class IsearchTitleFilter extends React.Component {
 
+  state = {
+    selectedOption: null,
+  };
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption }, () =>
+      console.log(`Option selected:`, this.state.selectedOption)
+    );
 
-render(){
+    let filteredProfileResults = []
+    
+    selectedOption.forEach(option => {
+      filteredProfileResults = this.props.profileList.filter( profile => profile.primaryTitle === option.value)
+    })
 
- let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    this.props.callbackFromParent(filteredProfileResults);
+    
+  };
 
- // uses selected letter state found in main component onClick function
- let alphabetList = alphabet.map( letter =>
-        {
-            return(
-                <a href="" className={this.props.selectedLetter === letter ? 'active-letter' : null} onClick={this.props.onClick} id={letter}><span className="" id={letter}>{letter}</span></a>
-            )
-        }
-    )
+  render() {
+    const { selectedOption } = this.state;
 
-  return (
-    <form className="flex-column">
-    {/* <div className="custom-select"> */}
-    <select
-      className="dropdown"
-      name="convertTo"
-      value={convertTo}
-      onChange={this.handleDropDown}
-    >
-      {this.state.currencies.map(currency => (
-        <option key={currency} value={currency}>
-          {currency}
-        </option>
-      ))}
-    </select>
-    {/* </div> */}
-    <input
-      className="result_input"
-      value={
-        amount === ""
-          ? "0"
-          : result === isNaN
-          ? "Calculating..."
-          : result
-      }
-    />
-  </form>
-  );}
+    return (
+      <div>
+        <label>Title filter:</label>
+        <Select
+        value={selectedOption}
+        onChange={this.handleChange}
+        isMulti={true}
+        options={this.props.options}
+        
+      />
+      </div>
+      
+    );
+  }
 };  
 
 export default IsearchTitleFilter;

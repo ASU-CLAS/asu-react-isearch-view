@@ -2,12 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import './index.css';
 
-// const options = [
-//   { value: 'chocolate', label: 'Chocolate' },
-//   { value: 'strawberry', label: 'Strawberry' },
-//   { value: 'vanilla', label: 'Vanilla' },
-// ];
-
 class IsearchExpertiseFilter extends React.Component {
 
   state = {
@@ -18,9 +12,7 @@ class IsearchExpertiseFilter extends React.Component {
       console.log(`Option selected:`, this.state.selectedOption)
     );
   };
-  getExpertiseList(){
-    
-  }
+  
   render() {
     const { selectedOption } = this.state;
 
@@ -31,7 +23,7 @@ class IsearchExpertiseFilter extends React.Component {
         value={selectedOption}
         onChange={this.handleChange}
         isMulti={true}
-        options={this.props.selectFilterOptions}
+        options={this.props.options}
         
       />
       </div>

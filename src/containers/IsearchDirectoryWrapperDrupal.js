@@ -7,9 +7,10 @@ import {IsearchCircleList} from '../containers/IsearchCircleList'
 import {IsearchCardList} from '../containers/IsearchCardList'
 import IsearchAtoZFilter from '../components/userFilters/IsearchAtoZFilter'
 import IsearchExpertiseFilter from '../components/userFilters/IsearchExpertiseFilter'
+import IsearchTitleFilter from '../components/userFilters/IsearchTitleFilter'
 import Avatar from "../components/images/avatar.png"
 import Loader from 'react-loader-spinner'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import EventEmitter from 'events'
 
 class IsearchDirectoryWrapperDrupal extends Component {
@@ -21,24 +22,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
       profileList: [],
       filterActive: false,
       filterLetter: '',
-      selectFilterOptions: [],
+      userSelectTitleFilterOptions: [],
+      userSelectExpertiseFilterOptions: [],
       isLoaded: false,
       callErr: true,
       errMsg: '',
     };
-  }
-
-  getExpertiseOptions(profiles) {
-    let expertiseOptionList = []
-    profiles.forEach(profile => {
-      if (profile.primaryTitle !== undefined) {
-        expertiseOptionList.push({value: profile.primaryTitle, label: profile.primaryTitle})
-      }
-    })
-    console.log(expertiseOptionList)
-    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
-    console.log(filteredExpertiseOptionList)
-    this.setState({selectFilterOptions: filteredExpertiseOptionList}) 
   }
 
   getTitleOptions(profiles) {
@@ -50,8 +39,31 @@ class IsearchDirectoryWrapperDrupal extends Component {
     })
     console.log(titleOptionList)
     let filteredTitleOptionList = titleOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
+    filteredTitleOptionList.sort((a, b) => a.value.localeCompare(b.value))
     console.log(filteredTitleOptionList)
-    return filteredTitleOptionList
+    this.setState({userSelectTitleFilterOptions: filteredTitleOptionList}) 
+  }
+
+  getExpertiseOptions(profiles) {
+    let expertiseOptionList = []
+    profiles.forEach(profile => {
+      if (profile.expertiseAreas !== undefined) {
+        profile.expertiseAreas.forEach(area => {
+          expertiseOptionList.push({value: area, label: area})
+        })
+      }
+    })
+    console.log(expertiseOptionList)
+    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i).sort()
+    filteredExpertiseOptionList.sort((a, b) => a.value.localeCompare(b.value))
+    console.log(filteredExpertiseOptionList)
+    this.setState({userSelectExpertiseFilterOptions: filteredExpertiseOptionList}) 
+  }
+
+  setTitleFilterState = (filteredData) => {
+    this.setState({
+      ourData: filteredData
+    })
   }
 
   componentDidMount() {
@@ -254,6 +266,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
 
       }
+      if(isearchConfig.showUserTitleFilter){
+
+      }
+      if(isearchConfig.showUserExpertiseFilter){
+
+      }
+      this.getTitleOptions(orderedProfileResults)
       this.getExpertiseOptions(orderedProfileResults)
 
       this.setState({
@@ -379,7 +398,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
         {config.showFilterAZ == true &&
         <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
-          <IsearchExpertiseFilter options={this.state.selectFilterOptions} />
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />
