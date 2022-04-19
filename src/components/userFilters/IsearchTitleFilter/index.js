@@ -14,19 +14,19 @@ class IsearchTitleFilter extends React.Component {
 
     let filteredProfileResults = []
     let profileList = this.props.profileList
-    
-    selectedOption.forEach(option => {
-      profileList.forEach(profile => {
-        if(profile.primaryTitle === option.value){
-          filteredProfileResults.push(profile)
-        }
+
+    if(selectedOption.length === 0){
+      this.props.callbackFromParent(profileList)
+    } else { 
+      selectedOption.forEach(option => {
+        profileList.forEach(profile => {
+          if(profile.primaryTitle === option.value){
+            filteredProfileResults.push(profile)
+          }
+        })
       })
-      //profileList.filter( profile => profile.primaryTitle === option.value).push(filteredProfileResults)
-      console.log(` in forEach: ${filteredProfileResults}`)
-    })
-    console.log(` final list: ${filteredProfileResults}`)
-    this.props.callbackFromParent(filteredProfileResults);
-    
+      this.props.callbackFromParent(filteredProfileResults);
+    }
   };
 
   render() {

@@ -65,6 +65,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
       ourData: filteredData
     })
   }
+  setExpertiseFilterState = (filteredData) => {
+    this.setState({
+      ourData: filteredData
+    })
+  }
 
   componentDidMount() {
 
@@ -399,7 +404,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} />
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />

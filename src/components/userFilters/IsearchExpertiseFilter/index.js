@@ -11,6 +11,26 @@ class IsearchExpertiseFilter extends React.Component {
     this.setState({ selectedOption }, () =>
       console.log(`Option selected:`, this.state.selectedOption)
     );
+
+    let filteredProfileResults = []
+    let profileList = this.props.profileList
+
+    if(selectedOption.length === 0){
+      this.props.callbackFromParent(profileList)
+    } else {
+      selectedOption.forEach(option => {
+        profileList.forEach(profile => {
+          if (profile.expertiseAreas !== undefined) {
+            profile.expertiseAreas.forEach(area => {
+              if(area === option.value){
+                filteredProfileResults.push(profile)
+              }
+            })
+          }
+        })
+      })
+      this.props.callbackFromParent(filteredProfileResults);
+    }    
   };
   
   render() {
