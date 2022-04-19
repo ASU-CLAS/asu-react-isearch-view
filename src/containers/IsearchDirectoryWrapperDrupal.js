@@ -23,7 +23,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
       filterActive: false,
       filterLetter: '',
       userSelectTitleFilterOptions: [],
+      userSelectTitleFilterActive: false,
       userSelectExpertiseFilterOptions: [],
+      userSelectExpertiseFilterActive: false,
       isLoaded: false,
       callErr: true,
       errMsg: '',
@@ -361,6 +363,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(config.showEmail == undefined) { config.showEmail = true; }
     if(config.showExpertise == undefined) { config.showExpertise = true; }
     if(config.showFilterAZ == undefined) { config.showFilterAZ = false; }
+    if(config.showUserExpertiseFilter == undefined) { config.showUserExpertiseFilter = false; }
+    if(config.showUserTitleFilter == undefined) { config.showUserTitleFilter = false; }
 
     let results = this.state.ourData.filter(Boolean);
 
@@ -383,6 +387,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
           {config.showFilterAZ == true &&
             <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
           }
+        {config.showUserExpertiseFilter == true &&
+        <div>
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+        </div>
+        }
+        {config.showUserTitleFilter == true &&
+        <div>
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+        </div>
+        }
           <IsearchDefaultList profileList={results} listConfig={config} />
         </div>
       );
@@ -392,6 +406,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
         <div>
         {config.showFilterAZ == true &&
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+        }
+        {config.showUserExpertiseFilter == true &&
+        <div>
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+        </div>
+        }
+        {config.showUserTitleFilter == true &&
+        <div>
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+        </div>
         }
           <IsearchTableList profileList={results} listConfig={config} />
         </div>
@@ -403,8 +427,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
         {config.showFilterAZ == true &&
         <div>
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+        </div>
+        }
+        {config.showUserExpertiseFilter == true &&
+        <div>
           <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+        </div>
+        }
+        {config.showUserTitleFilter == true &&
+        <div>
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />
@@ -416,6 +448,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
         <div>
         {config.showFilterAZ == true &&
           <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+        }
+                {config.showUserExpertiseFilter == true &&
+        <div>
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+        </div>
+        }
+        {config.showUserTitleFilter == true &&
+        <div>
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+        </div>
         }
           <IsearchCardList profileList={results} listConfig={config} />
         </div>
