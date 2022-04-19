@@ -26,8 +26,6 @@ export const IsearchCircleView = ({
     );
   }
 
-  let handlePhotoUrlError = () => e.target.src = Avatar
-
   return (
     <div>
       {circleHover ? (
@@ -36,9 +34,8 @@ export const IsearchCircleView = ({
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid}`}
           style={{
-            backgroundImage: `url(${photoUrl})`
+            backgroundImage: `url(${photoUrl}), url(${Avatar})`
           }}
-          onError={handlePhotoUrlError}
         >
           <div className="ch-info-wrap">
             <div className="ch-info">
@@ -57,7 +54,6 @@ export const IsearchCircleView = ({
               src={photoUrl}
               data-toggle="modal"
               data-target={`.bd-isearch-modal-${eid}`}
-              onError={handlePhotoUrlError}
               alt={`profile picture for ${displayName}`}
             />
           </div>
