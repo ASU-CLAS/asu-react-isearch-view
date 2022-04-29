@@ -25,7 +25,7 @@ export const IsearchListView = ({
     );
   }
   return (
-    <div key={eid} className="profile profile-type-standard">
+    <div key={eid} className="profile profile-type-standard iSearchFadeIn">
       <div className="profile-row">
         <div className="profile-photo-column">
           {listConfig.showPhoto && (

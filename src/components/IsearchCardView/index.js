@@ -26,7 +26,7 @@ export const IsearchCardView = ({
   }
 
   return (
-      <div className="card card-isearch">
+      <div className="card card-isearch iSearchFadeIn">
         {listConfig.showPhoto && (
           <img
             className="card-img-top"

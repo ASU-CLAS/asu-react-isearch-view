@@ -17,6 +17,7 @@ class IsearchTitleFilter extends React.Component {
 
     if(selectedOption.length === 0){
       this.props.callbackFromParent(profileList)
+      this.props.callbackFromParentSetState(false)
     } else { 
       selectedOption.forEach(option => {
         profileList.forEach(profile => {
@@ -25,6 +26,7 @@ class IsearchTitleFilter extends React.Component {
           }
         })
       })
+      this.props.callbackFromParentSetState(true)
       this.props.callbackFromParent(filteredProfileResults);
     }
   };

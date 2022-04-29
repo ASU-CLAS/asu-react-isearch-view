@@ -20,7 +20,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     this.state = {
       ourData: [],
       profileList: [],
-      filterActive: false,
+      userAZFilterActive: false,
       filterLetter: '',
       userSelectTitleFilterOptions: [],
       userSelectTitleFilterActive: false,
@@ -62,6 +62,45 @@ class IsearchDirectoryWrapperDrupal extends Component {
     this.setState({userSelectExpertiseFilterOptions: filteredExpertiseOptionList}) 
   }
 
+  checkFilterStatusExpertise(){
+    if(this.state.userAZFilterActive === true){
+      this.clearAZFilter()
+    }
+    if(this.state.userSelectTitleFilterActive === true){
+      this.clearTitleFilter()
+    }
+  }
+
+  checkFilterStatusTitle(){
+    if(this.state.userAZFilterActive === true){
+      this.clearAZFilter()
+    }
+    if(this.state.userSelectExpertiseFilterActive === true){
+      this.clearExpertiseFilter()
+    }
+  }
+
+  checkFilterStatusAZ(){
+    if(this.state.userSelectExpertiseFilterActive === true){
+      this.clearExpertiseFilter()
+    }
+    if(this.state.userSelectTitleFilterActive === true){
+      this.clearTitleFilter()
+    }
+  }
+
+  clearAZFilter(){
+    IsearchAtoZFilter.value = null
+    this.setState({userAZFilterActive: false, filterLetter: ''})
+  }
+  clearTitleFilter(){
+    IsearchTitleFilter.onChange({value: null})
+    this.setState({userSelectTitleFilterActive: false})
+  }
+  clearExpertiseFilter(){
+    IsearchExpertiseFilter.setState({selectedOption: null})
+  }
+
   setTitleFilterState = (filteredData) => {
     this.setState({
       ourData: filteredData
@@ -71,6 +110,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
     this.setState({
       ourData: filteredData
     })
+  }
+  setExpertiseFilterActiveState = (bool) => {
+    this.setState({userSelectExpertiseFilterActive: bool})
+    this.checkFilterStatusExpertise()
+  }
+  setTitleFilterActiveState = (bool) => {
+    this.setState({userSelectTitleFilterActive: bool})
+    this.checkFilterStatusTitle()
   }
 
   componentDidMount() {
@@ -324,10 +371,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
   handleClick(element){
 
     // if user clicks the same letter twice, it undos the filter and repopulates display profiles array with orig data
-    if (this.state.filterActive === true && this.state.filterLetter === element) {
+    if (this.state.userAZFilterActive === true && this.state.filterLetter === element) {
       this.setState({
         ourData: this.state.profileList,
-        filterActive: false,
+        userAZFilterActive: false,
         filterLetter: ''
       })
     }
@@ -338,7 +385,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
       this.setState({
         ourData: filteredProfileResults,
-        filterActive: true,
+        userAZFilterActive: true,
         filterLetter: element,
       })
     }
@@ -351,7 +398,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
-    console.log(this.state.filterActive, "checking filter")
+    console.log(this.state.userAZFilterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = Avatar;
@@ -431,12 +478,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
         {config.showUserExpertiseFilter == true &&
         <div>
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} callbackFromParentSetState={this.setExpertiseFilterActiveState} />
         </div>
         }
         {config.showUserTitleFilter == true &&
         <div>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} callbackFromParentSetState={this.setTitleFilterActiveState} />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />

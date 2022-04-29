@@ -12,7 +12,7 @@ export const IsearchDefaultList = ({
     <div className="isearch-default-list">
       {profileList.map((profileData, index) => (
         profileData.listConfig = listConfig,
-        <IsearchListView key={profileData.eid} {...profileData} />
+        <IsearchListView key={index} {...profileData} />
       ))}
     </div>
   );

@@ -14,7 +14,7 @@ export const IsearchCircleList = ({
     <div className="container"><div className="row">
       {profileList.map((profileData, index) => (
         profileData.listConfig = listConfig,
-        <div className="col col-6 modernCol col-md-4 col-lg-3"><IsearchCircleView {...profileData} /></div>
+        <div className="col col-6 modernCol col-md-4 col-lg-3"><IsearchCircleView key={index} {...profileData} /></div>
       ))}
     </div></div></div>
   );
