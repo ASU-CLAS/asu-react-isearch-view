@@ -20,7 +20,7 @@ export const IsearchTableView = ({
 }) => {
   console.log('returning table row')
   return (
-    <tr className='iSearchFadeIn'>
+    <tr>
       <th scope="row">
         {listConfig.showPhoto && (
           <a href={`https://isearch.asu.edu/profile/${eid}`}>

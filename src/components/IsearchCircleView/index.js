@@ -30,7 +30,7 @@ export const IsearchCircleView = ({
     <div>
       {circleHover ? (
         <div
-        className="ch-item ch-img-1 iSearchFadeIn"
+        className="ch-item ch-img-1"
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid}`}
           style={{

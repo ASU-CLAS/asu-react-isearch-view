@@ -13,15 +13,3 @@
 .titleOriginal {
   font-weight: bold;
 }
-.iSearchFadeIn {
-  animation: fadeInAnimation 1s linear;
-}
-
-@keyframes fadeInAnimation {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
