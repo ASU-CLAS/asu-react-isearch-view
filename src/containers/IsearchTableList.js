@@ -31,7 +31,7 @@ IsearchTableList.defaultProps = {
     showPhoto: true,
     showTitle: true,
     showExpertise: true,
-    newTab: "newTab"
+    newTab: true
   },
   profileList: [
     {
