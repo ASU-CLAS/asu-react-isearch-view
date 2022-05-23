@@ -16,7 +16,6 @@ import EventEmitter from 'events'
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       ourData: [],
       profileList: [],
@@ -26,11 +25,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
       userSelectTitleFilterActive: false,
       userSelectExpertiseFilterOptions: [],
       userSelectExpertiseFilterActive: false,
+      expertiseSelectedOption: null,
+      titleSelectedOption: null,
       isLoaded: false,
       callErr: true,
       errMsg: '',
     };
   }
+
+  /* Title filter functions */
 
   getTitleOptions(profiles) {
     let titleOptionList = []
@@ -39,36 +42,39 @@ class IsearchDirectoryWrapperDrupal extends Component {
         titleOptionList.push({value: profile.primaryTitle, label: profile.primaryTitle})
       }
     })
-    console.log(titleOptionList)
     let filteredTitleOptionList = titleOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
     filteredTitleOptionList.sort((a, b) => a.value.localeCompare(b.value))
-    console.log(filteredTitleOptionList)
     this.setState({userSelectTitleFilterOptions: filteredTitleOptionList}) 
   }
 
-  getExpertiseOptions(profiles) {
-    let expertiseOptionList = []
-    profiles.forEach(profile => {
-      if (profile.expertiseAreas !== undefined) {
-        profile.expertiseAreas.forEach(area => {
-          expertiseOptionList.push({value: area, label: area})
-        })
-      }
-    })
-    console.log(expertiseOptionList)
-    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i).sort()
-    filteredExpertiseOptionList.sort((a, b) => a.value.localeCompare(b.value))
-    console.log(filteredExpertiseOptionList)
-    this.setState({userSelectExpertiseFilterOptions: filteredExpertiseOptionList}) 
-  }
+  titleHandleChange = (selectedOption) => {
+    this.setState({ titleSelectedOption: selectedOption }, () =>
+      console.log(`Option selected:`, this.state.titleSelectedOption)
+    );
 
-  checkFilterStatusExpertise(){
-    if(this.state.userAZFilterActive === true){
-      this.clearAZFilter()
+    let filteredProfileResults = []
+    let profileList = this.state.profileList
+
+    if(selectedOption.length === 0){
+      this.setTitleFilterState(profileList)
+      this.setTitleFilterActiveState(false)
+    } else { 
+      selectedOption.forEach(option => {
+        profileList.forEach(profile => {
+          if(profile.primaryTitle === option.value){
+            filteredProfileResults.push(profile)
+          }
+        })
+      })
+      this.setTitleFilterActiveState(true)
+      this.setTitleFilterState(filteredProfileResults);
     }
-    if(this.state.userSelectTitleFilterActive === true){
-      this.clearTitleFilter()
-    }
+  };
+
+  setTitleFilterState = (filteredData) => {
+    this.setState({
+      ourData: filteredData
+    })
   }
 
   checkFilterStatusTitle(){
@@ -80,6 +86,86 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
   }
 
+  setTitleFilterActiveState = (bool) => {
+    this.setState({userSelectTitleFilterActive: bool})
+    this.checkFilterStatusTitle()
+  }
+
+  clearTitleFilter(){
+    this.value = null
+    this.setState({titleSelectedOption: null})
+  }
+
+/* Expertise filter functions */
+
+  getExpertiseOptions(profiles) {
+    let expertiseOptionList = []
+    profiles.forEach(profile => {
+      if (profile.expertiseAreas !== undefined) {
+        profile.expertiseAreas.forEach(area => {
+          expertiseOptionList.push({value: area, label: area})
+        })
+      }
+    })
+    let filteredExpertiseOptionList = expertiseOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i).sort()
+    filteredExpertiseOptionList.sort((a, b) => a.value.localeCompare(b.value))
+    this.setState({userSelectExpertiseFilterOptions: filteredExpertiseOptionList}) 
+  }
+
+  setExpertiseFilterState = (filteredData) => {
+    this.setState({
+      ourData: filteredData
+    })
+  }
+
+  expertiseHandleChange = (selectedOption) => {
+    this.setState({ expertiseSelectedOption: selectedOption }, () =>
+      console.log(`Option selected:`, this.state.expertiseSelectedOption)
+    );
+
+    let filteredProfileResults = []
+    let profileList = this.state.profileList
+
+    if(selectedOption.length === 0){
+      this.setExpertiseFilterState(profileList)
+      this.setExpertiseFilterActiveState(false)
+    } else {
+      selectedOption.forEach(option => {
+        profileList.forEach(profile => {
+          if (profile.expertiseAreas !== undefined) {
+            profile.expertiseAreas.forEach(area => {
+              if(area === option.value){
+                filteredProfileResults.push(profile)
+              }
+            })
+          }
+        })
+      })
+      this.setExpertiseFilterActiveState(true)
+      this.setExpertiseFilterState(filteredProfileResults);
+    }    
+  };
+  checkFilterStatusExpertise(){
+    if(this.state.userAZFilterActive === true){
+      this.clearAZFilter()
+    }
+    if(this.state.userSelectTitleFilterActive === true){
+      this.clearTitleFilter()
+    }
+  }
+
+  setExpertiseFilterActiveState = (bool) => {
+    this.setState({userSelectExpertiseFilterActive: bool})
+    this.checkFilterStatusExpertise()
+  }
+
+  clearExpertiseFilter(){
+    this.value = null
+    this.setState({expertiseSelectedOption: null})
+  }
+
+/* A-Z filter functions */
+
   checkFilterStatusAZ(){
     if(this.state.userSelectExpertiseFilterActive === true){
       this.clearExpertiseFilter()
@@ -88,36 +174,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
       this.clearTitleFilter()
     }
   }
-
   clearAZFilter(){
     IsearchAtoZFilter.value = null
     this.setState({userAZFilterActive: false, filterLetter: ''})
-  }
-  clearTitleFilter(){
-    IsearchTitleFilter.onChange({value: null})
-    this.setState({userSelectTitleFilterActive: false})
-  }
-  clearExpertiseFilter(){
-    IsearchExpertiseFilter.setState({selectedOption: null})
-  }
-
-  setTitleFilterState = (filteredData) => {
-    this.setState({
-      ourData: filteredData
-    })
-  }
-  setExpertiseFilterState = (filteredData) => {
-    this.setState({
-      ourData: filteredData
-    })
-  }
-  setExpertiseFilterActiveState = (bool) => {
-    this.setState({userSelectExpertiseFilterActive: bool})
-    this.checkFilterStatusExpertise()
-  }
-  setTitleFilterActiveState = (bool) => {
-    this.setState({userSelectTitleFilterActive: bool})
-    this.checkFilterStatusTitle()
   }
 
   componentDidMount() {
@@ -125,12 +184,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
     const isearchConfig = JSON.parse(this.props.dataFromPage.config)
 
     let feedURL = isearchConfig.endpointURL
-
-    console.log('iSearch Viewer - 2.0.3')
-    console.log('Developed by The College of Liberal Arts and Sciences')
-    console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
-    console.log('---')
-    console.log(feedURL);
 
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
@@ -156,8 +209,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.response.docs.length; i++) {
             if (item === response.data.response.docs[i].asuriteId) {
-              console.log('---')
-              console.log('Processing title for: ' + response.data.response.docs[i].asuriteId)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               var titleIndex = -1;
               // some profiles don't have deptids ???
@@ -171,8 +222,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
                 response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
-                console.log('No titleIndex, use working title')
-                console.log(response.data.response.docs[i].workingTitle)
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
                 if(response.data.response.docs[i].workingTitle == undefined) {
                   // check if the titles array exists and use that... can't take anything for granted
@@ -180,14 +229,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
                     response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
                   }
                   else {
-
-                    console.log('No titleIndex, no titles array, no title?')
                     // if the titles array doesn't exist, they just don't get a title I guess...
                     response.data.response.docs[i].selectedDepTitle = '';
 
                     // unless they are a student? we can test for student affiliation and make up a title
                     if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Student') {
-                      console.log('Might be a student')
                       response.data.response.docs[i].selectedDepTitle = 'Student';
                       if(response.data.response.docs[i].careers != undefined) {
                         response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].careers[0];
@@ -196,7 +242,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                     // or maybe a courtesy affiliate?
                     if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Courtesy Affiliate"') {
-                      console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
 
@@ -207,16 +252,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
                 response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
-                console.log('Set title via titleIndex')
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
                 if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
-                  console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
                   if(response.data.response.docs[i].workingTitle != undefined) {
                     response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
                   }
                   else {
-                    console.log('They said use working title, but there is none!')
+                    
                   }
 
 
@@ -233,10 +276,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
         orderedProfileResults = orderedProfileResults.map( item => {
           let titleIndex = item.deptids.indexOf(isearchConfig.ids[0].toString())
           item.selectedDepTitle = item.titles[titleIndex]
-          //console.log(item.titles);
           if(item.titleSource[titleIndex] == 'workingTitle') {
             item.selectedDepTitle = item.workingTitle
-            //console.log('use working title')
           }
           if (isearchConfig.sortType === 'rank') {
             item.selectedDepRank = item.employeeWeight[titleIndex]
@@ -254,10 +295,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        //console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
         orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
-        //console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -390,15 +429,16 @@ class IsearchDirectoryWrapperDrupal extends Component {
       })
     }
    // console.log(this.state.filterActive, "after test")
-
+   
     event.preventDefault();
+    this.clearExpertiseFilter()
+    this.clearTitleFilter()
   }
 
   render() {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
-    console.log(this.state.userAZFilterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = Avatar;
@@ -432,16 +472,29 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return (
         <div>
           {config.showFilterAZ == true &&
-            <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+            <IsearchAtoZFilter 
+            selectedLetter={this.state.filterLetter} 
+            onClick={e => this.handleClick(e.target.id)}
+            />
           }
         {config.showUserExpertiseFilter == true &&
         <div>
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+          <IsearchExpertiseFilter 
+            options={this.state.userSelectExpertiseFilterOptions} 
+            profileList={this.state.profileList}
+            expertiseHandleChange={this.expertiseHandleChange} 
+            expertiseSelectedOption={this.state.expertiseSelectedOption}
+          />
         </div>
         }
         {config.showUserTitleFilter == true &&
         <div>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+          <IsearchTitleFilter 
+            options={this.state.userSelectTitleFilterOptions} 
+            profileList={this.state.profileList} 
+            titleHandleChange={this.titleHandleChange}
+            titleSelectedOption={this.state.titleSelectedOption}
+          />
         </div>
         }
           <IsearchDefaultList profileList={results} listConfig={config} />
@@ -452,16 +505,29 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return (
         <div>
         {config.showFilterAZ == true &&
-          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter 
+          selectedLetter={this.state.filterLetter} 
+          onClick={e => this.handleClick(e.target.id)}
+          />
         }
         {config.showUserExpertiseFilter == true &&
         <div>
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+          <IsearchExpertiseFilter 
+            options={this.state.userSelectExpertiseFilterOptions} 
+            profileList={this.state.profileList}
+            expertiseHandleChange={this.expertiseHandleChange} 
+            expertiseSelectedOption={this.state.expertiseSelectedOption}
+          />
         </div>
         }
         {config.showUserTitleFilter == true &&
         <div>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+          <IsearchTitleFilter 
+            options={this.state.userSelectTitleFilterOptions} 
+            profileList={this.state.profileList} 
+            titleHandleChange={this.titleHandleChange}
+            titleSelectedOption={this.state.titleSelectedOption}
+          />
         </div>
         }
           <IsearchTableList profileList={results} listConfig={config} />
@@ -473,17 +539,30 @@ class IsearchDirectoryWrapperDrupal extends Component {
         <div>
         {config.showFilterAZ == true &&
         <div>
-          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter 
+            selectedLetter={this.state.filterLetter} 
+            onClick={e => this.handleClick(e.target.id)}
+          />
         </div>
         }
         {config.showUserExpertiseFilter == true &&
         <div>
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} callbackFromParentSetState={this.setExpertiseFilterActiveState} />
+          <IsearchExpertiseFilter 
+            options={this.state.userSelectExpertiseFilterOptions} 
+            profileList={this.state.profileList}
+            expertiseHandleChange={this.expertiseHandleChange} 
+            expertiseSelectedOption={this.state.expertiseSelectedOption}
+          />
         </div>
         }
         {config.showUserTitleFilter == true &&
         <div>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} callbackFromParentSetState={this.setTitleFilterActiveState} />
+          <IsearchTitleFilter 
+            options={this.state.userSelectTitleFilterOptions} 
+            profileList={this.state.profileList} 
+            titleHandleChange={this.titleHandleChange}
+            titleSelectedOption={this.state.titleSelectedOption}
+          />
         </div>
         }
           <IsearchCircleList profileList={results} listConfig={config} />
@@ -494,16 +573,29 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return (
         <div>
         {config.showFilterAZ == true &&
-          <IsearchAtoZFilter selectedLetter={this.state.filterLetter} onClick={e => this.handleClick(e.target.id)}/>
+          <IsearchAtoZFilter 
+          selectedLetter={this.state.filterLetter} 
+          onClick={e => this.handleClick(e.target.id)}
+          />
         }
                 {config.showUserExpertiseFilter == true &&
         <div>
-          <IsearchExpertiseFilter options={this.state.userSelectExpertiseFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setExpertiseFilterState} />
+          <IsearchExpertiseFilter 
+            options={this.state.userSelectExpertiseFilterOptions} 
+            profileList={this.state.profileList}
+            expertiseHandleChange={this.expertiseHandleChange} 
+            expertiseSelectedOption={this.state.expertiseSelectedOption}
+          />
         </div>
         }
         {config.showUserTitleFilter == true &&
         <div>
-          <IsearchTitleFilter options={this.state.userSelectTitleFilterOptions} profileList={this.state.profileList} callbackFromParent={this.setTitleFilterState} />
+          <IsearchTitleFilter 
+            options={this.state.userSelectTitleFilterOptions} 
+            profileList={this.state.profileList} 
+            titleHandleChange={this.titleHandleChange}
+            titleSelectedOption={this.state.titleSelectedOption}
+          />
         </div>
         }
           <IsearchCardList profileList={results} listConfig={config} />
