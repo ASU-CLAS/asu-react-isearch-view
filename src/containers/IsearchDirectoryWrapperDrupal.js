@@ -44,16 +44,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=3000&wt=json'
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0] + '&size=50&page=1'
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
       feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
     }
-
+    console.log(`updated feed: ${feedURL}`);
     axios.get(feedURL).then(response => {
-
-      let orderedProfileResults = response.data.response.docs
+      
+      let orderedProfileResults = response.data.results
+      console.log(orderedProfileResults)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
@@ -136,15 +137,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
       else {
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
-          let titleIndex = item.deptids.indexOf(isearchConfig.ids[0].toString())
-          item.selectedDepTitle = item.titles[titleIndex]
+          let titleIndex = item.deptids.raw.indexOf(isearchConfig.ids[0].toString())
+          item.selectedDepTitle = item.titles.raw[titleIndex]
           //console.log(item.titles);
-          if(item.titleSource[titleIndex] == 'workingTitle') {
-            item.selectedDepTitle = item.workingTitle
-            //console.log('use working title')
-          }
+          // if(item.title_source.raw[titleIndex] == 'workingTitle') {
+          //   item.selectedDepTitle = item.working_title.raw
+          //   //console.log('use working title')
+          // }
           if (isearchConfig.sortType === 'rank') {
-            item.selectedDepRank = item.employeeWeight[titleIndex]
+            item.selectedDepRank = item.employee_weight.raw[titleIndex]
           }
           return item
         })
@@ -153,15 +154,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (typeof isearchConfig.subAffFilters !== 'undefined') {
 
           subAffProfiles = response.data.response.docs
-            .filter(profile => profile.subaffiliations !== undefined)
-            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.includes(filter)))
+            .filter(profile => profile.subaffiliations.raw !== undefined)
+            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.raw.includes(filter)))
         }
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
         //console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw) || profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         //console.log(orderedProfileResults, "after filter")
         }
 
@@ -187,22 +188,22 @@ class IsearchDirectoryWrapperDrupal extends Component {
             const flags = isearchConfig.expertiseFilter.substr(isearchConfig.expertiseFilter.lastIndexOf('/') + 1 )
             let regexConstructor = new RegExp(pattern, flags);
             orderedProfileResults = orderedProfileResults.filter( profile => {
-              if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => regexConstructor.test(exp) )
+              if ( profile.expertise_areas.raw ) {
+                let matches = profile.expertise_areas.raw.filter( exp => regexConstructor.test(exp) )
                 return matches.length > 0
               }
             })
           }
           else {
             orderedProfileResults = orderedProfileResults.filter( profile => {
-              if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
+              if ( profile.expertise_areas.raw ) {
+                let matches = profile.expertise_areas.raw.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
                 return matches.length > 0
               }
             })
           }
         }
-
+        /*************** find examples of profiles with subaffilations ******************/
         // add subaffiliates to array before sorting
         if(subAffProfiles.length > 0) {
           orderedProfileResults.push(...subAffProfiles)
@@ -212,7 +213,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (isearchConfig.sortType === 'rank') {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
-                return a.lastName.localeCompare(b.lastName)
+                return a.last_name.raw.localeCompare(b.last_name.raw)
               }
               else {
                 return a.selectedDepRank - b.selectedDepRank
@@ -221,7 +222,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
         // otherwise sort alpha
         else {
-          orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
+          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw.localeCompare(b.last_name.raw))
         }
 
       }
@@ -279,7 +280,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     else {
       // filters through original data on each change, adds letter filter, and then sets results to display profiles array
-      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element.toLowerCase())
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.last_name.raw.toLowerCase().charAt(0) === element.toLowerCase())
 
       this.setState({
         ourData: filteredProfileResults,
