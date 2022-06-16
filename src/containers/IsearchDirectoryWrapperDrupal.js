@@ -44,7 +44,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0] + '&size=50&page=1'
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0] /* + '&size=50&page=1' */
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
@@ -160,10 +160,23 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        //console.log(orderedProfileResults, "i am chiken");
+        console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw) || profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
-        //console.log(orderedProfileResults, "after filter")
+        
+        function handleCourtesyAffiliates(profile) {
+          console.log(profile)
+          if('primary_simplified_empl_class' in profile) {
+            if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
+              return profile
+            } 
+          } else {
+            if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
+              return profile
+            }  
+          }
+        }
+        orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
+        console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -261,6 +274,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         } else {
             // Something happened in setting up the request that triggered an Error
             console.log('Error', error.message);
+            console.log(profile)
         }
         //display config info for error
         console.log(error.config);
