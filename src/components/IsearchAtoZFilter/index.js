@@ -13,7 +13,7 @@ render(){
  let alphabetList = alphabet.map( letter =>
         {
             return(
-                <a href="" className={this.props.selectedLetter === letter ? 'active-letter' : null} onClick={this.props.onClick} id={letter}><span className="" id={letter}>{letter}</span></a>
+                <a href="" className={this.props.selectedLetter === letter ? 'active-letter' : null} onClick={this.props.onClick} id={letter} key={letter}><span className="" id={letter}>{letter}</span></a>
             )
         }
     )

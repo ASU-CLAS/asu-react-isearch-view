@@ -44,7 +44,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0] /* + '&size=50&page=1' */
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=2&page=5' 
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
@@ -54,6 +54,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     axios.get(feedURL).then(response => {
       
       let orderedProfileResults = response.data.results
+      JSON.stringify(orderedProfileResults)
       console.log(orderedProfileResults)
       let subAffProfiles = []
 
@@ -137,7 +138,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       else {
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
-          let titleIndex = item.deptids.raw.indexOf(isearchConfig.ids[0].toString())
+          let titleIndex = item.deptids.raw[0].indexOf(isearchConfig.ids[0].toString())
           item.selectedDepTitle = item.titles.raw[titleIndex]
           //console.log(item.titles);
           // if(item.title_source.raw[titleIndex] == 'workingTitle') {
@@ -163,20 +164,21 @@ class IsearchDirectoryWrapperDrupal extends Component {
         console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
         
-        function handleCourtesyAffiliates(profile) {
-          console.log(profile)
-          if('primary_simplified_empl_class' in profile) {
-            if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
-              return profile
-            } 
-          } else {
-            if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
-              return profile
-            }  
-          }
-        }
-        orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
-        console.log(orderedProfileResults, "after filter")
+        // function handleCourtesyAffiliates(profile) {
+        //   console.log(profile)
+        //   if('primary_simplified_empl_class' in profile) {
+        //     if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
+        //       return profile
+        //     } 
+        //   } else {
+        //     if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
+        //       return profile
+        //     }  
+        //   }
+        // }
+        // orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
+        // console.log(orderedProfileResults, "after filter")
+        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
         // filter results by title (titleFilter)
@@ -226,7 +228,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (isearchConfig.sortType === 'rank') {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
-                return a.last_name.raw.localeCompare(b.last_name.raw)
+                return a.last_name.raw[0].localeCompare(b.last_name.raw[0])
               }
               else {
                 return a.selectedDepRank - b.selectedDepRank
@@ -235,7 +237,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
         // otherwise sort alpha
         else {
-          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw.localeCompare(b.last_name.raw))
+          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw[0].localeCompare(b.last_name.raw[0]))
         }
 
       }
@@ -274,7 +276,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
         } else {
             // Something happened in setting up the request that triggered an Error
             console.log('Error', error.message);
-            console.log(profile)
         }
         //display config info for error
         console.log(error.config);
@@ -294,7 +295,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     else {
       // filters through original data on each change, adds letter filter, and then sets results to display profiles array
-      let filteredProfileResults = this.state.profileList.filter( profile => profile.last_name.raw.toLowerCase().charAt(0) === element.toLowerCase())
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.last_name.raw[0].toLowerCase().charAt(0) === element.toLowerCase())
 
       this.setState({
         ourData: filteredProfileResults,
@@ -313,9 +314,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
-    if(config.defaultPhoto == undefined) {
-      config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
-    }
+    // if(config.defaultPhoto == undefined) {
+    //   config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+    // }
     if(config.showBio == undefined) { config.showBio = true; }
     if(config.showTitle == undefined) { config.showTitle = true; }
     if(config.showPhoto == undefined) { config.showPhoto = true; }
