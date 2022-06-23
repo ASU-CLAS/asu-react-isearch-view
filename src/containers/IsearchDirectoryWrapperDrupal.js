@@ -104,11 +104,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
-                response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
-                console.log('No titleIndex, use working title')
-                console.log(response.data.results[i].primary_title.raw)
+                
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-                if(response.data.results[i].primary_title.raw == undefined) {
+                if(response.data.results[i].primary_title == undefined) {
                   // check if the titles array exists and use that... can't take anything for granted
                   if(response.data.results[i].titles.raw != undefined && response.data.results[i].titles.raw[0] != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[0];
@@ -120,19 +118,23 @@ class IsearchDirectoryWrapperDrupal extends Component {
                     response.data.results[i].selectedDepTitle = '';
 
                     // unless they are a student? we can test for student affiliation and make up a title
-                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw[0] == 'Student') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Student')) {
                       console.log('Might be a student')
                       response.data.results[i].selectedDepTitle = 'Student';
                     }
 
                     // or maybe a courtesy affiliate?
-                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw[0] == 'Courtesy Affiliate"') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Courtesy Affiliate')) {
                       console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
 
                   }
 
+                } else {
+                  response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
+                console.log('No titleIndex, use working title')
+                console.log(response.data.results[i].primary_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
