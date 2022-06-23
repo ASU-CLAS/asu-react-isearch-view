@@ -5,16 +5,14 @@ import Loader from 'react-loader-spinner';
 import './index.css';
 
 export const IsearchListView = ({
-  addressLine1,
-  addressLine2,
-  displayName,
+  display_name,
   eid,
-  emailAddress,
+  email_address,
   loaded,
   phone,
-  photoUrl,
+  photo_url,
   selectedDepTitle,
-  shortBio,
+  short_bio,
   listConfig,
 }) => {
   if (!loaded) {
@@ -25,25 +23,25 @@ export const IsearchListView = ({
     );
   }
   return (
-    <div key={eid} className="profile profile-type-standard">
+    <div key={eid.raw} className="profile profile-type-standard">
       <div className="profile-row">
         <div className="profile-photo-column">
           {listConfig.showPhoto && (
-            <a href={`https://isearch.asu.edu/profile/${eid}`}>
+            <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>
               <img
                 className="pictureOriginal"
-                src={photoUrl}
+                src={photo_url.raw}
                 onError={e => {
                   e.target.src = listConfig.defaultPhoto;
                 }}
-                alt={`profile picture for ${displayName}`}
+                alt={`profile picture for ${display_name.raw}`}
               />
             </a>
           )}
         </div>
         <div className="profile-bio-column">
           <h3 className="profile-name">
-            <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
+            <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>{display_name.raw}</a>
           </h3>
           {listConfig.showTitle && (
             <div className="profile-title">
@@ -55,8 +53,8 @@ export const IsearchListView = ({
             {listConfig.showEmail && (
               <div className="">
                 <p>
-                  <a className="linkOriginal" href={`mailto:${emailAddress}`}>
-                    {emailAddress}
+                  <a className="linkOriginal" href={`mailto:${email_address.raw}`}>
+                    {email_address.raw}
                   </a>
                 </p>
               </div>
@@ -64,24 +62,15 @@ export const IsearchListView = ({
             {listConfig.showPhone && (
               <div className="">
                 <p>
-                  <a className="" href={`tel:${phone}`}>
-                    {phone}
+                  <a className="" href={`tel:${phone.raw}`}>
+                    {phone.raw}
                   </a>
                 </p>
               </div>
             )}
-            {listConfig.showPhone && (
-              <div className="">
-                  <div>
-                    {addressLine1}
-                    <br />
-                    {addressLine2}
-                  </div>
-              </div>
-            )}
           </div>
 
-          <p>{listConfig.showBio && shortBio}</p>
+          <p>{listConfig.showBio && short_bio.raw}</p>
         </div>
       </div>
     </div>
@@ -92,23 +81,15 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile Display Name
    */
-  displayName: PropTypes.string.isRequired,
+  display_name: PropTypes.object.isRequired,
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.string.isRequired,
-  /**
-   * iSearch profile address line 1
-   */
-  addressLine1: PropTypes.string,
-  /**
-   * iSearch profile address line 2
-   */
-  addressLine2: PropTypes.string,
+  eid: PropTypes.object.isRequired,
   /**
    * iSearch profile email address
    */
-  emailAddress: PropTypes.string,
+  email_address: PropTypes.object,
   /**
    * Is application data currently loading?
    */
@@ -116,11 +97,11 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile phone
    */
-  phone: PropTypes.string,
+  phone: PropTypes.object,
   /**
    * iSearch profile photo
    */
-  photoUrl: PropTypes.string,
+  photo_url: PropTypes.object,
   /**
    * iSearch profile selected department title
    */
@@ -128,7 +109,7 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile short bio
    */
-  shortBio: PropTypes.string,
+  short_bio: PropTypes.object,
   /**
    * config to show/hide profile data
    */
@@ -136,14 +117,12 @@ IsearchListView.propTypes = {
 };
 
 IsearchListView.defaultProps = {
-  addressLine1: '',
-  addressLine2: '',
-  emailAddress: '',
+  email_address: '',
   loaded: true,
   phone: '',
-  photoUrl: '',
+  photo_url: '',
   selectedDepTitle: '',
-  shortBio: '',
+  short_bio: '',
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
