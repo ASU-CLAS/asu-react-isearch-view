@@ -197,7 +197,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
               return profile
             } 
           } else {
-            if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
+            if(profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
               return profile
             }  
           }
