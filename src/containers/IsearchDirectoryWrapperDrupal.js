@@ -44,13 +44,34 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=2&page=5' 
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=999' 
     }
     else {
       let asuriteIds = isearchConfig.ids.join(' OR ')
       feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
     }
     console.log(`updated feed: ${feedURL}`);
+
+  //   async function downloadProfiles() {
+
+  //     let profiles = [];
+  //     let page = 0;
+  //     let totalPages = 0;
+  
+  //     do {
+  //         let { data: response }  = await axios.get(feedURL, { params: { page: ++page } })
+  //         totalPages = response.total_pages;
+  //         console.log(`downloadRecords: page ${page} of ${totalPages} downloaded...`)
+  //         profiles = profiles.concat(response.data)
+  //         console.log("records.length:", profiles.length)
+  //     } while (page < totalPages)
+  
+  //     console.log("downloadProfiles: download complete.")
+  //     return records
+  // }
+  
+  // downloadProfiles();
+
     axios.get(feedURL).then(response => {
       
       let orderedProfileResults = response.data.results
@@ -164,21 +185,21 @@ class IsearchDirectoryWrapperDrupal extends Component {
         console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
         
-        // function handleCourtesyAffiliates(profile) {
-        //   console.log(profile)
-        //   if('primary_simplified_empl_class' in profile) {
-        //     if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
-        //       return profile
-        //     } 
-        //   } else {
-        //     if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
-        //       return profile
-        //     }  
-        //   }
-        // }
-        // orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
-        // console.log(orderedProfileResults, "after filter")
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
+        function handleCourtesyAffiliates(profile) {
+          console.log(profile)
+          if('primary_simplified_empl_class' in profile) {
+            if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
+              return profile
+            } 
+          } else {
+            if(profile.affiliations.raw[0].includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
+              return profile
+            }  
+          }
+        }
+        orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
+        console.log(orderedProfileResults, "after filter")
+        //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
         // filter results by title (titleFilter)
