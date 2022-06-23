@@ -180,9 +180,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
         // filter results by subaffilation type (subAffFilters)
         if (typeof isearchConfig.subAffFilters !== 'undefined') {
 
-          subAffProfiles = response.data.results
-            .filter(profile => profile.subaffiliations.raw !== undefined)
-            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.raw.includes(filter)))
+          function handleSubAffiliates(profile){
+            if('subaffiliations' in profile) {
+              if(isearchConfig.subAffFilters.some(filter => profile.subaffiliations.raw.includes(filter))) {
+                return profile
+              }
+            }
+          }
+
+          subAffProfiles = response.data.results.filter(handleSubAffiliates)
         }
 
         // filter results by employee type (selectedFilters)

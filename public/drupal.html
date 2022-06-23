@@ -16,7 +16,7 @@
       <h2>This is the Drupal version of the app using data attributes to pass config</h2>
 
 
-      <!-- <h3>customList</h3>
+      <h3>customList</h3>
       <div class="clas-isearch-view" data-config='{
         "type":"customList",
         "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
@@ -45,12 +45,13 @@
         "showExpertise":true,
         "showPhone":true,
         "showFilterAZ":false
-      }'></div> -->
+      }'></div>
 
       <h3>depList</h3>
       <div class="clas-isearch-view" data-config='{
         "type":"depList",
         "displayType":"default",
+        "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
         "endpointURL":"https://dev-asu-isearch.ws.asu.edu/api/v1/",
         "selectedFilters":[
           "Academic Prof w/Admin Appt",
@@ -65,6 +66,7 @@
           ],
         "ids":[1755],
         "expertiseFilter":"",
+        "subAffFilters": ["ASU Foundation"],
         "showPhoto":true,
         "showTitle":true,
         "showBio":true,
