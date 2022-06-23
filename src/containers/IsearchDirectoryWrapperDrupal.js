@@ -44,11 +44,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=999' 
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=999' + '&client=clas'
     }
     else {
-      let asuriteIds = isearchConfig.ids.join(' OR ')
-      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
+      let asuriteIds = isearchConfig.ids.join(',')
+      feedURL = feedURL + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
     }
     console.log(`updated feed: ${feedURL}`);
 
@@ -77,53 +77,56 @@ class IsearchDirectoryWrapperDrupal extends Component {
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
       console.log(orderedProfileResults)
+
+      console.log('response data response:')
+      console.log(response.data.response)
+
+      console.log('response data results:')
+      console.log(response.data.results)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
-          for (var i = 0; i < response.data.response.docs.length; i++) {
-            if (item === response.data.response.docs[i].asuriteId) {
+          for (var i = 0; i < response.data.results.length; i++) {
+            if (item === response.data.results[i].asurite_id.raw) {
               console.log('---')
-              console.log('Processing title for: ' + response.data.response.docs[i].asuriteId)
+              console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               var titleIndex = -1;
               // some profiles don't have deptids ???
-              if(response.data.response.docs[i].deptids != undefined) {
-                titleIndex = response.data.response.docs[i].deptids.indexOf(isearchConfig.sourceIds[index].toString())
+              if(response.data.results[i].deptids.raw != undefined) {
+                titleIndex = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
               }
               // if there is no eid then use asurite in place
-              if(response.data.response.docs[i].eid == undefined) {
-                response.data.response.docs[i].eid = response.data.response.docs[i].asuriteId
+              if(response.data.results[i].eid.raw == undefined) {
+                response.data.results[i].eid.raw = response.data.results[i].asurite_id.raw
               }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
-                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
                 console.log('No titleIndex, use working title')
-                console.log(response.data.response.docs[i].workingTitle)
+                console.log(response.data.results[i].primary_title.raw)
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-                if(response.data.response.docs[i].workingTitle == undefined) {
+                if(response.data.results[i].primary_title.raw == undefined) {
                   // check if the titles array exists and use that... can't take anything for granted
-                  if(response.data.response.docs[i].titles != undefined && response.data.response.docs[i].titles[0] != undefined) {
-                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                  if(response.data.results[i].titles.raw != undefined && response.data.results[i].titles.raw[0] != undefined) {
+                    response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[0];
                   }
                   else {
 
                     console.log('No titleIndex, no titles array, no title?')
                     // if the titles array doesn't exist, they just don't get a title I guess...
-                    response.data.response.docs[i].selectedDepTitle = '';
+                    response.data.results[i].selectedDepTitle = '';
 
                     // unless they are a student? we can test for student affiliation and make up a title
-                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Student') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw[0] == 'Student') {
                       console.log('Might be a student')
-                      response.data.response.docs[i].selectedDepTitle = 'Student';
-                      if(response.data.response.docs[i].careers != undefined) {
-                        response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].careers[0];
-                      }
+                      response.data.results[i].selectedDepTitle = 'Student';
                     }
 
                     // or maybe a courtesy affiliate?
-                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Courtesy Affiliate"') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw[0] == 'Courtesy Affiliate"') {
                       console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
@@ -134,14 +137,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
-                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
+                response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[titleIndex]
                 console.log('Set title via titleIndex')
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
-                if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
+                if(response.data.results[i].title_source.raw[titleIndex] == 'working_title') {
                   console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
-                  if(response.data.response.docs[i].workingTitle != undefined) {
-                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                  if(response.data.results[i].working_title.raw != undefined) {
+                    response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
                   }
                   else {
                     console.log('They said use working title, but there is none!')
@@ -151,7 +154,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 }
               }
 
-              return response.data.response.docs[i]
+              return response.data.results[i]
             }
           }
         })
@@ -175,7 +178,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         // filter results by subaffilation type (subAffFilters)
         if (typeof isearchConfig.subAffFilters !== 'undefined') {
 
-          subAffProfiles = response.data.response.docs
+          subAffProfiles = response.data.results
             .filter(profile => profile.subaffiliations.raw !== undefined)
             .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.raw.includes(filter)))
         }
