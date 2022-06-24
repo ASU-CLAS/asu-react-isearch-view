@@ -44,81 +44,109 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'q=deptids:' + isearchConfig.ids[0] + '&rows=3000&wt=json'
+      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=999' + '&client=clas'
     }
     else {
-      let asuriteIds = isearchConfig.ids.join(' OR ')
-      feedURL = feedURL + 'q=asuriteId:('+ asuriteIds + ')&rows=2000&wt=json'
+      let asuriteIds = isearchConfig.ids.join(',')
+      feedURL = feedURL + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
     }
+    console.log(`updated feed: ${feedURL}`);
+
+  //   async function downloadProfiles() {
+
+  //     let profiles = [];
+  //     let page = 0;
+  //     let totalPages = 0;
+  
+  //     do {
+  //         let { data: response }  = await axios.get(feedURL, { params: { page: ++page } })
+  //         totalPages = response.total_pages;
+  //         console.log(`downloadRecords: page ${page} of ${totalPages} downloaded...`)
+  //         profiles = profiles.concat(response.data)
+  //         console.log("records.length:", profiles.length)
+  //     } while (page < totalPages)
+  
+  //     console.log("downloadProfiles: download complete.")
+  //     return records
+  // }
+  
+  // downloadProfiles();
 
     axios.get(feedURL).then(response => {
+      
+      let orderedProfileResults = response.data.results
+      JSON.stringify(orderedProfileResults)
+      console.log(orderedProfileResults)
 
-      let orderedProfileResults = response.data.response.docs
+      console.log('response data response:')
+      console.log(response.data.response)
+
+      console.log('response data results:')
+      console.log(response.data.results)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
-          for (var i = 0; i < response.data.response.docs.length; i++) {
-            if (item === response.data.response.docs[i].asuriteId) {
+          for (var i = 0; i < response.data.results.length; i++) {
+            if (item === response.data.results[i].asurite_id.raw) {
               console.log('---')
-              console.log('Processing title for: ' + response.data.response.docs[i].asuriteId)
+              console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               var titleIndex = -1;
               // some profiles don't have deptids ???
-              if(response.data.response.docs[i].deptids != undefined) {
-                titleIndex = response.data.response.docs[i].deptids.indexOf(isearchConfig.sourceIds[index].toString())
+              if(response.data.results[i].deptids.raw != undefined) {
+                titleIndex = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
               }
               // if there is no eid then use asurite in place
-              if(response.data.response.docs[i].eid == undefined) {
-                response.data.response.docs[i].eid = response.data.response.docs[i].asuriteId
+              if(response.data.results[i].eid.raw == undefined) {
+                response.data.results[i].eid.raw = response.data.results[i].asurite_id.raw
               }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
-                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
-                console.log('No titleIndex, use working title')
-                console.log(response.data.response.docs[i].workingTitle)
+                
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-                if(response.data.response.docs[i].workingTitle == undefined) {
+                if(response.data.results[i].primary_title == undefined) {
                   // check if the titles array exists and use that... can't take anything for granted
-                  if(response.data.response.docs[i].titles != undefined && response.data.response.docs[i].titles[0] != undefined) {
-                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[0];
+                  if(response.data.results[i].titles.raw != undefined && response.data.results[i].titles.raw[0] != undefined) {
+                    response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[0];
                   }
                   else {
 
                     console.log('No titleIndex, no titles array, no title?')
                     // if the titles array doesn't exist, they just don't get a title I guess...
-                    response.data.response.docs[i].selectedDepTitle = '';
+                    response.data.results[i].selectedDepTitle = '';
 
                     // unless they are a student? we can test for student affiliation and make up a title
-                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Student') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Student')) {
                       console.log('Might be a student')
-                      response.data.response.docs[i].selectedDepTitle = 'Student';
-                      if(response.data.response.docs[i].careers != undefined) {
-                        response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].careers[0];
-                      }
+                      response.data.results[i].selectedDepTitle = 'Student';
                     }
 
                     // or maybe a courtesy affiliate?
-                    if(response.data.response.docs[i].affiliations != undefined && response.data.response.docs[i].affiliations[0] == 'Courtesy Affiliate"') {
+                    if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Courtesy Affiliate')) {
                       console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
 
                   }
 
+                } else {
+                  response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
+                console.log('No titleIndex, use working title')
+                console.log(response.data.results[i].primary_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
-                response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].titles[titleIndex]
+                response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[titleIndex]
                 console.log('Set title via titleIndex')
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
-                if(response.data.response.docs[i].titleSource[titleIndex] == 'workingTitle') {
+                if(response.data.results[i].title_source.raw[titleIndex] == 'working_title') {
                   console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
-                  if(response.data.response.docs[i].workingTitle != undefined) {
-                    response.data.response.docs[i].selectedDepTitle = response.data.response.docs[i].workingTitle
+                  if(response.data.results[i].working_title.raw != undefined) {
+                    response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
                   }
                   else {
                     console.log('They said use working title, but there is none!')
@@ -128,7 +156,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 }
               }
 
-              return response.data.response.docs[i]
+              return response.data.results[i]
             }
           }
         })
@@ -136,15 +164,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
       else {
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
-          let titleIndex = item.deptids.indexOf(isearchConfig.ids[0].toString())
-          item.selectedDepTitle = item.titles[titleIndex]
+          let titleIndex = item.deptids.raw[0].indexOf(isearchConfig.ids[0].toString())
+          item.selectedDepTitle = item.titles.raw[titleIndex]
           //console.log(item.titles);
-          if(item.titleSource[titleIndex] == 'workingTitle') {
-            item.selectedDepTitle = item.workingTitle
-            //console.log('use working title')
-          }
+          // if(item.title_source.raw[titleIndex] == 'workingTitle') {
+          //   item.selectedDepTitle = item.working_title.raw
+          //   //console.log('use working title')
+          // }
           if (isearchConfig.sortType === 'rank') {
-            item.selectedDepRank = item.employeeWeight[titleIndex]
+            item.selectedDepRank = item.employee_weight.raw[titleIndex]
           }
           return item
         })
@@ -152,17 +180,37 @@ class IsearchDirectoryWrapperDrupal extends Component {
         // filter results by subaffilation type (subAffFilters)
         if (typeof isearchConfig.subAffFilters !== 'undefined') {
 
-          subAffProfiles = response.data.response.docs
-            .filter(profile => profile.subaffiliations !== undefined)
-            .filter(profile => isearchConfig.subAffFilters.some(filter => profile.subaffiliations.includes(filter)))
+          function handleSubAffiliates(profile){
+            if('subaffiliations' in profile) {
+              if(isearchConfig.subAffFilters.some(filter => profile.subaffiliations.raw.includes(filter))) {
+                return profile
+              }
+            }
+          }
+
+          subAffProfiles = response.data.results.filter(handleSubAffiliates)
         }
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        //console.log(orderedProfileResults, "i am chiken");
+        console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
-        orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primarySimplifiedEmplClass) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
-        //console.log(orderedProfileResults, "after filter")
+        
+        function handleCourtesyAffiliates(profile) {
+          console.log(profile)
+          if('primary_simplified_empl_class' in profile) {
+            if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
+              return profile
+            } 
+          } else {
+            if(profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
+              return profile
+            }  
+          }
+        }
+        orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
+        console.log(orderedProfileResults, "after filter")
+        //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
         // filter results by title (titleFilter)
@@ -187,22 +235,22 @@ class IsearchDirectoryWrapperDrupal extends Component {
             const flags = isearchConfig.expertiseFilter.substr(isearchConfig.expertiseFilter.lastIndexOf('/') + 1 )
             let regexConstructor = new RegExp(pattern, flags);
             orderedProfileResults = orderedProfileResults.filter( profile => {
-              if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => regexConstructor.test(exp) )
+              if ( profile.expertise_areas.raw ) {
+                let matches = profile.expertise_areas.raw.filter( exp => regexConstructor.test(exp) )
                 return matches.length > 0
               }
             })
           }
           else {
             orderedProfileResults = orderedProfileResults.filter( profile => {
-              if ( profile.expertiseAreas ) {
-                let matches = profile.expertiseAreas.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
+              if ( profile.expertise_areas.raw ) {
+                let matches = profile.expertise_areas.raw.filter( exp => isearchConfig.expertiseFilter.toLowerCase().includes( exp.toLowerCase()) ) // logic reversed so .include filters correctly (e.g. searching for Aging should not return results for Bioimaging)
                 return matches.length > 0
               }
             })
           }
         }
-
+        /*************** find examples of profiles with subaffilations ******************/
         // add subaffiliates to array before sorting
         if(subAffProfiles.length > 0) {
           orderedProfileResults.push(...subAffProfiles)
@@ -212,7 +260,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (isearchConfig.sortType === 'rank') {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
-                return a.lastName.localeCompare(b.lastName)
+                return a.last_name.raw.localeCompare(b.last_name.raw)
               }
               else {
                 return a.selectedDepRank - b.selectedDepRank
@@ -221,7 +269,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
         // otherwise sort alpha
         else {
-          orderedProfileResults = orderedProfileResults.sort((a, b) => a.lastName.localeCompare(b.lastName))
+          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw.localeCompare(b.last_name.raw))
         }
 
       }
@@ -279,7 +327,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     else {
       // filters through original data on each change, adds letter filter, and then sets results to display profiles array
-      let filteredProfileResults = this.state.profileList.filter( profile => profile.lastName.toLowerCase().charAt(0) === element.toLowerCase())
+      let filteredProfileResults = this.state.profileList.filter( profile => profile.last_name.raw[0].toLowerCase().charAt(0) === element.toLowerCase())
 
       this.setState({
         ourData: filteredProfileResults,
@@ -298,9 +346,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
-    if(config.defaultPhoto == undefined) {
-      config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
-    }
+    // if(config.defaultPhoto == undefined) {
+    //   config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+    // }
     if(config.showBio == undefined) { config.showBio = true; }
     if(config.showTitle == undefined) { config.showTitle = true; }
     if(config.showPhoto == undefined) { config.showPhoto = true; }

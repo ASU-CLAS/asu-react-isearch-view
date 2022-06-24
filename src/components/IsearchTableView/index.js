@@ -5,17 +5,15 @@ import Loader from 'react-loader-spinner';
 import './index.css';
 
 export const IsearchTableView = ({
-  addressLine1,
-  addressLine2,
-  displayName,
+  display_name,
   eid,
-  emailAddress,
+  email_address,
   loaded,
   phone,
-  photoUrl,
+  photo_url,
   selectedDepTitle,
-  shortBio,
-  expertiseAreas,
+  short_bio,
+  expertise_areas,
   listConfig,
 }) => {
   console.log('returning table row')
@@ -23,35 +21,35 @@ export const IsearchTableView = ({
     <tr>
       <th scope="row">
         {listConfig.showPhoto && (
-          <a href={`https://isearch.asu.edu/profile/${eid}`}>
+          <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>
             <img
               className="pictureOriginal"
-              src={photoUrl}
+              src={photo_url.raw}
               onError={e => {
                 e.target.src = listConfig.defaultPhoto;
               }}
-              alt={`profile picture for ${displayName}`}
+              alt={`profile picture for ${display_name.raw}`}
             />
           </a>
         )}
       </th>
       <td>
         <h3 className="card-title">
-          <a href={`https://isearch.asu.edu/profile/${eid}`}>{displayName}</a>
+          <a href={`https://isearch.asu.edu/profile/${eid}`}>{display_name.raw}</a>
         </h3>
         {listConfig.showTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
-        {listConfig.showBio && <p>{shortBio}</p>}
-        {listConfig.showExpertise && expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
+        {listConfig.showBio && <p>{short_bio.raw}</p>}
+        {listConfig.showExpertise && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
       </td>
       <td>
         {listConfig.showEmail && (
           <p>
-            <a className="linkOriginal" href={`mailto:${emailAddress}`}>
-              {emailAddress}
+            <a className="linkOriginal" href={`mailto:${email_address.raw}`}>
+              {email_address.raw}
             </a>
           </p>
         )}
-        {listConfig.showPhone && <p>{phone}</p>}
+        {listConfig.showPhone && <p>{phone.raw}</p>}
       </td>
     </tr>
   );
@@ -61,15 +59,15 @@ IsearchTableView.propTypes = {
   /**
    * iSearch profile Display Name
    */
-  displayName: PropTypes.string.isRequired,
+  display_name: PropTypes.object.isRequired,
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.string.isRequired,
+  eid: PropTypes.object.isRequired,
   /**
    * iSearch profile email address
    */
-  emailAddress: PropTypes.string,
+  email_address: PropTypes.object,
   /**
    * Is application data currently loading?
    */
@@ -77,11 +75,11 @@ IsearchTableView.propTypes = {
   /**
    * iSearch profile phone
    */
-  phone: PropTypes.string,
+  phone: PropTypes.object,
   /**
    * iSearch profile photo
    */
-  photoUrl: PropTypes.string,
+  photo_url: PropTypes.object,
   /**
    * iSearch profile selected department title
    */
@@ -89,11 +87,11 @@ IsearchTableView.propTypes = {
   /**
    * iSearch profile selected expertise areas
    */
-  expertiseAreas: PropTypes.array,
+  expertise_areas: PropTypes.object,
   /**
    * iSearch profile short bio
    */
-  shortBio: PropTypes.string,
+  short_bio: PropTypes.object,
   /**
    * config to show/hide profile data
    */
@@ -101,17 +99,15 @@ IsearchTableView.propTypes = {
 };
 
 IsearchTableView.defaultProps = {
-  addressLine1: '',
-  addressLine2: '',
-  displayName: '',
+  display_name: '',
   eid:"1234",
-  emailAddress: '',
+  email_address: '',
   loaded: true,
   phone: '',
-  photoUrl: '',
+  photo_url: '',
   selectedDepTitle: '',
-  shortBio: '',
-  expertiseAreas: [],
+  short_bio: '',
+  expertise_areas: [],
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
