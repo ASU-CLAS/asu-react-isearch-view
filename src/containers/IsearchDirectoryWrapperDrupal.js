@@ -260,7 +260,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (isearchConfig.sortType === 'rank') {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
-                return a.last_name.raw[0].localeCompare(b.last_name.raw[0])
+                return a.last_name.raw.localeCompare(b.last_name.raw)
               }
               else {
                 return a.selectedDepRank - b.selectedDepRank
@@ -269,7 +269,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
         // otherwise sort alpha
         else {
-          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw[0].localeCompare(b.last_name.raw[0]))
+          orderedProfileResults = orderedProfileResults.sort((a, b) => a.last_name.raw.localeCompare(b.last_name.raw))
         }
 
       }
