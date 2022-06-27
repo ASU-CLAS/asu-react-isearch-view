@@ -101,8 +101,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
   getExpertiseOptions(profiles) {
     let expertiseOptionList = []
     profiles.forEach(profile => {
-      if (profile.expertiseAreas !== undefined) {
-        profile.expertiseAreas.forEach(area => {
+      if (profile.expertise_areas.raw !== null) {
+        profile.expertise_areas.raw.forEach(area => {
           expertiseOptionList.push({value: area, label: area})
         })
       }
@@ -132,8 +132,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
     } else {
       selectedOption.forEach(option => {
         profileList.forEach(profile => {
-          if (profile.expertiseAreas !== undefined) {
-            profile.expertiseAreas.forEach(area => {
+          if (profile.expertise_areas.raw !== null) {
+            profile.expertise_areas.raw.forEach(area => {
               if(area === option.value){
                 filteredProfileResults.push(profile)
               }
