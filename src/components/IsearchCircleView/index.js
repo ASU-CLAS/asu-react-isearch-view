@@ -34,7 +34,7 @@ export const IsearchCircleView = ({
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid.raw}`}
           style={{
-            backgroundImage: `url(${photo_url.raw}), url(${defaultPhoto})`,
+            backgroundImage: `url(${photo_url.raw}), url(${Avatar})`,
           }}
         >
           <div className="ch-info-wrap">
