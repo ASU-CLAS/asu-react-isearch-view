@@ -12,9 +12,9 @@ export const IsearchTableList = ({
     <div id="isearch-table-list">
         <table className="table">
           <tbody>
-            {profileList.map((profileData, index) => (
-              profileData.listConfig = listConfig,
-              <IsearchTableView {...profileData} />
+            {profileList.map((profile, index) => (
+              profile.listConfig = listConfig,
+              <IsearchTableView {...profile} key={index} />
             ))}
           </tbody>
         </table>

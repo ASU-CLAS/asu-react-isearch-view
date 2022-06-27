@@ -1,4 +1,3 @@
-// ./src/components/App.js
 import React from 'react';
 import {IsearchCardView} from '../components/IsearchCardView';
 import Loader from 'react-loader-spinner';
@@ -11,9 +10,12 @@ export const IsearchCardList = ({
   return (
     <div className="isearch-circle-list">
     <div className="container"><div className="row row-spaced">
-      {profileList.map((profileData, index) => (
-        profileData.listConfig = listConfig,
-        <div className="col col-12 col-md-6 col-lg-4"><IsearchCardView {...profileData} /></div>
+    {console.log(`cards list data:`)}
+      {console.log(profileList)}
+      {profileList.map((profile, index) => (
+        console.log(profile),
+        profile.listConfig = listConfig,
+        <div className="col col-12 col-md-6 col-lg-4" key={index}><IsearchCardView {...profile} /></div>
       ))}
     </div></div></div>
   );

@@ -8,15 +8,15 @@ import './index.css'
 export const IsearchCircleView = ({
   circleHover,
   defaultPhoto,
-  displayName,
+  display_name,
   eid,
-  emailAddress,
+  email_address,
   loaded,
   phone,
-  photoUrl,
+  photo_url,
   selectedDepTitle,
-  expertiseAreas,
-  shortBio,
+  expertise_areas,
+  short_bio,
 }) => {
   if (!loaded) {
     return (
@@ -30,18 +30,18 @@ export const IsearchCircleView = ({
     <div>
       {circleHover ? (
         <div
-        className="ch-item ch-img-1"
+          className="ch-item ch-img-1"
           data-toggle="modal"
-          data-target={`.bd-isearch-modal-${eid}`}
+          data-target={`.bd-isearch-modal-${eid.raw}`}
           style={{
-            backgroundImage: `url(${photoUrl}), url(${Avatar})`
+            backgroundImage: `url(${photo_url.raw}), url(${defaultPhoto})`,
           }}
         >
           <div className="ch-info-wrap">
             <div className="ch-info">
               <div className="ch-info-front ch-img-1"></div>
               <div className="ch-info-back">
-                <h3>{displayName}</h3>
+                <h3>{display_name.raw}</h3>
                 <p>{selectedDepTitle}</p>
               </div>
             </div>
@@ -51,22 +51,25 @@ export const IsearchCircleView = ({
         <div>
           <div className="modernProfile">
             <img
-              src={photoUrl}
+              src={photo_url.raw}
               data-toggle="modal"
-              data-target={`.bd-isearch-modal-${eid}`}
-              alt={`profile picture for ${displayName}`}
+              data-target={`.bd-isearch-modal-${eid.raw}`}
+              onError={e => {
+                e.target.src = defaultPhoto;
+              }}
+              alt={`profile picture for ${display_name.raw}`}
             />
           </div>
           <div style={{textAlign: 'center'}}>
-            <a className="" href={`https://isearch.asu.edu/profile/${eid}`}>
-              {displayName}
+            <a className="" href={`https://isearch.asu.edu/profile/${eid.raw}`}>
+              {display_name.raw}
             </a>
             <p className="">{selectedDepTitle}</p>
           </div>
         </div>
       )}
 
-      <div className={`modal fade bd-isearch-modal-${eid}`} tabIndex="-1" role="dialog">
+      <div className={`modal fade bd-isearch-modal-${eid.raw}`} tabIndex="-1" role="dialog">
         <div className="modal-dialog isearch-card-modal">
           <div className="modal-content">
             <div className="card isearch-card">
@@ -75,27 +78,27 @@ export const IsearchCircleView = ({
               </button>
               <img
                 className="pictureModal"
-                src={photoUrl}
+                src={photo_url.raw}
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={`profile picture for ${displayName}`}
+                alt={`profile picture for ${display_name.raw}`}
               />
               <div className="card-body">
                 <h4 className="card-title">
-                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid}`}>
-                    {displayName}
+                  <a className="linkOriginal" href={`https://isearch.asu.edu/profile/${eid.raw}`}>
+                    {display_name.raw}
                   </a>
                 </h4>
                 <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
-                <p>{shortBio}</p>
-                {expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
+                <p>{short_bio.raw}</p>
+                {expertise_areas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.map((item,index) => (<span>{item}{index < expertise_areas.length - 1 && ', '}</span>) )}</p></span>}
                 <p>
-                  <a className="linkOriginal" href={`mailto:${emailAddress}`}>
-                    {emailAddress}
+                  <a className="linkOriginal" href={`mailto:${email_address.raw}`}>
+                    {email_address.raw}
                   </a>
                 </p>
-                <p>{phone}</p>
+                <p>{phone.raw}</p>
               </div>
             </div>
           </div>
@@ -117,15 +120,15 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile Display Name
    */
-  displayName: PropTypes.string.isRequired,
+   display_name: PropTypes.object.isRequired,
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.number.isRequired,
+  eid: PropTypes.object.isRequired,
   /**
    * iSearch profile email address
    */
-  emailAddress: PropTypes.string,
+   email_address: PropTypes.object,
   /**
    * Is application data currently loading?
    */
@@ -133,11 +136,11 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile phone
    */
-  phone: PropTypes.string,
+  phone: PropTypes.object,
   /**
    * iSearch profile photo
    */
-  photoUrl: PropTypes.string,
+   photo_url: PropTypes.object,
   /**
    * iSearch profile selected department title
    */
@@ -145,11 +148,11 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile selected expertise areas
    */
-   expertiseAreas: PropTypes.array,
+   expertise_areas: PropTypes.object,
   /**
    * iSearch profile short bio
    */
-  shortBio: PropTypes.string,
+   short_bio: PropTypes.object,
 };
 
 IsearchCircleView.defaultProps = {
@@ -158,8 +161,8 @@ IsearchCircleView.defaultProps = {
   emailAddress: '',
   loaded: true,
   phone: '',
-  photoUrl: '',
+  photo_url: {raw: ''},
   selectedDepTitle: '',
-  shortBio: '',
-  expertiseAreas: '',
+  short_bio: '',
+  expertise_areas: '',
 };
