@@ -38,13 +38,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
   getTitleOptions(profiles) {
     let titleOptionList = []
     profiles.forEach(profile => {
-      if (profile.primaryTitle !== undefined) {
-        titleOptionList.push({value: profile.primaryTitle, label: profile.primaryTitle})
+      if (profile.primary_title !== undefined) {
+        titleOptionList.push({value: profile.primary_title.raw, label: profile.primary_title.raw})
       }
     })
-    let filteredTitleOptionList = titleOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label === v.label && t.value===v.value))===i)
-    filteredTitleOptionList.sort((a, b) => a.value.localeCompare(b.value))
-    this.setState({userSelectTitleFilterOptions: filteredTitleOptionList}) 
+    let filteredTitleOptionList = titleOptionList.filter((v,i,a)=>a.findIndex(t=>(t.label[0] === v.label[0] && t.value[0]===v.value[0]))===i)
+    console.log('filtered title list:')
+    console.log(filteredTitleOptionList)
+    //duplicates not getting filtered above, then sort below for A-Z
+    filteredTitleOptionList.sort((a, b) => a.value[0].localeCompare(b.value[0]))
+    let uniqueFilteredTitleOptionList = [...new Set(filteredTitleOptionList)];
+    this.setState({userSelectTitleFilterOptions: uniqueFilteredTitleOptionList}) 
   }
 
   titleHandleChange = (selectedOption) => {
@@ -60,9 +64,18 @@ class IsearchDirectoryWrapperDrupal extends Component {
       this.setTitleFilterActiveState(false)
     } else { 
       selectedOption.forEach(option => {
+        //console.log('option:')
+        //console.log(option.value[0])
         profileList.forEach(profile => {
-          if(profile.primaryTitle === option.value){
-            filteredProfileResults.push(profile)
+          //console.log(profile)
+          if(profile.primary_title !== undefined){
+            //console.log('not undefined:')
+            //console.log(profile)
+            if(profile.primary_title.raw[0] == option.value[0]){
+              //console.log('match:')
+              //console.log(profile)
+              filteredProfileResults.push(profile)
+            }
           }
         })
       })
@@ -119,9 +132,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
   }
 
   expertiseHandleChange = (selectedOption) => {
-    this.setState({ expertiseSelectedOption: selectedOption }, () =>
-      console.log(`Option selected:`, this.state.expertiseSelectedOption)
-    );
+    this.setState({ expertiseSelectedOption: selectedOption });
 
     let filteredProfileResults = []
     let profileList = this.state.profileList
@@ -198,7 +209,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       let asuriteIds = isearchConfig.ids.join(',')
       feedURL = feedURL + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
     }
-    console.log(`updated feed: ${feedURL}`);
+    //console.log(`updated feed: ${feedURL}`);
 
   //   async function downloadProfiles() {
 
@@ -224,13 +235,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
       
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
-      console.log(orderedProfileResults)
+      //console.log(orderedProfileResults)
 
-      console.log('response data response:')
-      console.log(response.data.response)
+      //console.log('response data response:')
+      //console.log(response.data.response)
 
-      console.log('response data results:')
-      console.log(response.data.results)
+      //console.log('response data results:')
+      //console.log(response.data.results)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
@@ -238,8 +249,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.results.length; i++) {
             if (item === response.data.results[i].asurite_id.raw) {
-              console.log('---')
-              console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
+              //console.log('---')
+              //console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               var titleIndex = -1;
               // some profiles don't have deptids ???
@@ -265,13 +276,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                     // unless they are a student? we can test for student affiliation and make up a title
                     if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Student')) {
-                      console.log('Might be a student')
+                      //console.log('Might be a student')
                       response.data.results[i].selectedDepTitle = 'Student';
                     }
 
                     // or maybe a courtesy affiliate?
                     if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Courtesy Affiliate')) {
-                      console.log('Is a courtesy affiliate')
+                      //console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
 
@@ -279,17 +290,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                 } else {
                   response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
-                console.log('No titleIndex, use working title')
-                console.log(response.data.results[i].primary_title.raw)
+                //console.log('No titleIndex, use working title')
+                //console.log(response.data.results[i].primary_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
                 response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[titleIndex]
-                console.log('Set title via titleIndex')
+                //console.log('Set title via titleIndex')
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
                 if(response.data.results[i].title_source.raw[titleIndex] == 'working_title') {
-                  console.log('Title source override, use working title')
+                  //console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
                   if(response.data.results[i].working_title.raw != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
@@ -339,11 +350,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        console.log(orderedProfileResults, "i am chiken");
+        //console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
         
         function handleCourtesyAffiliates(profile) {
-          console.log(profile)
+          //console.log(profile)
           if('primary_simplified_empl_class' in profile) {
             if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
               return profile
@@ -355,7 +366,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           }
         }
         orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
-        console.log(orderedProfileResults, "after filter")
+        //console.log(orderedProfileResults, "after filter")
         //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
