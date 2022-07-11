@@ -31,7 +31,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
 
-    console.log('iSearch Viewer - 2.0.3')
+    console.log('iSearch Viewer - 2.1.0')
     console.log('Developed by The College of Liberal Arts and Sciences')
     console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
     console.log('---')
@@ -39,7 +39,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
-      feedURL = '/clas-feeds/isearch/solr/'
+      feedURL = 'https://live-asu-isearch.ws.asu.edu/api/v1/'
     }
 
     // depList and customList need to use different solr queries
@@ -57,7 +57,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
   //     let profiles = [];
   //     let page = 0;
   //     let totalPages = 0;
-  
+
   //     do {
   //         let { data: response }  = await axios.get(feedURL, { params: { page: ++page } })
   //         totalPages = response.total_pages;
@@ -65,15 +65,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
   //         profiles = profiles.concat(response.data)
   //         console.log("records.length:", profiles.length)
   //     } while (page < totalPages)
-  
+
   //     console.log("downloadProfiles: download complete.")
   //     return records
   // }
-  
+
   // downloadProfiles();
 
     axios.get(feedURL).then(response => {
-      
+
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
       console.log(orderedProfileResults)
@@ -104,7 +104,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
-                
+
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
                 if(response.data.results[i].primary_title == undefined) {
                   // check if the titles array exists and use that... can't take anything for granted
@@ -164,9 +164,14 @@ class IsearchDirectoryWrapperDrupal extends Component {
       else {
         //assign custom titles and rank
         orderedProfileResults = orderedProfileResults.map( item => {
-          let titleIndex = item.deptids.raw[0].indexOf(isearchConfig.ids[0].toString())
+          // get the array index of this dept
+          let titleIndex = item.deptids.raw.indexOf(isearchConfig.ids[0].toString())
+          // use the array index to select the correct title for this dept
           item.selectedDepTitle = item.titles.raw[titleIndex]
-          //console.log(item.titles);
+          //console.log('-- person --');
+          //console.log(item.display_name.raw);
+          //console.log(item.selectedDepTitle);
+          //console.log(item.titles.raw);
           // if(item.title_source.raw[titleIndex] == 'workingTitle') {
           //   item.selectedDepTitle = item.working_title.raw
           //   //console.log('use working title')
@@ -195,17 +200,17 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
         console.log(orderedProfileResults, "i am chiken");
         // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
-        
+
         function handleCourtesyAffiliates(profile) {
           console.log(profile)
           if('primary_simplified_empl_class' in profile) {
             if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
               return profile
-            } 
+            }
           } else {
             if(profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
               return profile
-            }  
+            }
           }
         }
         orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
@@ -346,9 +351,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
-    // if(config.defaultPhoto == undefined) {
-    //   config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
-    // }
+    if(config.defaultPhoto == undefined) {
+      config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
+    }
     if(config.showBio == undefined) { config.showBio = true; }
     if(config.showTitle == undefined) { config.showTitle = true; }
     if(config.showPhoto == undefined) { config.showPhoto = true; }

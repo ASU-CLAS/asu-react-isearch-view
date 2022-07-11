@@ -47,7 +47,7 @@ export const IsearchCardView = ({
             <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
           )}
           {listConfig.showBio && <p>{short_bio.raw}</p>}
-          {listConfig.showExpertise && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
+          {listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
           {listConfig.showEmail && (
             <p>
               <a className="linkOriginal" href={'mailto:' + email_address.raw}>

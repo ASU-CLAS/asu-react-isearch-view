@@ -17,6 +17,7 @@ export const IsearchTableView = ({
   listConfig,
 }) => {
   console.log('returning table row')
+  console.log(expertise_areas)
   return (
     <tr>
       <th scope="row">
@@ -35,11 +36,11 @@ export const IsearchTableView = ({
       </th>
       <td>
         <h3 className="card-title">
-          <a href={`https://isearch.asu.edu/profile/${eid}`}>{display_name.raw}</a>
+          <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>{display_name.raw}</a>
         </h3>
         {listConfig.showTitle && <p className="titleOriginal">{selectedDepTitle}</p>}
         {listConfig.showBio && <p>{short_bio.raw}</p>}
-        {listConfig.showExpertise && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
+        {listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
       </td>
       <td>
         {listConfig.showEmail && (
@@ -99,15 +100,15 @@ IsearchTableView.propTypes = {
 };
 
 IsearchTableView.defaultProps = {
-  display_name: '',
-  eid:"1234",
-  email_address: '',
+  display_name: {raw:''},
+  eid: {raw:'1234'},
+  email_address: {raw:''},
   loaded: true,
-  phone: '',
-  photo_url: '',
+  phone: {raw:''},
+  photo_url: {raw:''},
   selectedDepTitle: '',
-  short_bio: '',
-  expertise_areas: [],
+  short_bio: {raw:''},
+  expertise_areas: {raw:[]},
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
