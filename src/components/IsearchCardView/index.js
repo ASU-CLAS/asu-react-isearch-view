@@ -4,17 +4,15 @@ import PropTypes from 'prop-types';
 import './index.css';
 
 export const IsearchCardView = ({
-  addressLine1,
-  addressLine2,
-  displayName,
+  display_name,
   eid,
-  emailAddress,
+  email_address,
   loaded,
   phone,
-  photoUrl,
+  photo_url,
   selectedDepTitle,
-  shortBio,
-  expertiseAreas,
+  short_bio,
+  expertise_areas,
   listConfig,
 }) => {
   if (!loaded) {
@@ -30,17 +28,17 @@ export const IsearchCardView = ({
         {listConfig.showPhoto && (
           <img
             className="card-img-top"
-            src={photoUrl}
+            src={photo_url.raw}
             onError={e => {
               e.target.src = listConfig.defaultPhoto;
             }}
-            alt={'profile picture for ' + displayName}
+            alt={'profile picture for ' + display_name.raw}
           />
         )}
         <div className="card-header">
           <h3 className="card-title">
-            <a className="" href={'https://isearch.asu.edu/profile/' + eid}>
-              {displayName}
+            <a className="" href={'https://isearch.asu.edu/profile/' + eid.raw}>
+              {display_name.raw}
             </a>
           </h3>
         </div>
@@ -48,16 +46,16 @@ export const IsearchCardView = ({
           {listConfig.showTitle && (
             <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
           )}
-          {listConfig.showBio && <p>{shortBio}</p>}
-          {listConfig.showExpertise && expertiseAreas.length > 0 && <span><label>Expertise Areas: </label> <p>{expertiseAreas.map((item,index) => (<span>{item}{index < expertiseAreas.length - 1 && ', '}</span>) )}</p></span>}
+          {listConfig.showBio && <p>{short_bio.raw}</p>}
+          {listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
           {listConfig.showEmail && (
             <p>
-              <a className="linkOriginal" href={'mailto:' + emailAddress}>
-                {emailAddress}
+              <a className="linkOriginal" href={'mailto:' + email_address.raw}>
+                {email_address.raw}
               </a>
             </p>
           )}
-          <p>{listConfig.showPhone && phone}</p>
+          <p>{listConfig.showPhone && phone.raw}</p>
         </div>
       </div>
   );
@@ -67,15 +65,15 @@ IsearchCardView.propTypes = {
   /**
    * iSearch profile Display Name
    */
-  displayName: PropTypes.string.isRequired,
+  display_name: PropTypes.object.isRequired,
   /**
    * iSearch profile EID
    */
-  eid: PropTypes.number.isRequired,
+  eid: PropTypes.object.isRequired,
   /**
    * iSearch profile email address
    */
-  emailAddress: PropTypes.string,
+  email_address: PropTypes.object,
   /**
    * Is application data currently loading?
    */
@@ -83,11 +81,11 @@ IsearchCardView.propTypes = {
   /**
    * iSearch profile phone
    */
-  phone: PropTypes.string,
+  phone: PropTypes.object,
   /**
    * iSearch profile photo
    */
-  photoUrl: PropTypes.string,
+  photo_url: PropTypes.object,
   /**
    * iSearch profile selected department title
    */
@@ -95,11 +93,11 @@ IsearchCardView.propTypes = {
     /**
    * iSearch profile selected expertise areas
    */
-  expertiseAreas: PropTypes.array,
+  expertise_areas: PropTypes.object,
   /**
    * iSearch profile short bio
    */
-  shortBio: PropTypes.string,
+  short_bio: PropTypes.object,
   /**
    * config to show/hide profile data
    */
@@ -107,15 +105,13 @@ IsearchCardView.propTypes = {
 };
 
 IsearchCardView.defaultProps = {
-  addressLine1: '',
-  addressLine2: '',
-  emailAddress: '',
+  email_address: '',
   loaded: true,
   phone: '',
-  photoUrl: '',
+  photo_url: '',
   selectedDepTitle: '',
-  shortBio: '',
-  expertiseAreas: [],
+  short_bio: '',
+  expertise_areas: [],
   listConfig: {
     showBio: true,
     defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',

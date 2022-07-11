@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@asu-design-system/bootstrap4-theme": "^1.1.2",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "css-loader": "^5.2.0",
     "faker": "^5.5.2",
     "file-loader": "^6.2.0",
