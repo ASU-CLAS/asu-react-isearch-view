@@ -241,7 +241,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       //console.log(response.data.response)
 
       //console.log('response data results:')
-      //console.log(response.data.results)
+      console.log(response.data.results)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
@@ -249,8 +249,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.results.length; i++) {
             if (item === response.data.results[i].asurite_id.raw) {
-              //console.log('---')
-              //console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
+              console.log('---')
+              console.log('Processing title for: ' + response.data.results[i].asurite_id.raw)
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               var titleIndex = -1;
               // some profiles don't have deptids ???
@@ -276,13 +276,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                     // unless they are a student? we can test for student affiliation and make up a title
                     if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Student')) {
-                      //console.log('Might be a student')
+                      console.log('Might be a student')
                       response.data.results[i].selectedDepTitle = 'Student';
                     }
 
                     // or maybe a courtesy affiliate?
                     if(response.data.results[i].affiliations.raw != undefined && response.data.results[i].affiliations.raw.includes('Courtesy Affiliate')) {
-                      //console.log('Is a courtesy affiliate')
+                      console.log('Is a courtesy affiliate')
                       // not sure what to do here now, could be anything!
                     }
 
@@ -290,17 +290,21 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                 } else {
                   response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
-                //console.log('No titleIndex, use working title')
-                //console.log(response.data.results[i].primary_title.raw)
+                console.log('No titleIndex, use working title')
+                console.log(response.data.results[i].primary_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
               else {
                 response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[titleIndex]
-                //console.log('Set title via titleIndex')
+                console.log('Set title via titleIndex')
+                if(response.data.results[i].titles.raw[titleIndex] == null){
+                  response.data.results[i].selectedDepTitle = response.data.results[i].primary_title.raw
+                }
+                console.log(response.data.results[i].titles.raw[titleIndex])
                 // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
                 if(response.data.results[i].title_source.raw[titleIndex] == 'working_title') {
-                  //console.log('Title source override, use working title')
+                  console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
                   if(response.data.results[i].working_title.raw != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
