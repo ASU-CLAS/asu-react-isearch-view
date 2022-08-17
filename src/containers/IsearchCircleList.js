@@ -1,4 +1,3 @@
-// ./src/components/App.js
 import React from 'react';
 import {IsearchCircleView} from '../components/IsearchCircleView';
 import Loader from 'react-loader-spinner';

@@ -24,7 +24,6 @@ export const IsearchTableList = ({
 
 IsearchTableList.defaultProps = {
   listConfig: {
-    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
     showBio: true,
     showEmail: true,
     showPhone: true,

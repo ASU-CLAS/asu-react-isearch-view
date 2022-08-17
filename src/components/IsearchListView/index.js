@@ -89,7 +89,7 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile email address
    */
-  email_address: PropTypes.object,
+  email_address: PropTypes.string,
   /**
    * Is application data currently loading?
    */
@@ -97,7 +97,7 @@ IsearchListView.propTypes = {
   /**
    * iSearch profile phone
    */
-  phone: PropTypes.object,
+  phone: PropTypes.string,
   /**
    * iSearch profile photo
    */

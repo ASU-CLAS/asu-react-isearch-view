@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Col} from 'reactstrap';
-import Loader from 'react-loader-spinner';
-
-import './index.css';
+import React from 'react'
+import PropTypes from 'prop-types'
+import {Col} from 'reactstrap'
+import Loader from 'react-loader-spinner'
+import Avatar from '../../components/images/avatar.png'
+import './index.css'
 
 export const IsearchCircleView = ({
   circleHover,
@@ -34,7 +34,7 @@ export const IsearchCircleView = ({
           data-toggle="modal"
           data-target={`.bd-isearch-modal-${eid.raw}`}
           style={{
-            backgroundImage: `url(${photo_url.raw}), url(${defaultPhoto})`,
+            backgroundImage: `url(${photo_url.raw}), url(${Avatar})`,
           }}
         >
           <div className="ch-info-wrap">
@@ -157,8 +157,8 @@ IsearchCircleView.propTypes = {
 
 IsearchCircleView.defaultProps = {
   circleHover: true,
-  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
-  email_address: '',
+  defaultPhoto: Avatar,
+  emailAddress: '',
   loaded: true,
   phone: '',
   photo_url: {raw: ''},

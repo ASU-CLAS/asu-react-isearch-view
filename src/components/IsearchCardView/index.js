@@ -114,7 +114,6 @@ IsearchCardView.defaultProps = {
   expertise_areas: [],
   listConfig: {
     showBio: true,
-    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
     showEmail: true,
     showPhone: true,
     showPhoto: true,
