@@ -198,24 +198,22 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-        console.log(orderedProfileResults, "i am chiken");
-        // Emeritus profiles don't have primarySimplifiedEmplClass property as they are not technically employees, but all of them have "Courtesy Affiliate" affiliations
-
-        function handleCourtesyAffiliates(profile) {
-          console.log(profile)
-          if('primary_simplified_empl_class' in profile) {
-            if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
-              return profile
-            }
-          } else {
-            if(profile.affiliations.raw.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus")){
-              return profile
+          console.log(orderedProfileResults, "before filter");
+          function handleCourtesyAffiliates(profile) {
+            console.log(profile)
+            if('primary_simplified_empl_class' in profile) {
+              if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
+                return profile
+              }
+            } else {
+              if( profile.affiliations.raw.includes("Courtesy Affiliate") ){
+                return profile
+              }
             }
           }
-        }
-        orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
-        console.log(orderedProfileResults, "after filter")
-        //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
+          orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
+          console.log(orderedProfileResults, "after filter")
+          //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
         // filter results by title (titleFilter)
