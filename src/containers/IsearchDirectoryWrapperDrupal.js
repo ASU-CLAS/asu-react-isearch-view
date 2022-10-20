@@ -76,13 +76,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
-      console.log(orderedProfileResults)
+      //console.log(orderedProfileResults)
 
-      console.log('response data response:')
-      console.log(response.data.response)
+      //console.log('response data response:')
+      //console.log(response.data.response)
 
-      console.log('response data results:')
-      console.log(response.data.results)
+      //console.log('response data results:')
+      //console.log(response.data.results)
       let subAffProfiles = []
 
       if (isearchConfig.type === 'customList') {
@@ -199,21 +199,38 @@ class IsearchDirectoryWrapperDrupal extends Component {
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
           console.log(orderedProfileResults, "before filter");
+          const courtesyAffiliateEnabled = isearchConfig.selectedFilters.includes('Courtesy Affiliate');
+          const emeritusEnabled = isearchConfig.selectedFilters.includes('Emeritus');
+          
           function handleCourtesyAffiliates(profile) {
-            console.log(profile)
             if('primary_simplified_empl_class' in profile) {
               if(isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0])){
                 return profile
               }
             } else {
-              if( profile.affiliations.raw.includes("Courtesy Affiliate") ){
-                return profile
+              const isCourtesyAffiliate = profile.affiliations.raw.includes("Courtesy Affiliate");
+              var isEmeritus = false;
+              
+              // Check for Emeritus
+              if ( profile.titles && profile.titles.raw.length > 0 ) {
+                profile.titles.raw.forEach(title => {
+                  if ( title && (title.includes("Emeritus") || title.includes("Emerita")) ) {
+                    isEmeritus = true;
+                  }
+                });
+              }
+    
+              if ( courtesyAffiliateEnabled && isCourtesyAffiliate ) {
+                return profile;
+              }
+              else if ( emeritusEnabled && isEmeritus ) {
+                return profile;
               }
             }
           }
+
           orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
           console.log(orderedProfileResults, "after filter")
-          //orderedProfileResults = orderedProfileResults.filter( profile => isearchConfig.selectedFilters.includes(profile.primary_simplified_empl_class.raw[0]) || profile.affiliations.includes("Courtesy Affiliate") && isearchConfig.selectedFilters.includes("Emeritus") )
         }
 
         // filter results by title (titleFilter)
@@ -347,7 +364,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let config = JSON.parse(this.props.dataFromPage.config);
 
-    console.log(this.state.filterActive, "checking filter")
+    //console.log(this.state.filterActive, "checking filter")
     // check for missing config options and set defaults
     if(config.defaultPhoto == undefined) {
       config.defaultPhoto = "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png";
