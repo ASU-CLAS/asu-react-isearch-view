@@ -105,8 +105,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
               // if there is no sourceID for this profile, then we should default to the workingTitle field
               if(titleIndex == -1) {
 
-                // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-                if( response.data.results[i].working_title.raw == undefined ) {
+                if( response.data.results[i].working_title != undefined ) {
+                  response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
+                  console.log('No titleIndex, use working title')
+                  console.log(response.data.results[i].working_title.raw)
+                } else {
+                  // courtesy affiliates don't have workingTitle :( so just use the first title in the list
+
                   // check if the titles array exists and use that... can't take anything for granted
                   if(response.data.results[i].titles.raw != undefined && response.data.results[i].titles.raw[0] != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[0];
@@ -130,11 +135,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
                     }
 
                   }
-
-                } else {
-                  response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
-                  console.log('No titleIndex, use working title')
-                  console.log(response.data.results[i].working_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
