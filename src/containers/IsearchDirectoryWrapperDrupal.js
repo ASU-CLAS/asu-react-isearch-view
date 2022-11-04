@@ -106,7 +106,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
               if(titleIndex == -1) {
 
                 // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-                if(response.data.results[i].working_title == undefined) {
+                if( response.data.results[i].working_title.raw == undefined ) {
                   // check if the titles array exists and use that... can't take anything for granted
                   if(response.data.results[i].titles.raw != undefined && response.data.results[i].titles.raw[0] != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].titles.raw[0];
@@ -133,8 +133,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
                 } else {
                   response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
-                console.log('No titleIndex, use working title')
-                console.log(response.data.results[i].working_title.raw)
+                  console.log('No titleIndex, use working title')
+                  console.log(response.data.results[i].working_title.raw)
                 }
               }
               // if there is a sourceID index, use it to select the correct title from the titles array
@@ -145,7 +145,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 if(response.data.results[i].title_source.raw[titleIndex] == 'workingTitle') {
                   console.log('Title source override, use working title')
                   // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
-                  if(response.data.results[i].working_title.raw != undefined) {
+                  if(response.data.results[i].working_title != undefined) {
                     response.data.results[i].selectedDepTitle = response.data.results[i].working_title.raw
                   }
                   else {
