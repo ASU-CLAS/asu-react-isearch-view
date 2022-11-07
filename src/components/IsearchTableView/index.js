@@ -16,8 +16,9 @@ export const IsearchTableView = ({
   expertise_areas,
   listConfig,
 }) => {
-  console.log('returning table row')
-  console.log(expertise_areas)
+  //console.log('returning table row')
+  //console.log(expertise_areas)
+
   return (
     <tr>
       <th scope="row">
@@ -44,13 +45,13 @@ export const IsearchTableView = ({
       </td>
       <td>
         {listConfig.showEmail && (
-          <p>
+          <p className="noWrap">
             <a className="linkOriginal" href={`mailto:${email_address.raw}`}>
               {email_address.raw}
             </a>
           </p>
         )}
-        {listConfig.showPhone && <p>{phone.raw}</p>}
+        {listConfig.showPhone && <p className="noWrap">{phone.raw}</p>}
       </td>
     </tr>
   );
