@@ -13,15 +13,12 @@ export const IsearchListView = ({
   photo_url,
   selectedDepTitle,
   short_bio,
+  expertise_areas,
   listConfig,
 }) => {
-  if (!loaded) {
-    return (
-      <div className="loader">
-        <Loader type="ThreeDots" color="#5C6670" height="100" width="100" />
-      </div>
-    );
-  }
+  console.log('returning table row')
+  console.log(expertise_areas)
+
   return (
     <div key={eid.raw} className="profile profile-type-standard">
       <div className="profile-row">
@@ -71,6 +68,9 @@ export const IsearchListView = ({
           </div>
 
           <p>{listConfig.showBio && short_bio.raw}</p>
+
+          <p>{listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}</p>
+   
         </div>
       </div>
     </div>
