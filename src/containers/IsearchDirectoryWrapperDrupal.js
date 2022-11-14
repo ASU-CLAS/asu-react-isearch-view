@@ -162,7 +162,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
               response.data.results[i].titleIndex = -1;
               // some profiles don't have deptids ???
               if(response.data.results[i].deptids.raw != undefined) {
-                response.data.results[i].titleIndex = person.deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
+                response.data.results[i].titleIndex = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
               }  
               response.data.results[i].selectedDepTitle = this.processTitles(response.data.results[i]);
 
