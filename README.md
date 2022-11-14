@@ -2,6 +2,8 @@ React component for displaying ASU directory listings from isearch.asu.edu. This
 
 ### Demo: <a href="https://codepen.io/tkilbour/pen/qBqQwRQ" target="blank">iSearch directory React component on CodePen</a>
 
+*Requires npm=6.13.4 and yarn=1.22.4.  Later/current versions do not work.
+
 ## Install (Stand Alone)
 * `git clone https://github.com/ASU-CLAS/asu-react-isearch-view.git`
 * `yarn` - install all dependencies
