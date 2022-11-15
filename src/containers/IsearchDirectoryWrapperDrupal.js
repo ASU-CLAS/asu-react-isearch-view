@@ -182,7 +182,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           item.selectedDepTitle = this.processTitles(item);
 
           if (isearchConfig.sortType === 'rank') {
-            item.selectedDepRank = item.employee_weight.raw[titleIndex]
+            item.selectedDepRank = item.employee_weight.raw[item.titleIndex]
           }
           return item
         })
