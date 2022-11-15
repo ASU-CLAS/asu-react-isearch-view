@@ -157,17 +157,19 @@ class IsearchDirectoryWrapperDrupal extends Component {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.results.length; i++) {
+            //console.log(response.data.results[i]);
             if (item === response.data.results[i].asurite_id.raw) {
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
               response.data.results[i].titleIndex = -1;
               // some profiles don't have deptids ???
-              if(response.data.results[i].deptids.raw != undefined) {
+              if(response.data.results[i].deptids != undefined && response.data.results[i].deptids.raw != undefined) {
                 response.data.results[i].titleIndex = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
               }  
               response.data.results[i].selectedDepTitle = this.processTitles(response.data.results[i]);
 
               return response.data.results[i]
             }
+
           }
         })
       }
