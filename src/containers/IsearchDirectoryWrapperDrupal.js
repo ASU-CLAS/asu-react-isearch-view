@@ -10,10 +10,12 @@ import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
 import EventEmitter from 'events';
 
+const debug = false;
+
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    if ( debug ) console.log(props);
     this.state = {
       ourData: [],
       profileList: [],
@@ -25,11 +27,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
     };
   }
 
-  processTitles(person, debug=false) 
+  processTitles(person) 
   {
 
     if ( debug ) {
-      console.log('---')
       console.log('Processing title for: ' + person.asurite_id.raw)
     }
 
@@ -41,7 +42,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if(person.titleIndex == -1) {
 
       if( person.working_title != undefined ) {
-        person.selectedDepTitle = person.working_title.raw
+        person.selectedDepTitle = person.working_title.raw[0]
         if ( debug ) {
           console.log('No titleIndex, use working title')
           console.log(person.working_title.raw)
@@ -83,7 +84,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         if ( debug ) { console.log('Title source override, use working title') }
         // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
         if(person.working_title != undefined) {
-          person.selectedDepTitle = person.working_title.raw
+          person.selectedDepTitle = person.working_title.raw[0]
         }
         else {
           if ( debug ) { console.log('They said use working title, but there is none!') }
@@ -103,12 +104,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
 
-    console.log('iSearch Viewer - 2.1.0')
+    console.log('iSearch Viewer - 2.2.0')
     console.log('Developed by The College of Liberal Arts and Sciences')
     console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
     console.log('---')
-    console.log(feedURL);
-
+ 
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
       feedURL = 'https://live-asu-isearch.ws.asu.edu/api/v1/'
@@ -122,7 +122,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
       let asuriteIds = isearchConfig.ids.join(',')
       feedURL = feedURL + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
     }
-    console.log(`updated feed: ${feedURL}`);
+
+    if ( debug ) console.log(feedURL);
 
   //   async function downloadProfiles() {
 
@@ -151,12 +152,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
-      //console.log(orderedProfileResults)
 
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
           for (var i = 0; i < response.data.results.length; i++) {
+            if ( debug ) console.log("-- "+i+" --");
             //console.log(response.data.results[i]);
             if (item === response.data.results[i].asurite_id.raw) {
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
@@ -175,15 +176,27 @@ class IsearchDirectoryWrapperDrupal extends Component {
       }
       else {
         //assign custom titles and rank
-        orderedProfileResults = orderedProfileResults.map( item => {
+        orderedProfileResults = orderedProfileResults.map( (item,index) => {
+          if ( debug ) console.log("-- "+index+" --");
           // get the array index of this dept
           item.titleIndex = item.deptids.raw.indexOf(isearchConfig.ids[0].toString())
 
           item.selectedDepTitle = this.processTitles(item);
 
           if (isearchConfig.sortType === 'rank') {
-            item.selectedDepRank = item.employee_weight.raw[item.titleIndex]
+            if ( typeof item.faculty_rank !== 'undefined' )
+              item.selectedDepRank = item.faculty_rank.raw;
+            else
+              item.selectedDepRank = 100;
           }
+
+          if (isearchConfig.sortType === 'weight') {
+            if ( typeof item.employee_weight !== 'undefined' )
+              item.selectedDepRank = item.employee_weight.raw[item.titleIndex];
+            else
+              item.selectedDepRank = 999;
+          }
+
           return item
         })
 
@@ -203,7 +216,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
         // filter results by employee type (selectedFilters)
         if (typeof isearchConfig.selectedFilters !== 'undefined') {
-          console.log(orderedProfileResults, "before filter");
+          if ( debug ) console.log(orderedProfileResults, "before filter");
           const courtesyAffiliateEnabled = isearchConfig.selectedFilters.includes('Courtesy Affiliate');
           const emeritusEnabled = isearchConfig.selectedFilters.includes('Emeritus');
           
@@ -214,8 +227,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
             } else {
               const isCourtesyAffiliate = profile.affiliations.raw.includes("Courtesy Affiliate");
-              var isEmeritus = false;
               
+              var isEmeritus = false;
               // Check for Emeritus
               if ( profile.titles && profile.titles.raw.length > 0 ) {
                 profile.titles.raw.forEach(title => {
@@ -226,16 +239,19 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
     
               if ( courtesyAffiliateEnabled && isCourtesyAffiliate ) {
-                return profile;
+                if ( isEmeritus && !emeritusEnabled )
+                  return null;
+                else
+                  return profile;
               }
-              else if ( emeritusEnabled && isEmeritus ) {
+              else if ( isEmeritus && emeritusEnabled ) {
                 return profile;
               }
             }
           }
 
           orderedProfileResults = orderedProfileResults.filter(handleCourtesyAffiliates)
-          console.log(orderedProfileResults, "after filter")
+          if ( debug ) console.log(orderedProfileResults, "after filter")
         }
 
         // filter results by title (titleFilter)
@@ -248,7 +264,11 @@ class IsearchDirectoryWrapperDrupal extends Component {
             orderedProfileResults = orderedProfileResults.filter( profile => regexConstructor.test(profile.selectedDepTitle))
           }
           else{
-            orderedProfileResults = orderedProfileResults.filter( profile => profile.selectedDepTitle.toLowerCase().includes(isearchConfig.titleFilter.toLowerCase()) )
+            orderedProfileResults = orderedProfileResults.filter( profile => { 
+              if ( profile.selectedDepTitle !== null )
+                return profile.selectedDepTitle.toLowerCase().includes(isearchConfig.titleFilter.toLowerCase()) 
+              } 
+            );
           }
         }
 
@@ -282,7 +302,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
 
         // sort results by isearch weight/rank
-        if (isearchConfig.sortType === 'rank') {
+        if (isearchConfig.sortType === 'rank' || isearchConfig.sortType === 'weight' ) {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
                 return a.last_name.raw.localeCompare(b.last_name.raw)
