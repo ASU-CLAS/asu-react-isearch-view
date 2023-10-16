@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@asu-design-system/bootstrap4-theme@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.web.asu.edu/@asu-design-system%2fbootstrap4-theme/-/bootstrap4-theme-1.1.2.tgz#740f00e5092839beda9a86f11dbd17dffe7b64e6"
-  integrity sha512-lF4BLzf31B8enYeBdIf7JbhDLm7JXVKRS+VLTPQShsHd4SRExonOJR/RVewQj7F0iL6YLlHVoM/pg7q536HL8w==
+"@asu/unity-bootstrap-theme@^1.7.6":
+  version "1.7.6"
+  resolved "https://npm.pkg.github.com/download/@asu/unity-bootstrap-theme/1.7.6/89f490574b00067ea6cb4fc599659a21f11d8981#89f490574b00067ea6cb4fc599659a21f11d8981"
+  integrity sha512-Nqwu6HAHcxSdtUyVrdayHuOx7SXOApR1UvKGBRRzKmUTGM/A2xNX0EfBscNwRJPe/PrWzvUjiNEyLGtpAkiVRQ==
 
 "@babel/code-frame@7.10.4":
   version "7.10.4"
@@ -1162,6 +1162,11 @@
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
+
+"@fortawesome/fontawesome-free@5.15.3":
+  version "5.15.3"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.3.tgz#c36ffa64a2a239bf948541a97b6ae8d729e09a9a"
+  integrity sha512-rFnSUN/QOtnOAgqFRooTA3H57JLDm0QEG/jPdk+tLQNL/eWd+Aok8g3qCI+Q1xuDPWpGW/i9JySpJVsq8Q0s9w==
 
 "@hypnosphi/create-react-context@^0.3.1":
   version "0.3.1"
@@ -5189,10 +5194,15 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-follow-redirects@^1.0.0, follow-redirects@^1.10.0:
+follow-redirects@^1.0.0:
   version "1.14.8"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.8.tgz#016996fb9a11a100566398b1c6839337d7bfa8fc"
   integrity sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==
+
+follow-redirects@^1.14.0:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.3.tgz#fe2f3ef2690afce7e82ed0b44db08165b207123a"
+  integrity sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==
 
 for-in@^1.0.2:
   version "1.0.2"

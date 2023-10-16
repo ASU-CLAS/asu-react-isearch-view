@@ -3,32 +3,32 @@ React component for displaying ASU directory listings from isearch.asu.edu. This
 ### Demo: <a href="https://codepen.io/tkilbour/pen/qBqQwRQ" target="blank">iSearch directory React component on CodePen</a>
 
 ## Install (Stand Alone)
-* `git clone https://github.com/ASU-CLAS/asu-react-isearch-view.git`
-* `yarn` - install all dependencies
-* register/login to the ASU Unity npm registry
-* `yarn build` - build project files in dist folder (react/react-dom are separated into vendor.js)
-* `yarn dev` - build project files in dist folder and start webpack dev server (visit /drupal.html or /wordpress.html)
+
+- `git clone https://github.com/ASU-CLAS/asu-react-isearch-view.git`
+- `yarn` - install all dependencies
+- register/login to the ASU Unity npm registry
+- `yarn build` - build project files in dist folder (react/react-dom are separated into vendor.js)
+- `yarn dev` - build project files in dist folder and start webpack dev server (visit /drupal.html or /wordpress.html)
 
 ## Rendering the component
 
 This React component will render inside an element with a class name of `clas-isearch-view`. The component requires the following options:
 
-| Parameter     |  Options |
-| ------------- | :------|
-| data-config      | A JSON object with configuration options |
+| Parameter   | Options                                  |
+| ----------- | :--------------------------------------- |
+| data-config | A JSON object with configuration options |
 
-| Config key     |  Allowed values |  Notes |
-| ------------- | ------|  :------|
-| type      | "customList", "depList" | If deplist, will assume ids is a list of isearch departments, if customList will assume a list of asurite ids |
-| displayType      | "default", "table", "cards", "circles" | Changes the visual style of the list. Default is the new Web Standards 2.0 design |
-| defaultPhoto      | absolute url string | If a profile has no photo, use this one instead |
-| endpointURL      | absolute url string | This should be a proxy url that connects to https://asudir-solr.asu.edu/asudir/directory/select? because CORS prevents accessing the endpoint directly |
-| ids      | array of strings | either asurite ids or dept ids depending on the config "type" |
-| sourceIds      | array of numbers | list of dept ids to use titles from |
-| titleFilter      | string or regex | filter depList by title |
-| expertiseFilter      | string or regex | filter depList by expertise areas |
-| showFilterAZ    | boolean | display A-Z filter |
-
+| Config key      | Allowed values                         | Notes                                                                                                                                                  |
+| --------------- | -------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type            | "customList", "depList"                | If deplist, will assume ids is a list of isearch departments, if customList will assume a list of asurite ids                                          |
+| displayType     | "classic", "table", "cards", "circles" | Changes the visual style of the list. Default is the new Web Standards 2.0 design                                                                      |
+| defaultPhoto    | absolute url string                    | If a profile has no photo, use this one instead                                                                                                        |
+| endpointURL     | absolute url string                    | This should be a proxy url that connects to https://asudir-solr.asu.edu/asudir/directory/select? because CORS prevents accessing the endpoint directly |
+| ids             | array of strings                       | either asurite ids or dept ids depending on the config "type"                                                                                          |
+| sourceIds       | array of numbers                       | list of dept ids to use titles from                                                                                                                    |
+| titleFilter     | string or regex                        | filter depList by title                                                                                                                                |
+| expertiseFilter | string or regex                        | filter depList by expertise areas                                                                                                                      |
+| showFilterAZ    | boolean                                | display A-Z filter                                                                                                                                     |
 
 There are 2 different structures for the config data depending on the 'type': customList, deptList
 
@@ -36,6 +36,7 @@ There are 2 different structures for the config data depending on the 'type': cu
 
 Example config object for customList (designed to give the end user complete control over who is displayed in the list):
 This type has no sorting or filtering options because the asurites would be place manually in the correct order
+
 ```JSON
 {
   "type":"customList",
@@ -70,6 +71,7 @@ Example config object for depList (designed to be an easy to configure list that
 selectedFilters is a list of employee types to show
 titleFilter is a regular expression used to filter the list by titles
 sort is not fully implemented, but should be able to toggle the list sorting between alphabetical (last name) and rank
+
 ```JSON
 {
   "type":"depList",
@@ -92,6 +94,10 @@ sort is not fully implemented, but should be able to toggle the list sorting bet
 ```
 
 ### Full example code snippet
+
 ```html
-<div class="clas-isearch-view" data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"showExpertise":false,"showFilterAZ":false}'></div>
+<div
+  class="clas-isearch-view"
+  data-config='{"type":"customList", "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png", "endpointURL":"https://asudir-solr.asu.edu/asudir/directory/select?","displayType":"default","ids":["atpjk","saibaba","acerropa","jjcohen4","pmahdav2","kkusumi","kazilek","lluecke","fmilner"],"sourceIds":[1409,88253,1457657,1409,1409,1409,1409,1409,1409],"showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"showExpertise":false,"showFilterAZ":false}'
+></div>
 ```
