@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Loader from 'react-loader-spinner';
+import React from "react";
+import PropTypes from "prop-types";
+import Loader from "react-loader-spinner";
 
-import './index.css';
+import "./index.css";
 
 export const IsearchListView = ({
   display_name,
@@ -24,14 +24,14 @@ export const IsearchListView = ({
   }
   return (
     <div key={eid.raw} className="profile profile-type-standard">
-      <div className="profile-row">
-        <div className="profile-photo-column">
+      <div className="profile-row row">
+        <div className="profile-photo-column col-12 col-sm-3 col-md-2">
           {listConfig.showPhoto && (
             <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>
               <img
                 className="pictureOriginal"
                 src={photo_url.raw}
-                onError={e => {
+                onError={(e) => {
                   e.target.src = listConfig.defaultPhoto;
                 }}
                 alt={`profile picture for ${display_name.raw}`}
@@ -39,9 +39,11 @@ export const IsearchListView = ({
             </a>
           )}
         </div>
-        <div className="profile-bio-column">
+        <div className="profile-bio-column col-12 col-sm-9">
           <h3 className="profile-name">
-            <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>{display_name.raw}</a>
+            <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>
+              {display_name.raw}
+            </a>
           </h3>
           {listConfig.showTitle && (
             <div className="profile-title">
@@ -53,7 +55,10 @@ export const IsearchListView = ({
             {listConfig.showEmail && (
               <div className="">
                 <p>
-                  <a className="linkOriginal" href={`mailto:${email_address.raw}`}>
+                  <a
+                    className="linkOriginal"
+                    href={`mailto:${email_address.raw}`}
+                  >
                     {email_address.raw}
                   </a>
                 </p>
@@ -117,18 +122,19 @@ IsearchListView.propTypes = {
 };
 
 IsearchListView.defaultProps = {
-  email_address: '',
+  email_address: "",
   loaded: true,
-  phone: '',
-  photo_url: '',
-  selectedDepTitle: '',
-  short_bio: '',
+  phone: "",
+  photo_url: "",
+  selectedDepTitle: "",
+  short_bio: "",
   listConfig: {
     showBio: true,
-    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+    defaultPhoto:
+      "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
     showEmail: true,
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-  }
+  },
 };
