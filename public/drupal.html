@@ -4,21 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drupal iSearch component example</title>
-    <link href="/public/bootstrap-asu.css" rel="stylesheet">
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <link href="/public/bootstrap-asu.css" rel="stylesheet" />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
     <script src="/dist/vendor.js"></script>
   </head>
   <body>
+    <div class="container">
+      <div class="row">
+        <div class="col col-12 col-sm-12">
+          <h2>
+            This is the Drupal version of the app using data attributes to pass
+            config
+          </h2>
 
-    <div class="container"><div class="row"><div class="col col-12 col-sm-12">
+          <h3>customList</h3>
+          <div
+            class="clas-isearch-view"
+            data-config='{"type":"depList","displayType":"table","selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],"showPhoto":true,"showExpertise":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"circlesOptionHover":true,"ids":[437389],"sortType":"alpha","showSocial":false}'
+          ></div>
 
-      <h2>This is the Drupal version of the app using data attributes to pass config</h2>
-
-      <h3>customList</h3>
-      <div class="clas-isearch-view" data-config='{"type":"depList","displayType":"classic","selectedFilters":["Academic Prof w/Admin Appt","Academic Professional","Administrative","Classified","Faculty","Faculty w/Admin Appointment","Graduate Assistant/Associate","Post Doctoral Scholars","University Staff"],"showPhoto":true,"showExpertise":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"circlesOptionHover":true,"ids":[437389],"sortType":"alpha","showSocial":false}'></div>
-
-      <!--
+          <!--
 
       <h3>customList</h3>
       <div class="clas-isearch-view" data-config='{
@@ -80,10 +92,9 @@
         "showFilterAZ":true
       }'></div>
 -->
-    <script src="/drupalIsearchViewer.js"></script>
-    </div></div></div>
-
-
-
+          <script src="/drupalIsearchViewer.js"></script>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
