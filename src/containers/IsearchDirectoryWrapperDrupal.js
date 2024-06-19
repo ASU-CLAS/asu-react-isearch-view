@@ -122,7 +122,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
         feedURL += '&sort-by=faculty_rank'
       }
 
-      if(isearchConfig.rankIds) {
+      if(isearchConfig.sortType == "rank" && isearchConfig.rankIds) {
         feedURL +=  "&rank_group=" + isearchConfig.rankIds
       }
 
