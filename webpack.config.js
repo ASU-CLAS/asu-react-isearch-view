@@ -12,6 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: '[name].js',
     publicPath: '/',
+    hashFunction: "sha256",
   },
   devServer: {
     historyApiFallback: true,

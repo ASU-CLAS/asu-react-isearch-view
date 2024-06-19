@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "dev": "webpack --mode production && webpack serve --mode=development",
+    "dev": "webpack --mode production && webpack serve --mode=development -openssl-legacy-provider",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "drupal": "webpack --mode production && yarn run drupal:dist",
@@ -16,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@asu/unity-bootstrap-theme": "^1.9.15",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "axios": "^0.21.2",
     "css-loader": "^5.2.0",

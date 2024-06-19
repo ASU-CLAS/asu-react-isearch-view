@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@asu-design-system/bootstrap4-theme@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.web.asu.edu/@asu-design-system%2fbootstrap4-theme/-/bootstrap4-theme-1.1.2.tgz#740f00e5092839beda9a86f11dbd17dffe7b64e6"
-  integrity sha512-lF4BLzf31B8enYeBdIf7JbhDLm7JXVKRS+VLTPQShsHd4SRExonOJR/RVewQj7F0iL6YLlHVoM/pg7q536HL8w==
-
 "@babel/code-frame@7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"
@@ -1162,6 +1157,11 @@
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
+
+"@fortawesome/fontawesome-free@^6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.2.tgz#310fe90cb5a8dee9698833171b98e7835404293d"
+  integrity sha512-hRILoInAx8GNT5IMkrtIt9blOdrqHOnPBH+k70aWUAqPZPgopb9G5EQJFpaBx/S8zp2fC+mPW349Bziuk1o28Q==
 
 "@hypnosphi/create-react-context@^0.3.1":
   version "0.3.1"

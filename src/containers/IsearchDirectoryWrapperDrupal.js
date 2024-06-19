@@ -103,7 +103,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     const isearchConfig = JSON.parse(this.props.dataFromPage.config)
 
     let feedURL = isearchConfig.endpointURL
-
+    let feedBase = isearchConfig.endpointURL
     console.log('iSearch Viewer - 2.2.0')
     console.log('Developed by The College of Liberal Arts and Sciences')
     console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
@@ -111,12 +111,21 @@ class IsearchDirectoryWrapperDrupal extends Component {
  
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
-      feedURL = 'https://live-asu-isearch.ws.asu.edu/api/v1/'
+      feedBase = 'https://live-asu-isearch.ws.asu.edu/api/v1/'
     }
 
     // depList and customList need to use different solr queries
     if (isearchConfig.type === 'depList') {
-      feedURL = feedURL + 'webdir-departments/profiles?dept_id=' + isearchConfig.ids[0]  + '&size=999' + '&client=clas'
+      feedURL = feedBase + 'webdir-profiles/faculty-staff/filtered?dept_ids=' + isearchConfig.ids[0]  + '&size=999' + '&client=clas'
+
+      if(isearchConfig.sortType == "rank") {
+        feedURL += '&sort-by=faculty_rank'
+      }
+
+      if(isearchConfig.rankIds) {
+        feedURL +=  "&rank_group=" + isearchConfig.rankIds
+      }
+
     }
     else {
       let asuriteIds = isearchConfig.ids.join(',')
@@ -183,12 +192,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
           item.selectedDepTitle = this.processTitles(item);
 
-          if (isearchConfig.sortType === 'rank') {
-            if ( typeof item.faculty_rank !== 'undefined' )
-              item.selectedDepRank = item.faculty_rank.raw;
-            else
-              item.selectedDepRank = 100;
-          }
+          // if (isearchConfig.sortType === 'rank') {
+          //   if ( typeof item.faculty_rank !== 'undefined' )
+          //     item.selectedDepRank = item.faculty_rank.raw;
+          //   else
+          //     item.selectedDepRank = 100;
+          // }
 
           if (isearchConfig.sortType === 'weight') {
             if ( typeof item.employee_weight !== 'undefined' )
@@ -302,7 +311,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
         }
 
         // sort results by isearch weight/rank
-        if (isearchConfig.sortType === 'rank' || isearchConfig.sortType === 'weight' ) {
+        //if (isearchConfig.sortType === 'rank' || isearchConfig.sortType === 'weight' ) {
+        if (isearchConfig.sortType === 'weight' ) {
           orderedProfileResults = orderedProfileResults.sort((a, b) => {
               if ( a.selectedDepRank === b.selectedDepRank ){
                 return a.last_name.raw.localeCompare(b.last_name.raw)
@@ -311,6 +321,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 return a.selectedDepRank - b.selectedDepRank
               }
           })
+        }
+        else if (isearchConfig.sortType === 'rank') {
         }
         // otherwise sort alpha
         else {
