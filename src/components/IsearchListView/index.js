@@ -36,7 +36,7 @@ export const IsearchListView = ({
             </a>
           )}
         </div>
-        <div className="profile-bio-column col-12 col-sm-9">
+        <div className="profile-bio-column col-12 col-sm-9 col-md-8">
           <h3 className="profile-name">
             <a href={`https://isearch.asu.edu/profile/${eid.raw}`}>
               {display_name.raw}
