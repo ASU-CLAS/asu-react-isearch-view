@@ -4,7 +4,7 @@ import Loader from "react-loader-spinner";
 
 import "./index.css";
 
-export const IsearchListView = ({
+export const IsearchCircleGridView = ({
   display_name,
   eid,
   email_address,
@@ -16,8 +16,8 @@ export const IsearchListView = ({
   expertise_areas,
   listConfig,
 }) => {
-  console.log('returning table row')
-  console.log(expertise_areas)
+  console.log("returning table row");
+  console.log(expertise_areas);
 
   return (
     <div key={eid.raw} className="profile profile-type-standard">
@@ -74,15 +74,30 @@ export const IsearchListView = ({
 
           <p>{listConfig.showBio && short_bio.raw}</p>
 
-          <p>{listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}</p>
-   
+          <p>
+            {listConfig.showExpertise &&
+              expertise_areas.raw != null &&
+              expertise_areas.raw.length > 0 && (
+                <span>
+                  <label>Expertise Areas: </label>{" "}
+                  <p>
+                    {expertise_areas.raw.map((item, index) => (
+                      <span>
+                        {item}
+                        {index < expertise_areas.raw.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </p>
+                </span>
+              )}
+          </p>
         </div>
       </div>
     </div>
   );
 };
 
-IsearchListView.propTypes = {
+IsearchCircleGridView.propTypes = {
   /**
    * iSearch profile Display Name
    */
@@ -121,7 +136,7 @@ IsearchListView.propTypes = {
   listConfig: PropTypes.object,
 };
 
-IsearchListView.defaultProps = {
+IsearchCircleGridView.defaultProps = {
   email_address: "",
   loaded: true,
   phone: "",
