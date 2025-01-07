@@ -104,7 +104,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL
     let feedBase = isearchConfig.endpointURL
-    console.log('iSearch Viewer - 2.2.0')
+    console.log('iSearch Viewer - 2.2.1')
     console.log('Developed by The College of Liberal Arts and Sciences')
     console.log('https://github.com/ASU-CLAS/asu-react-isearch-view')
     console.log('---')
@@ -129,7 +129,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     }
     else {
       let asuriteIds = isearchConfig.ids.join(',')
-      feedURL = feedURL + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
+      feedURL = feedBase + 'webdir-profiles/faculty-staff/filtered?asurite_ids='+ asuriteIds + `&size=${isearchConfig.ids.length}` + '&client=clas'
     }
 
     if ( debug ) console.log(feedURL);
