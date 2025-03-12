@@ -16,8 +16,8 @@ export const IsearchListView = ({
   expertise_areas,
   listConfig,
 }) => {
-  console.log('returning table row')
-  console.log(expertise_areas)
+  console.log("returning table row");
+  console.log(expertise_areas);
 
   return (
     <div key={eid.raw} className="profile profile-type-standard">
@@ -49,7 +49,7 @@ export const IsearchListView = ({
           )}
 
           <div className="profile-contact-row">
-            {listConfig.showEmail && (
+            {listConfig.showEmail && email_address.raw && (
               <div className="">
                 <p>
                   <a
@@ -61,7 +61,7 @@ export const IsearchListView = ({
                 </p>
               </div>
             )}
-            {listConfig.showPhone && (
+            {listConfig.showPhone && phone.raw && (
               <div className="">
                 <p>
                   <a className="" href={`tel:${phone.raw}`}>
@@ -74,8 +74,23 @@ export const IsearchListView = ({
 
           <p>{listConfig.showBio && short_bio.raw}</p>
 
-          <p>{listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}</p>
-   
+          <p>
+            {listConfig.showExpertise &&
+              expertise_areas.raw != null &&
+              expertise_areas.raw.length > 0 && (
+                <span>
+                  <label>Expertise Areas: </label>{" "}
+                  <p>
+                    {expertise_areas.raw.map((item, index) => (
+                      <span>
+                        {item}
+                        {index < expertise_areas.raw.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </p>
+                </span>
+              )}
+          </p>
         </div>
       </div>
     </div>
