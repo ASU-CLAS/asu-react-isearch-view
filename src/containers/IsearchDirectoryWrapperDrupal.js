@@ -10,7 +10,7 @@ import Loader from 'react-loader-spinner';
 import PropTypes from 'prop-types';
 import EventEmitter from 'events';
 
-const debug = false;
+const debug = true;
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -29,7 +29,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
   processTitles(person) 
   {
-
     if ( debug ) {
       console.log('Processing title for: ' + person.asurite_id.raw)
     }
@@ -39,58 +38,77 @@ class IsearchDirectoryWrapperDrupal extends Component {
       person.eid.raw = person.asurite_id.raw
     }
     // if there is no sourceID for this profile, then we should default to the workingTitle field
-    if(person.titleIndex == -1) {
+    // NEW: if there is no sourceID for this profile, display primary department and custom title, fallback to primary title
+    if(person.depMatch == 'unknown') {
 
       if( person.working_title != undefined ) {
         person.selectedDepTitle = person.working_title.raw[0]
+        person.displayDep = person.primary_department.raw
         if ( debug ) {
-          console.log('No titleIndex, use working title')
+          console.log('No sourceID, use working title')
           console.log(person.working_title.raw)
         }
       } else {
+
+        // if no custom title, fallback to primary title
+        if (person.primary_title.raw != undefined) {
+          person.selectedDepTitle = person.primary_title.raw
+          if (debug) {
+            console.log('No sourceID, no working title, use primary title')
+            console.log(person.primary_title.raw)
+          }
+        }
+
+        // ***** COURTESY AFFILIATE PLACEHOLDER START ***** //
+
+
         // courtesy affiliates don't have workingTitle :( so just use the first title in the list
-
         // check if the titles array exists and use that... can't take anything for granted
-        if(person.titles.raw != undefined && person.titles.raw[0] != undefined) {
-          person.selectedDepTitle = person.titles.raw[0];
-        }
-        else {
+        // else if(person.titles.raw != undefined && person.titles.raw[0] != undefined) {
+        //   person.selectedDepTitle = person.titles.raw[0];
+        // }
+        // else {
+        //   if ( debug ) { console.log('No titleIndex, no titles array, no title?') }
+        //   // if the titles array doesn't exist, they just don't get a title I guess...
+        //   person.selectedDepTitle = '';
 
-          if ( debug ) { console.log('No titleIndex, no titles array, no title?') }
-          // if the titles array doesn't exist, they just don't get a title I guess...
-          person.selectedDepTitle = '';
+        //   // unless they are a student? we can test for student affiliation and make up a title
+        //   if(person.affiliations.raw != undefined && person.affiliations.raw.includes('Student')) {
+        //     if ( debug ) { console.log('Might be a student') }
+        //     person.selectedDepTitle = 'Student';
+        //   }
 
-          // unless they are a student? we can test for student affiliation and make up a title
-          if(person.affiliations.raw != undefined && person.affiliations.raw.includes('Student')) {
-            if ( debug ) { console.log('Might be a student') }
-            person.selectedDepTitle = 'Student';
-          }
+        //   // or maybe a courtesy affiliate?
+        //   if(person.affiliations.raw != undefined && person.affiliations.raw.includes('Courtesy Affiliate')) {
+        //     if ( debug ) { console.log('Is a courtesy affiliate') }
+        //     // not sure what to do here now, could be anything!
+        //   }
 
-          // or maybe a courtesy affiliate?
-          if(person.affiliations.raw != undefined && person.affiliations.raw.includes('Courtesy Affiliate')) {
-            if ( debug ) { console.log('Is a courtesy affiliate') }
-            // not sure what to do here now, could be anything!
-          }
+        // }
 
-        }
+
+        // ***** COURTESY AFFILIATE PLACEHOLDER END ***** //
+
       }
     }
-    // if there is a sourceID index, use it to select the correct title from the titles array
+    //if the sourceID matches the person's primary department, display custom title, fallback to primary title
+    else if ( person.depMatch == 'primary') {
+      if (debug) {console.log('Set title via matching sourceID and primary dept')}
+      
+      if (person.working_title.raw != undefined) {
+        person.selectedDepTitle = person.working_title.raw
+      } else {
+        person.selectedDepTitle = person.primary_title.raw
+      }
+    } 
+    // if there is a sourceID index and it does NOT match the primary department, display custom title if it exists, otherwise display NO title
     else {
-      person.selectedDepTitle = person.titles.raw[person.titleIndex]
-      if ( debug ) { console.log('Set title via titleIndex = '+person.titleIndex) }
-      // however! if the title source array indicates workingTitle, then use the workingTitle field instead of the department title in the title array
-      if(person.title_source.raw[person.titleIndex] == 'workingTitle') {
-        if ( debug ) { console.log('Title source override, use working title') }
-        // yes... sometime you see a profile indicate use workingTitle but there is no working workingTitle field
-        if(person.working_title != undefined) {
-          person.selectedDepTitle = person.working_title.raw[0]
-        }
-        else {
-          if ( debug ) { console.log('They said use working title, but there is none!') }
-        }
-
-
+      if (person.working_title) {
+        if ( debug ) { console.log('Non-primary department, use custom title') }
+        person.selectedDepTitle = person.working_title.raw
+      }
+      else {
+        if ( debug ) { console.log('No custom title, so display none') }
       }
     }
 
@@ -111,7 +129,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
  
     // fallback for older CLAS CMS usage
     if(isearchConfig.endpointURL == undefined) {
-      feedBase = 'https://live-asu-isearch.ws.asu.edu/api/v1/'
+      feedBase = 'https://search.asu.edu/api/v1/'
     }
 
     // depList and customList need to use different solr queries
@@ -162,6 +180,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
       let orderedProfileResults = response.data.results
       JSON.stringify(orderedProfileResults)
 
+
       if (isearchConfig.type === 'customList') {
         // order results and assign custom titles
         orderedProfileResults = isearchConfig.ids.map(( item, index ) => {
@@ -170,12 +189,23 @@ class IsearchDirectoryWrapperDrupal extends Component {
             //console.log(response.data.results[i]);
             if (item === response.data.results[i].asurite_id.raw) {
               // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
-              response.data.results[i].titleIndex = -1;
+              response.data.results[i].depMatch = 'unknown';
               // some profiles don't have deptids ???
-              if(response.data.results[i].deptids != undefined && response.data.results[i].deptids.raw != undefined) {
-                response.data.results[i].titleIndex = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString())
+              if (isearchConfig.sourceIds[index]) {
+                console.log('id found')
+              } else {
+                console.log(isearchConfig.sourceIds[index])
+              }
+              if(response.data.results[i].deptids != undefined && response.data.results[i].deptids.raw != undefined && isearchConfig.sourceIds[index] != undefined ) {
+                // check if sourceID matches the person's 'primary department', otherwise match sourceID with department in the person's departments array
+                if (response.data.results[i].primary_deptid.raw === isearchConfig.sourceIds[index].toString()) {
+                  response.data.results[i].depMatch = 'primary';
+                } else {
+                  response.data.results[i].depMatch = 'non-primary';
+                }
               }  
-              response.data.results[i].selectedDepTitle = this.processTitles(response.data.results[i]);
+              response.data.results[i].displayDep = null
+              response.data.results[i].selectedDepTitle = this.processTitles(response.data.results[i])
 
               return response.data.results[i]
             }
@@ -188,7 +218,13 @@ class IsearchDirectoryWrapperDrupal extends Component {
         orderedProfileResults = orderedProfileResults.map( (item,index) => {
           if ( debug ) console.log("-- "+index+" --");
           // get the array index of this dept
-          item.titleIndex = item.deptids.raw.indexOf(isearchConfig.ids[0].toString())
+          let listDep = isearchConfig.ids[0].toString()
+          item.titleIndex = item.deptids.raw.indexOf(listDep)
+          if (item.primary_deptid == listDep) {
+            item.depMatch = 'primary'
+          } else {
+            item.depMatch = 'non-primary'
+          }
 
           item.selectedDepTitle = this.processTitles(item);
 
@@ -421,10 +457,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
       return(
         <div className="loader">
           <Loader
-           type="ThreeDots"
-           color="#5C6670"
-           height="100"
-           width="100"
+          type="ThreeDots"
+          color="#5C6670"
+          height="100"
+          width="100"
           />
         </div>
       )

@@ -12,6 +12,7 @@ export const IsearchTableView = ({
   phone,
   photo_url,
   selectedDepTitle,
+  displayDep,
   short_bio,
   expertise_areas,
   listConfig,
@@ -42,7 +43,7 @@ export const IsearchTableView = ({
           </a>
         </h3>
         {listConfig.showTitle && (
-          <p className="titleOriginal">{selectedDepTitle}</p>
+          <p className="titleOriginal">{selectedDepTitle}{displayDep && <span >, <span className="departmentOriginal">{displayDep}</span></span>}</p>
         )}
         {listConfig.showBio && <p>{short_bio.raw}</p>}
         {listConfig.showExpertise &&
@@ -105,6 +106,10 @@ IsearchTableView.propTypes = {
    */
   selectedDepTitle: PropTypes.string,
   /**
+   * iSearch profile department
+   */
+  displayDep: PropTypes.string,
+  /**
    * iSearch profile selected expertise areas
    */
   expertise_areas: PropTypes.object,
@@ -126,6 +131,7 @@ IsearchTableView.defaultProps = {
   phone: { raw: "" },
   photo_url: { raw: "" },
   selectedDepTitle: "",
+  displayDep: null,
   short_bio: { raw: "" },
   expertise_areas: { raw: [] },
   listConfig: {

@@ -15,6 +15,7 @@ export const IsearchCircleView = ({
   phone,
   photo_url,
   selectedDepTitle,
+  displayDep,
   expertise_areas,
   short_bio,
 }) => {
@@ -69,7 +70,7 @@ export const IsearchCircleView = ({
         </div>
       )}
 
-      <div className={`modal fade bd-isearch-modal-${eid.raw}`} tabIndex="-1" role="dialog">
+      <div className={`modal fade bd-isearch-modal-${eid.raw}`} aria-label={`${display_name.raw}`} tabIndex="-1" role="dialog">
         <div className="modal-dialog isearch-card-modal">
           <div className="modal-content">
             <div className="card isearch-card">
@@ -82,7 +83,7 @@ export const IsearchCircleView = ({
                 onError={e => {
                   e.target.src = defaultPhoto;
                 }}
-                alt={`profile picture for ${display_name.raw}`}
+                alt={`${display_name.raw}`}
               />
               <div className="card-body">
                 <h4 className="card-title">
@@ -120,7 +121,7 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile Display Name
    */
-   display_name: PropTypes.object.isRequired,
+  display_name: PropTypes.object.isRequired,
   /**
    * iSearch profile EID
    */
@@ -128,7 +129,7 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile email address
    */
-   email_address: PropTypes.object,
+  email_address: PropTypes.object,
   /**
    * Is application data currently loading?
    */
@@ -140,29 +141,34 @@ IsearchCircleView.propTypes = {
   /**
    * iSearch profile photo
    */
-   photo_url: PropTypes.object,
+  photo_url: PropTypes.object,
   /**
    * iSearch profile selected department title
    */
   selectedDepTitle: PropTypes.string,
   /**
+   * iSearch profile department
+   */
+  displayDep: PropTypes.string,
+  /**
    * iSearch profile selected expertise areas
    */
-   expertise_areas: PropTypes.object,
+  expertise_areas: PropTypes.object,
   /**
    * iSearch profile short bio
    */
-   short_bio: PropTypes.object,
+  short_bio: PropTypes.object,
 };
 
 IsearchCircleView.defaultProps = {
   circleHover: true,
-  defaultPhoto: '/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+  defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
   email_address: '',
   loaded: true,
   phone: '',
   photo_url: {raw: ''},
   selectedDepTitle: '',
+  displayDep: null,
   short_bio: '',
   expertise_areas: '',
 };
