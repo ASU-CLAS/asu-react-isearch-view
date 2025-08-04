@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './index.css';
+import '@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css'
 
 export const IsearchCardView = ({
   display_name,

@@ -1,20 +1,20 @@
-import faker from 'faker';
+import faker from "faker";
 
-import {IsearchListView} from '.';
+import { IsearchCircleGridView } from ".";
 
-import '@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css'
+import "@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css";
 
 export default {
-  title: 'iSearch/ListView',
-  component: IsearchListView,
+  title: "iSearch/CircleGridView",
+  component: IsearchCircleGridView,
 };
 
-const Template = args => (
+const Template = (args) => (
   <div className="container pt-3">
     <div className="row">
       <div className="col col-12">
         <div className="clas-isearch-view">
-          <IsearchListView {...args} />
+          <IsearchCircleGridView {...args} />
         </div>
       </div>
     </div>
@@ -35,10 +35,11 @@ Basic.args = {
   phone: faker.phone.phoneNumber(),
   listConfig: {
     showBio: true,
-    defaultPhoto: 'https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png',
+    defaultPhoto:
+      "https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
     showEmail: true,
     showPhone: true,
     showPhoto: true,
     showTitle: true,
-  }
+  },
 };
