@@ -23,6 +23,9 @@
 .titleOriginal {
   font-weight: bold;
 }
+.departmentOriginal {
+  font-weight: normal;
+}
 
 /* Modern displayType */
 .modernProfile {

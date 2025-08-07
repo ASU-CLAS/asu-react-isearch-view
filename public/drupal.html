@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drupal iSearch component example</title>
-    <link href="/public/bootstrap-asu.css" rel="stylesheet" />
     <script
       crossorigin
       src="https://unpkg.com/react@17/umd/react.development.js"
@@ -24,20 +23,20 @@
             config
           </h2>
 
-          <h3>customList</h3>
+          <!-- <h3>customList</h3>
           <div
             class="clas-isearch-view"
-            data-config='{"type":"customList","displayType":"classic","showPhoto":true,"showTitle":false,"showBio":true,"showEmail":true,"showPhone":true,"newTab":false,"showUserExpertiseFilter":true,"showUserTitleFilter":false,"showFilterAZ":true,"ids":["dagruss","tahmed31","oalmasa1","mamundse","cbagciog","hbarker2","abelakov","vbenkert","visar","sbeschl2","abinnend","kbrown72","sburnsil","cjcalhou","ozanutku","acichope","aajec","corman","mcruse","bridille","jmedmond","serincin","enfarkas","dfellne","mfiroz","dcfossum","lgharav","ngoksel","srdogan","bkgoodm1","srgraff","mhanso10","marycam","aholian1","cholman1","hhoogenb","khristo","ahumphre","iinozemt","lpopova","jkeahey","akefeli","mkenny1","ekhausto","okittrie","ilevin3","nlozinsk","lmanche","ymann","amart140","mmeirosu","jmelkers","emeloy","cmesch","ameyerro","smoldabe","rwmoore6","kmox1","debneill","rniebuhr","aolenina","ioranli","orlich","mmostlin","bapagel","mparvu","jpaulesc","msemen","tpeiu"],"sourceIds":[-1,"1741","1729","1744",-1,"9360","152057","9360","1744","1537","1742","1742","1739","1742",-1,"9360","9358","1758","1729",-1,-1,"1758","199691","2396","96263","392823","392823","96263","192466","1728","1739","1742","1729","1754","95889","1729","35492","237810","2243","306464","96263","9358","9360","1744","1411","1744","1754","9360","9360","32395",-1,"2125","306464","1622","1742","1729","1742","306844","159362","306464","1729","159362","1728","306464","190984","392827","1729","159365",-1,"1742","192466","1742","1537","1742","1744","1728","1730","192466",-1,"1729","1742","190984",-1,-1,-1,"96261","306464","1743","192466","1742","1742","96261","35492","436464","1729","1744","1739"],"sortType":"alpha","showExpertise":true,"showSocial":false,"circlesOptionHover":true,"selectedFilters":[],"rankIds":"0"}'
-          ></div>
+            data-config='{"type":"customList","displayType":"default","showPhoto":true,"showTitle":true,"showBio":true,"showEmail":true,"showPhone":true,"newTab":false,"showUserExpertiseFilter":true,"showUserTitleFilter":false,"showFilterAZ":true,"ids":["dagruss","tahmed31","oalmasa1","mamundse","cbagciog","hbarker2","abelakov","vbenkert","visar","sbeschl2","abinnend","kbrown72","sburnsil","cjcalhou","ozanutku","acichope","aajec","corman","mcruse","bridille","jmedmond","serincin","enfarkas","dfellne","mfiroz","dcfossum","lgharav","ngoksel","srdogan","bkgoodm1","srgraff","mhanso10","marycam","aholian1","cholman1","hhoogenb","khristo","ahumphre","iinozemt","lpopova","jkeahey","akefeli","mkenny1","ekhausto","okittrie","ilevin3","nlozinsk","lmanche","ymann","amart140","mmeirosu","jmelkers","emeloy","cmesch","ameyerro","smoldabe","rwmoore6","kmox1","debneill","rniebuhr","aolenina","ioranli","orlich","mmostlin","bapagel","mparvu","jpaulesc","msemen","tpeiu"],"sourceIds":[-1,"1741","1729","1744",-1,"9360","152057","9360","1744","1537","1742","1742","1739","1742",-1,"9360","9358","1758","1729",-1,-1,"1758","199691","2396","96263","392823","392823","96263","192466","1728","1739","1742","1729","1754","95889","1729","35492","237810","2243","306464","96263","9358","9360","1744","1411","1744","1754","9360","9360","32395",-1,"2125","306464","1622","1742","1729","1742","306844","159362","306464","1729","159362","1728","306464","190984","392827","1729","159365",-1,"1742","192466","1742","1537","1742","1744","1728","1730","192466",-1,"1729","1742","190984",-1,-1,-1,"96261","306464","1743","192466","1742","1742","96261","35492","436464","1729","1744","1739"],"sortType":"alpha","showExpertise":true,"showSocial":false,"circlesOptionHover":true,"selectedFilters":[],"rankIds":"0"}'
+          ></div> -->
 
-          <!--
+          
 
-      <h3>customList</h3>
+      <!-- <h3>customList</h3>
       <div class="clas-isearch-view" data-config='{
         "type":"customList",
         "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-        "endpointURL":"https://live-asu-isearch.ws.asu.edu/api/v1/",
-        "displayType":"default",
+        "endpointURL":"https://search.asu.edu/api/v1/",
+        "displayType":"cards",
         "ids":[
           "atpjk",
           "jjcohen4",
@@ -61,26 +60,19 @@
         "showExpertise":true,
         "showPhone":true,
         "showFilterAZ":false
-      }'></div>
+      }'></div> -->
 
       <h3>depList</h3>
       <div class="clas-isearch-view" data-config='{
         "type":"depList",
         "displayType":"default",
         "defaultPhoto":"https://thecollege.asu.edu/profiles/openclas/modules/custom/clas_isearch/images/avatar.png",
-        "endpointURL":"https://live-asu-isearch.ws.asu.edu/api/v1/",
+        "endpointURL":"https://search.asu.edu/api/v1/",
         "selectedFilters":[
-          "Academic Prof w/Admin Appt",
-          "Academic Professional",
-          "Administrative",
-          "Classified","Faculty",
-          "Faculty w/Admin Appointment",
-          "Graduate Assistant/Associate",
-          "Post Doctoral Scholars",
-          "University Staff",
-          "Emeritus"
+          "Emeritus",
+          "Courtesy Affiliate"
           ],
-        "ids":[1755],
+        "ids":[1409],
         "expertiseFilter":"",
         "subAffFilters": ["ASU Foundation"],
         "showPhoto":true,
@@ -89,9 +81,10 @@
         "showEmail":true,
         "showExpertise":true,
         "showPhone":true,
-        "showFilterAZ":true
+        "showFilterAZ":false,
+        "sortType":"rank"
       }'></div>
--->
+
           <script src="/drupalIsearchViewer.js"></script>
         </div>
       </div>

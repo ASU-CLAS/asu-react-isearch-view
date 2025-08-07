@@ -2,7 +2,8 @@ import faker from 'faker';
 
 import {IsearchCardView} from '.';
 
-import '../../../public/bootstrap-asu.css';
+
+import '@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css';
 
 export default {
   title: 'iSearch/CardView',

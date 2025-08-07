@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './index.css';
+import '@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css'
 
 export const IsearchCardView = ({
   display_name,
@@ -11,6 +11,7 @@ export const IsearchCardView = ({
   phone,
   photo_url,
   selectedDepTitle,
+  displayDep,
   short_bio,
   expertise_areas,
   listConfig,
@@ -44,7 +45,7 @@ export const IsearchCardView = ({
         </div>
         <div className="card-body">
           {listConfig.showTitle && (
-            <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}</h6>
+            <h6 className="card-subtitle mb-2 text-muted titleOriginal">{selectedDepTitle}{displayDep && <span >, <span className="departmentOriginal">{displayDep}</span></span>}</h6>
           )}
           {listConfig.showBio && <p>{short_bio.raw}</p>}
           {listConfig.showExpertise && expertise_areas.raw != null && expertise_areas.raw.length > 0 && <span><label>Expertise Areas: </label> <p>{expertise_areas.raw.map((item,index) => (<span>{item}{index < expertise_areas.raw.length - 1 && ', '}</span>) )}</p></span>}
@@ -90,6 +91,10 @@ IsearchCardView.propTypes = {
    * iSearch profile selected department title
    */
   selectedDepTitle: PropTypes.string,
+  /**
+   * iSearch profile department
+   */
+  displayDep: PropTypes.string,
     /**
    * iSearch profile selected expertise areas
    */
@@ -110,6 +115,7 @@ IsearchCardView.defaultProps = {
   phone: '',
   photo_url: '',
   selectedDepTitle: '',
+  displayDep: null,
   short_bio: '',
   expertise_areas: [],
   listConfig: {

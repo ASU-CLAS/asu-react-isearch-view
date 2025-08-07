@@ -12,12 +12,11 @@ export const IsearchListView = ({
   phone,
   photo_url,
   selectedDepTitle,
+  displayDep,
   short_bio,
   expertise_areas,
   listConfig,
 }) => {
-  console.log("returning table row");
-  console.log(expertise_areas);
 
   return (
     <div key={eid.raw} className="profile profile-type-standard">
@@ -44,7 +43,7 @@ export const IsearchListView = ({
           </h3>
           {listConfig.showTitle && (
             <div className="profile-title">
-              <p className="titleOriginal">{selectedDepTitle}</p>
+              <p className="titleOriginal">{selectedDepTitle}{displayDep && <span >, <span className="departmentOriginal">{displayDep}</span></span>}</p>
             </div>
           )}
 
@@ -127,6 +126,10 @@ IsearchListView.propTypes = {
    */
   selectedDepTitle: PropTypes.string,
   /**
+   * iSearch profile department
+   */
+  displayDep: PropTypes.string,
+  /**
    * iSearch profile short bio
    */
   short_bio: PropTypes.object,
@@ -142,6 +145,7 @@ IsearchListView.defaultProps = {
   phone: "",
   photo_url: "",
   selectedDepTitle: "",
+  displayDep: null,
   short_bio: "",
   listConfig: {
     showBio: true,
