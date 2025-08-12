@@ -19,7 +19,10 @@
 
 .titleOriginal {
   font-weight: bold;
-}
+
+.departmentOriginal {
+  font-weight: normal;
+}}
 
 .noWrap {
   white-space: nowrap;
