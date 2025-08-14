@@ -1,9 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import IsearchDirectoryWrapperDrupal from './containers/IsearchDirectoryWrapperDrupal';
+import { createRoot } from 'react-dom/client';
+import "@asu/unity-bootstrap-theme/dist/css/unity-bootstrap-theme.css";
 
-let appRoots = document.getElementsByClassName('clas-isearch-view');
+const domNodes = document.getElementsByClassName('clas-isearch-view');
 
-for (let element of appRoots) {
-  ReactDOM.render(<IsearchDirectoryWrapperDrupal dataFromPage={element.dataset} />, element);
+for (let node of domNodes) {
+  const root = createRoot(node);
+  root.render(<IsearchDirectoryWrapperDrupal dataFromPage={node.dataset} />)
 }
+
