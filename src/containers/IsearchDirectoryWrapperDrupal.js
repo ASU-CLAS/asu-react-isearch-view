@@ -31,13 +31,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if (debug) {
       console.log("Processing title for: " + person.asurite_id.raw);
     }
-
     // if there is no eid then use asurite in place
     if (person.eid.raw == undefined) {
       person.eid.raw = person.asurite_id.raw;
     }
     // if there is no sourceID for this profile, display primary department and custom title, fallback to primary title
-    if (person.depMatch == "unknown") {
+    if (person.depMatch === -2) {
       if (person.working_title != undefined) {
         person.selectedDepTitle = person.working_title.raw[0];
         person.displayDep = person.primary_department.raw;
@@ -57,24 +56,27 @@ class IsearchDirectoryWrapperDrupal extends Component {
       }
     }
     //if the sourceID matches the person's primary department, display custom title, fallback to primary title
-    else if (person.depMatch == "primary") {
+    else if (person.depMatch === -1) {
       if (debug) {
         console.log("Set title via matching sourceID and primary dept");
       }
 
-      if (person.working_title.raw != undefined) {
-        person.selectedDepTitle = person.working_title.raw;
+      const depIndex = person.departments.raw.indexOf(person.primary_department.raw);
+
+      if (person.titles.raw[depIndex] != undefined) {
+        person.selectedDepTitle = person.titles.raw[depIndex];
       } else {
         person.selectedDepTitle = person.primary_title.raw;
       }
     }
     // if there is a sourceID index and it does NOT match the primary department, display custom title if it exists, otherwise display NO title
     else {
-      if (person.working_title) {
+      const depIndex = person.depMatch;
+      if (person.titles.raw[depIndex]) {
         if (debug) {
           console.log("Non-primary department, use custom title");
         }
-        person.selectedDepTitle = person.working_title.raw;
+        person.selectedDepTitle = person.titles.raw[depIndex];
       } else {
         if (debug) {
           console.log("Check for courtesy affiliate status");
@@ -189,10 +191,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
               //console.log(response.data.results[i]);
               if (item === response.data.results[i].asurite_id.raw) {
                 // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
-                response.data.results[i].depMatch = "unknown";
+                response.data.results[i].depMatch = -2;
                 // some profiles don't have deptids ???
                 if (isearchConfig.sourceIds[index]) {
-                  console.log("id found");
                 } else {
                   console.log(isearchConfig.sourceIds[index]);
                 }
@@ -206,9 +207,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
                     response.data.results[i].primary_deptid.raw ===
                     isearchConfig.sourceIds[index].toString()
                   ) {
-                    response.data.results[i].depMatch = "primary";
+
+                    response.data.results[i].depMatch = -1;
                   } else {
-                    response.data.results[i].depMatch = "non-primary";
+                    response.data.results[i].depMatch = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString());
                   }
                 }
                 response.data.results[i].displayDep = null;
