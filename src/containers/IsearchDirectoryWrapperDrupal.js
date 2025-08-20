@@ -114,11 +114,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
       const emeritus = subaffiliations.filter((affiliation) =>
         affiliation.match(/emeritus(?: \w+)* professor/i)
       );
-      console.log(emeritus);
       const retired = subaffiliations.filter((affiliation) =>
         affiliation.match(/retired(?: \w+)*/i)
       );
-      console.log(retired);
 
       if (emeritus != undefined && emeritus.length >= 1) {
         return emeritus[0];
@@ -230,9 +228,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
             let listDep = isearchConfig.ids[0].toString();
             item.titleIndex = item.deptids.raw.indexOf(listDep);
             if (item.primary_deptid == listDep) {
-              item.depMatch = "primary";
+              item.depMatch = -1;
             } else {
-              item.depMatch = "non-primary";
+              item.depMatch = item.deptids.raw.indexOf(listDep);
             }
 
             item.selectedDepTitle = this.processTitles(item);
@@ -280,10 +278,12 @@ class IsearchDirectoryWrapperDrupal extends Component {
               isearchConfig.selectedFilters.includes("Emeritus");
 
             function handleCourtesyAffiliates(profile) {
-              if ("primary_simplified_empl_class" in profile) {
+              const depIndex = profile.deptids.raw.indexOf(isearchConfig.ids[0])
+              const depClass = profile.empl_classes.raw[depIndex]
+              if (depClass) {
                 if (
                   isearchConfig.selectedFilters.includes(
-                    profile.primary_simplified_empl_class.raw[0]
+                    depClass
                   )
                 ) {
                   return profile;
@@ -291,7 +291,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                   isearchConfig.selectedFilters.includes(
                     "Faculty w/Admin Appointment"
                   ) &&
-                  profile.primary_simplified_empl_class.raw[0] ===
+                  depClass ===
                     "Administrative Appointment"
                 ) {
                   return profile;
