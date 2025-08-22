@@ -10,7 +10,7 @@ import Loader from "react-loader-spinner";
 import PropTypes from "prop-types";
 import EventEmitter from "events";
 
-const debug = false;
+const debug = true;
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -343,8 +343,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
             } else {
               orderedProfileResults = orderedProfileResults.filter(
                 (profile) => {
-                  if (profile.selectedDepTitle !== null)
-                    return profile.selectedDepTitle
+                  if (profile.selectedDepTitle !== undefined)
+                    return profile.selectedDepTitle[0]
                       .toLowerCase()
                       .includes(isearchConfig.titleFilter.toLowerCase());
                 }
