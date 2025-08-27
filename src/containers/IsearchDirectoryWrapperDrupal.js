@@ -10,7 +10,7 @@ import Loader from "react-loader-spinner";
 import PropTypes from "prop-types";
 import EventEmitter from "events";
 
-const debug = true;
+const debug = false;
 
 class IsearchDirectoryWrapperDrupal extends Component {
   constructor(props) {
@@ -39,10 +39,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if (person.depMatch === -2) {
       if (person.working_title != undefined) {
         person.selectedDepTitle = person.working_title.raw[0];
-        person.displayDep = person.primary_department.raw;
+        person.displayDep = person.primary_department?.raw;
         if (debug) {
           console.log("No sourceID, use working title");
-          console.log(person.working_title.raw);
+          console.log('working title', person.working_title.raw);
         }
       } else {
         // if no custom title, fallback to primary title
@@ -50,7 +50,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           person.selectedDepTitle = person.primary_title.raw;
           if (debug) {
             console.log("No sourceID, no working title, use primary title");
-            console.log(person.primary_title?.raw);
+            console.log('primary_title', person.primary_title?.raw);
           }
         }
       }
@@ -186,21 +186,22 @@ class IsearchDirectoryWrapperDrupal extends Component {
           orderedProfileResults = isearchConfig.ids.map((item, index) => {
             for (var i = 0; i < response.data.results.length; i++) {
               if (debug) console.log("-- " + i + " --");
-              //console.log(response.data.results[i]);
+            
               if (item === response.data.results[i].asurite_id.raw) {
                 // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
                 response.data.results[i].depMatch = -2;
                 // some profiles don't have deptids ???
                 if (isearchConfig.sourceIds[index]) {
                 } else {
-                  console.log(isearchConfig.sourceIds[index]);
+                  // console.log(isearchConfig.sourceIds[index]);
                 }
                 if (
-                  response.data.results[i].deptids != undefined &&
-                  response.data.results[i].deptids.raw != undefined &&
-                  isearchConfig.sourceIds[index] != undefined
+                  response.data.results[i].deptids &&
+                  isearchConfig.sourceIds[index]
                 ) {
+                  if (response.data.results[i].deptids.raw != null) {
                   // check if sourceID matches the person's 'primary department', otherwise match sourceID with department in the person's departments array
+                  
                   if (
                     response.data.results[i].primary_deptid.raw ===
                     isearchConfig.sourceIds[index].toString()
@@ -210,6 +211,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                   } else {
                     response.data.results[i].depMatch = response.data.results[i].deptids.raw.indexOf(isearchConfig.sourceIds[index].toString());
                   }
+                  }
                 }
                 response.data.results[i].displayDep = null;
                 response.data.results[i].selectedDepTitle = this.processTitles(
@@ -217,6 +219,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 );
 
                 return response.data.results[i];
+                
               }
             }
           });
@@ -226,7 +229,10 @@ class IsearchDirectoryWrapperDrupal extends Component {
             if (debug) console.log("-- " + index + " --");
             // get the array index of this dept
             let listDep = isearchConfig.ids[0].toString();
-            item.titleIndex = item.deptids.raw.indexOf(listDep);
+
+            if(item.deptids){
+              item.titleIndex = item.deptids.raw.indexOf(listDep);
+            }
             if (item.primary_deptid == listDep) {
               item.depMatch = -1;
             } else {
@@ -243,7 +249,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
             // }
 
             if (isearchConfig.sortType === "weight") {
-              if (typeof item.employee_weight !== "undefined")
+              if (typeof item.employee_weight !== undefined)
                 item.selectedDepRank =
                   item.employee_weight.raw[item.titleIndex];
               else item.selectedDepRank = 999;
@@ -253,7 +259,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           });
 
           // filter results by subaffilation type (subAffFilters)
-          if (typeof isearchConfig.subAffFilters !== "undefined") {
+          if (typeof isearchConfig.subAffFilters !== undefined) {
             function handleSubAffiliates(profile) {
               if ("subaffiliations" in profile) {
                 if (
