@@ -71,12 +71,11 @@ export const IsearchListView = ({
             )}
           </div>
 
-          <p>{listConfig.showBio && short_bio.raw}</p>
+          <div>{listConfig.showBio && short_bio.raw}</div>
 
-          <p>
+          <div>
             {listConfig.showExpertise &&
-              expertise_areas.raw != null &&
-              expertise_areas.raw.length > 0 && (
+              expertise_areas?.raw?.length > 0 && (
                 <span>
                   <label>Expertise Areas: </label>{" "}
                   <p>
@@ -89,7 +88,7 @@ export const IsearchListView = ({
                   </p>
                 </span>
               )}
-          </p>
+          </div>
         </div>
       </div>
     </div>
