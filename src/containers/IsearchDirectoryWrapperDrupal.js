@@ -31,7 +31,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if (debug) {
       console.log("Processing title for: " + person.asurite_id.raw);
     }
-
+    console.log(person);
     // if there is no eid then use asurite in place
     if (person.eid.raw == undefined) {
       person.eid.raw = person.asurite_id.raw;
@@ -62,10 +62,20 @@ class IsearchDirectoryWrapperDrupal extends Component {
         console.log("Set title via matching sourceID and primary dept");
       }
 
-      if (person.working_title.raw != undefined) {
+      if (person.working_title != undefined) {
         person.selectedDepTitle = person.working_title.raw;
-      } else {
+        //console.log("Set working title");
+      } else if (person.primary_title != undefined) {
         person.selectedDepTitle = person.primary_title.raw;
+        //console.log("Set primary title");
+      }
+      else if (person.home_rank_description != undefined) {
+        //console.log("Set home rank description");
+        person.selectedDepTitle = person.home_rank_description.raw;
+      }
+      else {
+        //console.log("Set null");
+        person.selectedDepTitle = null;
       }
     }
     // if there is a sourceID index and it does NOT match the primary department, display custom title if it exists, otherwise display NO title
@@ -135,7 +145,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     let feedURL = isearchConfig.endpointURL;
     let feedBase = isearchConfig.endpointURL;
-    console.log("iSearch Viewer - 2.2.1");
+    console.log("iSearch Viewer - 2.2.2");
     console.log("Developed by The College of Liberal Arts and Sciences");
     console.log("https://github.com/ASU-CLAS/asu-react-isearch-view");
     console.log("---");
@@ -193,6 +203,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 // some profiles don't have deptids ???
                 if (isearchConfig.sourceIds[index]) {
                   console.log("id found");
+                  console.log(response.data.results[i].asurite_id.raw);
                 } else {
                   console.log(isearchConfig.sourceIds[index]);
                 }
@@ -253,9 +264,15 @@ class IsearchDirectoryWrapperDrupal extends Component {
           });
 
           // filter results by subaffilation type (subAffFilters)
-          if (typeof isearchConfig.subAffFilters !== "undefined") {
+          if (
+            Array.isArray(isearchConfig.subAffFilters) &&
+            isearchConfig.subAffFilters.length > 0
+          ) {
             function handleSubAffiliates(profile) {
-              if ("subaffiliations" in profile) {
+              if (
+                profile.subaffiliations &&
+                Array.isArray(profile.subaffiliations.raw)
+              ) {
                 if (
                   isearchConfig.subAffFilters.some((filter) =>
                     profile.subaffiliations.raw.includes(filter)
@@ -278,7 +295,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
               isearchConfig.selectedFilters.includes("Emeritus");
 
             function handleCourtesyAffiliates(profile) {
-              if ("primary_simplified_empl_class" in profile) {
+              if ("primary_simplified_empl_class" in profile && profile.primary_simplified_empl_class != undefined) {
+                console.log("oops");
                 if (
                   isearchConfig.selectedFilters.includes(
                     profile.primary_simplified_empl_class.raw[0]
@@ -351,10 +369,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
           }
 
           // filter results by expertise (expertiseFilter)
-          if (
-            typeof isearchConfig.expertiseFilter === "string" &&
-            isearchConfig.expertiseFilter !== ""
-          ) {
+          if (typeof isearchConfig.expertiseFilter === "string" && isearchConfig.expertiseFilter !== "" ) {
             // check if the expertisefilter is in regex format
             if (isearchConfig.expertiseFilter[0] === "/") {
               const pattern = isearchConfig.expertiseFilter
