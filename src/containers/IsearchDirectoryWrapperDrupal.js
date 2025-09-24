@@ -19,6 +19,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
     this.state = {
       ourData: [],
       profileList: [],
+      processedProfiles: [],
       filterActive: false,
       filterLetter: "",
       isLoaded: false,
@@ -31,7 +32,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
     if (debug) {
       console.log("Processing title for: " + person.asurite_id.raw);
     }
-    console.log(person);
     // if there is no eid then use asurite in place
     if (person.eid.raw == undefined) {
       person.eid.raw = person.asurite_id.raw;
@@ -122,11 +122,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
       const emeritus = subaffiliations.filter((affiliation) =>
         affiliation.match(/emeritus(?: \w+)* professor/i)
       );
-      console.log(emeritus);
       const retired = subaffiliations.filter((affiliation) =>
         affiliation.match(/retired(?: \w+)*/i)
       );
-      console.log(retired);
 
       if (emeritus != undefined && emeritus.length >= 1) {
         return emeritus[0];
@@ -191,6 +189,29 @@ class IsearchDirectoryWrapperDrupal extends Component {
         let orderedProfileResults = response.data.results;
         JSON.stringify(orderedProfileResults);
 
+        let processedProfiles = []
+
+        function getString(value) {
+          if (typeof value === 'undefined') {
+            return 'undefined'
+          } else if (typeof value === 'object') {
+            if (value == null) {
+              return 'null'
+            } else {
+              getString(value.raw)
+            }
+          } else {
+            return value
+          }
+        }
+
+        orderedProfileResults.forEach((profile) => {
+          let processedProfile = {
+            asurite: ''
+          }
+          processedProfile.asurite = getString(profile.asurite_id)
+        })
+
         if (isearchConfig.type === "customList") {
           // order results and assign custom titles
           orderedProfileResults = isearchConfig.ids.map((item, index) => {
@@ -201,12 +222,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
                 // get the sourceID index to use for selecting the right title, sourceID would be the department this profile was selected from
                 response.data.results[i].depMatch = "unknown";
                 // some profiles don't have deptids ???
-                if (isearchConfig.sourceIds[index]) {
-                  console.log("id found");
-                  console.log(response.data.results[i].asurite_id.raw);
-                } else {
-                  console.log(isearchConfig.sourceIds[index]);
-                }
+                
                 if (
                   response.data.results[i].deptids != undefined &&
                   response.data.results[i].deptids.raw != undefined &&
@@ -231,6 +247,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
               }
             }
           });
+
+
         } else {
           //assign custom titles and rank
           orderedProfileResults = orderedProfileResults.map((item, index) => {
@@ -296,7 +314,6 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
             function handleCourtesyAffiliates(profile) {
               if ("primary_simplified_empl_class" in profile && profile.primary_simplified_empl_class != undefined) {
-                console.log("oops");
                 if (
                   isearchConfig.selectedFilters.includes(
                     profile.primary_simplified_empl_class.raw[0]
@@ -438,7 +455,7 @@ class IsearchDirectoryWrapperDrupal extends Component {
             callErr: false,
           },
           () => {
-            //console.log(this.state.ourData);
+            console.log(this.state.ourData);
           }
         );
       })
@@ -472,6 +489,9 @@ class IsearchDirectoryWrapperDrupal extends Component {
         //display config info for error
         console.log(error.config);
       });
+
+      console.log('ourData',this.state.ourData)
+      console.log('profileList', this.state.profileList)
   }
 
   handleClick(element) {
@@ -503,6 +523,8 @@ class IsearchDirectoryWrapperDrupal extends Component {
 
     event.preventDefault();
   }
+
+
 
   render() {
     let config = JSON.parse(this.props.dataFromPage.config);
